@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+include("@PROJECT_BINARY_DIR@/cmake/@PROJECT_NAME@Targets.cmake")
+check_required_components("@PROJECT_NAME@")
+get_target_property(@PROJECT_NAME@_INCLUDE_DIR @PROJECT_NAME@ INTERFACE_INCLUDE_DIRECTORIES)
