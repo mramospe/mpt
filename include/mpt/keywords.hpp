@@ -3,20 +3,22 @@
 #include "mpt/values.hpp"
 #include <tuple>
 
-namespace mpt {
+namespace mpt::keywords {
 
   /// Represent the description of a keyword argument
-  template <class T> struct keyword_argument {
-    using value_type = T;
-    value_type value;
-  };
+  template <class T> using argument = mpt::value_wrapper<T>;
 
   /// Set of required keyword arguments
-  template <class...> struct required_keyword_arguments;
+  template <class...> struct required;
 
   /// Set of required keyword arguments
-  template <class... T>
-  struct required_keyword_arguments<keyword_argument<T>...> {};
+  template <class... T> struct required<argument<T>...> {};
+
+  /// Set of keyword arguments that have default values
+  template <class...> struct defaulted;
+
+  /// Set of keyword arguments that have default values
+  template <class... T> struct defaulted<argument<T>...> {};
 
   /*!\brief Class that accepts keyword arguments in the constructor
 
@@ -29,43 +31,41 @@ namespace mpt {
     \ref std::tuple. You can use the \ref keywords_parser::get and
     \ref keywords_parser::set member functions to manipulate the values.
    */
-  template <class Required, class... Keyword> class keywords_parser;
+  template <class Required, class Defaulted> class parser;
 
-  template <class... RequiredKeyword, class... Keyword>
-  class keywords_parser<required_keyword_arguments<RequiredKeyword...>,
-                        Keyword...>
-      : protected std::tuple<typename RequiredKeyword::value_type...,
-                             typename Keyword::value_type...> {
+  template <class... R, class... D>
+  class parser<required<R...>, defaulted<D...>>
+      : protected std::tuple<typename R::value_type...,
+                             typename D::value_type...> {
 
-    static_assert(
-        !has_repeated_template_arguments_v<RequiredKeyword..., Keyword...>,
-        "Keyword arguments are repeated");
+    static_assert(!has_repeated_template_arguments_v<R..., D...>,
+                  "Keyword arguments are repeated");
 
   public:
     /// Base type
-    using base_type = std::tuple<typename RequiredKeyword::value_type...,
-                                 typename Keyword::value_type...>;
+    using base_type =
+        std::tuple<typename R::value_type..., typename D::value_type...>;
 
-    keywords_parser() = default;
-    keywords_parser(keywords_parser const &) = default;
-    keywords_parser(keywords_parser &&) = default;
-    keywords_parser &operator=(keywords_parser const &) = default;
-    keywords_parser &operator=(keywords_parser &&) = default;
+    parser() = default;
+    parser(parser const &) = default;
+    parser(parser &&) = default;
+    parser &operator=(parser const &) = default;
+    parser &operator=(parser &&) = default;
 
     /// Constructor from the keyword arguments and a tuple of default values
     template <class Tuple, class... K>
-    keywords_parser(Tuple &&defaults, K &&...v) noexcept
+    parser(Tuple &&defaults, K &&... v) noexcept
         : base_type{parse_keywords_with_defaults_and_required(
               std::forward<Tuple>(defaults), std::forward<K>(v)...)} {}
 
     /// Get a keyword argument
     template <class K> constexpr auto get() const {
-      return std::get<mpt::index_v<K, RequiredKeyword..., Keyword...>>(*this);
+      return std::get<mpt::type_index_v<K, R..., D...>>(*this);
     }
 
     /// Set a keyword argument
     template <class K> constexpr auto set(typename K::value_type v) const {
-      std::get<mpt::index_v<K, RequiredKeyword..., Keyword...>>(*this) = v;
+      std::get<mpt::type_index_v<K, R..., D...>>(*this) = v;
     }
 
   private:
@@ -74,18 +74,17 @@ namespace mpt {
       If a value is not provided, it is taken from the tuple of default values.
     */
     template <std::size_t I, class Tuple, class... K>
-    static constexpr auto value_or_default(Tuple &&defaults, K &&...keyword) {
+    static constexpr auto value_or_default(Tuple &&defaults, K &&... keyword) {
 
-      using current_keyword_type =
-          mpt::type_at_t<I, RequiredKeyword..., Keyword...>;
+      using current_keyword_type = mpt::type_at_t<I, R..., D...>;
 
       typename current_keyword_type::value_type value;
 
       // conversion to the type from the current type descriptor
       if constexpr (mpt::has_type_v<current_keyword_type,
                                     std::remove_reference_t<K>...>) {
-        value = mpt::value_at<mpt::index_v<current_keyword_type,
-                                           std::remove_reference_t<K>...>>(
+        value = mpt::value_at<mpt::type_index_v<current_keyword_type,
+                                                std::remove_reference_t<K>...>>(
                     std::forward<K>(keyword)...)
                     .value;
       } else
@@ -99,7 +98,7 @@ namespace mpt {
     template <std::size_t... I, class Tuple, class... K>
     static constexpr base_type
     parse_keywords_with_defaults_impl(std::index_sequence<I...>,
-                                      Tuple &&defaults, K &&...keyword) {
+                                      Tuple &&defaults, K &&... keyword) {
 
       return {value_or_default<I>(std::forward<Tuple>(defaults),
                                   std::forward<K>(keyword)...)...};
@@ -110,7 +109,7 @@ namespace mpt {
       static_assert(!has_repeated_template_arguments_v<Default...>,
                     "Default keyword arguments are repeated");
       static_assert(
-          !(mpt::has_type_v<RequiredKeyword, Default...> || ...),
+          !(mpt::has_type_v<R, Default...> || ...),
           "Required keyword arguments are found in the list of default values");
     }
 
@@ -118,25 +117,22 @@ namespace mpt {
       static_assert(
           !has_repeated_template_arguments_v<std::remove_reference_t<K>...>,
           "Required keyword arguments are repeated");
-      static_assert(
-          (mpt::has_type_v<RequiredKeyword, std::remove_reference_t<K>...> &&
-           ...),
-          "Some required keyword arguments are not provided");
+      static_assert((mpt::has_type_v<R, std::remove_reference_t<K>...> && ...),
+                    "Some required keyword arguments are not provided");
     }
 
     /// Parse the input keyword arguments with the given list of default values
     template <class Tuple, class... K>
     static constexpr base_type
     parse_keywords_with_defaults_and_required(Tuple &&defaults,
-                                              K &&...keywords) {
+                                              K &&... keywords) {
 
       check_defaults(defaults);
       check_required(keywords...);
 
       return parse_keywords_with_defaults_impl(
-          std::make_index_sequence<((sizeof...(RequiredKeyword)) +
-                                    (sizeof...(Keyword)))>(),
+          std::make_index_sequence<((sizeof...(R)) + (sizeof...(D)))>(),
           std::forward<Tuple>(defaults), std::forward<K>(keywords)...);
     }
   };
-} // namespace mpt
+} // namespace mpt::keywords

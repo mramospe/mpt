@@ -5,6 +5,11 @@
 #include <string>
 #include <string_view>
 
+/*\brief Tools to handle smart enumeration types
+
+  A smart enumeration type is an enumeration type that can be created/converted
+  from/to a string of characters.
+ */
 namespace mpt::smart_enum {
 
   /// Type of a buffer on a enumeration type declaration
@@ -17,6 +22,7 @@ namespace mpt::smart_enum {
   template <class EnumType, std::size_t N>
   using values_type = std::array<EnumType, N>;
 
+  /// Functions for developers only
   namespace detail {
 
     /// Create an array of characters corresponding to the input to the
@@ -43,7 +49,10 @@ namespace mpt::smart_enum {
       // value, and we change it back to true once we find a separator (a comma
       // ',')
       bool status = true;
-      for (auto counter = 0u, fc = 0u, sc = 0u; sc < buffer.size();) {
+
+      std::size_t counter = 0u, fc = 0u, sc = 0u;
+
+      while (sc < buffer.size()) {
 
         auto c = buffer[sc];
 
@@ -92,6 +101,11 @@ namespace mpt::smart_enum {
   /// Access the properties of an enumeration type via ADL
   template <class EnumType>
   using properties_t = typename properties<EnumType>::type;
+
+  /// Whether the given value corresponds to an unknown value
+  template <class EnumType> constexpr bool is_unknown(EnumType e) {
+    return e == properties_t<EnumType>::unknown_value;
+  }
 
   /// Determine the enumeration value from the given string
   template <class EnumType>
@@ -160,19 +174,7 @@ namespace mpt::smart_enum {
   }
 } // namespace mpt::smart_enum
 
-#define MPT_DEFINE_STRING_ACCESSORS(enum_name)                                 \
-  enum_name from_string_view(std::string_view const &str) {                    \
-    return mpt::smart_enum::from_string_view<enum_name>(str);                  \
-  }                                                                            \
-  enum_name from_string(std::string const &str) {                              \
-    return mpt::smart_enum::from_string<enum_name>(str);                       \
-  }                                                                            \
-  enum_name from_string_view_throw_if_unknown(std::string_view const &str) {   \
-    return mpt::smart_enum::from_string_view_throw_if_unknown<enum_name>(str); \
-  }                                                                            \
-  enum_name from_string_throw_if_unknown(std::string const &str) {             \
-    return mpt::smart_enum::from_string_throw_if_unknown<enum_name>(str);      \
-  }                                                                            \
+#define MPT_DEFINE_STRING_CONVERTERS(enum_name)                                \
   std::string to_string(enum_name e) { return mpt::smart_enum::to_string(e); } \
   std::string_view to_string_view(enum_name e) {                               \
     return mpt::smart_enum::to_string_view(e);                                 \
@@ -217,7 +219,7 @@ namespace mpt::smart_enum {
   constexpr enum_properties_name smart_enum_properties(enum_name) {            \
     return {};                                                                 \
   }                                                                            \
-  MPT_DEFINE_STRING_ACCESSORS(enum_name);                                      \
+  MPT_DEFINE_STRING_CONVERTERS(enum_name);                                     \
   static_assert(true)
 
 // TODO: With GCC 11 and Clang 13 we can make use of the "using enum

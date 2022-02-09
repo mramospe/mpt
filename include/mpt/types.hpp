@@ -1,11 +1,11 @@
 #pragma once
 #include <cstdlib>
 #include <type_traits>
-#include <variant>
 
 namespace mpt {
 
-  template <class T> struct type_wrapper {};
+  /// Wrapper around a set of types
+  template <class... T> struct types_wrapper {};
 
   /// Whether the type is in the given list
   template <class Reference, class... T> struct has_type : std::false_type {};
@@ -65,15 +65,16 @@ namespace mpt {
       has_single_template<Ref, T...>::value;
 
   /// Get the index of the type in the list of types
-  template <class Match, class... T> struct index;
+  template <class Match, class... T> struct type_index;
 
   /// Get the index of the type in the list of types
-  template <class Match, class T0, class... T> struct index<Match, T0, T...> {
-    static constexpr auto value = index<Match, T...>::value + 1;
+  template <class Match, class T0, class... T>
+  struct type_index<Match, T0, T...> {
+    static constexpr auto value = type_index<Match, T...>::value + 1;
   };
 
   /// Get the index of the type in the list of types
-  template <class Match, class... T> struct index<Match, Match, T...> {
+  template <class Match, class... T> struct type_index<Match, Match, T...> {
     static_assert(!has_type_v<Match, T...>,
                   "Multiple matches found for the given type");
     static constexpr auto value = 0u;
@@ -81,7 +82,7 @@ namespace mpt {
 
   /// Get the type at the given position
   template <class Match, class... T>
-  static constexpr auto index_v = index<Match, T...>::value;
+  static constexpr auto type_index_v = type_index<Match, T...>::value;
 
   /// Get the index of the type in the list of types
   template <template <class> class Match, template <class> class... T>
@@ -132,50 +133,100 @@ namespace mpt {
     template <class V> using tpl = T0<V>;
   };
 
-  /// Expand a std::variant object with a new type, if it does not contain it
-  /// yet
-  template <class Variant, class NewType, class Enable = void>
-  struct expand_variant;
+  namespace {
 
-  /// Expand a std::variant object with a new type, if it does not contain it
-  /// yet
-  template <class... T, class NewType>
-  struct expand_variant<std::variant<T...>, NewType,
-                        std::enable_if_t<!mpt::has_type_v<NewType, T...>>> {
-    using type = std::variant<T..., NewType>;
+    /// Expand a set of types object with a new type, if it does not contain it
+    /// yet
+    template <class TypesSet, class NewType, class Enable = void>
+    struct expand_types_set;
+
+    /// Expand a set of types with a new type, if it does not contain it yet
+    template <class... T, class NewType>
+    struct expand_types_set<types_wrapper<T...>, NewType,
+                            std::enable_if_t<!mpt::has_type_v<NewType, T...>>> {
+      using type = types_wrapper<T..., NewType>;
+    };
+
+    /// Expand a set of types with a new type, if it does not contain it yet
+    template <class... T, class NewType>
+    struct expand_types_set<types_wrapper<T...>, NewType,
+                            std::enable_if_t<mpt::has_type_v<NewType, T...>>> {
+      using type = types_wrapper<T...>;
+    };
+
+    /// Expand a set of types with a new type, if it does not contain it yet
+    template <class TypesSet, class NewType>
+    using expand_types_set_t =
+        typename expand_types_set<TypesSet, NewType>::type;
+  } // namespace
+
+  /// Define a set of types with several types, avoiding repetitions
+  template <class TypesSet, class... T> struct types_set;
+
+  /// Define a set of types with several types, avoiding repetitions
+  template <class... T> struct types_set<types_wrapper<T...>> {
+    using type = types_wrapper<T...>;
   };
 
-  /// Expand a std::variant object with a new type, if it does not contain it
-  /// yet
-  template <class... T, class NewType>
-  struct expand_variant<std::variant<T...>, NewType,
-                        std::enable_if_t<mpt::has_type_v<NewType, T...>>> {
-    using type = std::variant<T...>;
+  /// Define a set of types with several types, avoiding repetitions
+  template <class... Types, class NewType, class... T>
+  struct types_set<types_wrapper<Types...>, NewType, T...> {
+    using type =
+        typename types_set<expand_types_set_t<types_wrapper<Types...>, NewType>,
+                           T...>::type;
   };
 
-  /// Expand a std::variant object with a new type, if it does not contain it
-  /// yet
-  template <class Variant, class NewType>
-  using expand_variant_t = typename expand_variant<Variant, NewType>::type;
+  /// Define a set of types with several types, avoiding repetitions
+  template <class... NewTypes>
+  using types_set_t = typename types_set<types_wrapper<>, NewTypes...>::type;
 
-  /// Expand a std::variant with several types, avoiding repetitions
-  template <class Variant, class... T> struct expand_variant_with_types;
+  /// Make a set of types
+  template <class... T> constexpr types_set_t<T...> make_type_set() {
+    return {};
+  }
 
-  /// Expand a std::variant with several types, avoiding repetitions
-  template <class... T> struct expand_variant_with_types<std::variant<T...>> {
-    using type = std::variant<T...>;
+  namespace {
+
+    /// Specialize a template using mpt::types_wrapper
+    template <template <class...> class Template, class... T>
+    struct specialize_template_from_types_wrapper;
+
+    /// Specialize a template using mpt::types_wrapper
+    template <template <class...> class Template, class... T>
+    struct specialize_template_from_types_wrapper<Template,
+                                                  types_wrapper<T...>> {
+      using type = Template<T...>;
+    };
+
+    /// Specialize a template using mpt::types_wrapper
+    template <template <class...> class Template, class TypesWrapper>
+    using specialize_template_from_types_wrapper_t =
+        typename specialize_template_from_types_wrapper<Template,
+                                                        TypesWrapper>::type;
+  } // namespace
+
+  /// Specialize the given template
+  template <template <class...> class Template, class... T>
+  struct specialize_template {
+    using type =
+        specialize_template_from_types_wrapper_t<Template, types_wrapper<T...>>;
   };
 
-  /// Expand a std::variant with several types, avoiding repetitions
-  template <class... VariantTypes, class NewType, class... T>
-  struct expand_variant_with_types<std::variant<VariantTypes...>, NewType,
-                                   T...> {
-    using type = typename expand_variant_with_types<
-        expand_variant_t<std::variant<VariantTypes...>, NewType>, T...>::type;
+  /// Specialize the given template
+  template <template <class...> class Template, class... T>
+  using specialize_template_t =
+      typename specialize_template<Template, T...>::type;
+
+  /// Specialize the given template avoiding repetitions
+  template <template <class...> class Template, class... T>
+  struct specialize_template_avoid_repetitions {
+    using type =
+        specialize_template_from_types_wrapper_t<Template, types_set_t<T...>>;
   };
 
-  /// Expand a std::variant with several types, avoiding repetitions
-  template <class Variant, class... NewTypes>
-  using expand_variant_with_types_t =
-      typename expand_variant_with_types<Variant, NewTypes...>::type;
+  /// Specialize the given template avoiding repetitions
+  template <template <class...> class Template, class... T>
+  using specialize_template_avoid_repetitions_t =
+      typename specialize_template_avoid_repetitions<Template, T...>::type;
+
 } // namespace mpt
