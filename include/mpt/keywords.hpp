@@ -54,7 +54,7 @@ namespace mpt::keywords {
 
     /// Constructor from the keyword arguments and a tuple of default values
     template <class Tuple, class... K>
-    parser(Tuple &&defaults, K &&... v) noexcept
+    parser(Tuple &&defaults, K &&...v) noexcept
         : base_type{parse_keywords_with_defaults_and_required(
               std::forward<Tuple>(defaults), std::forward<K>(v)...)} {}
 
@@ -74,7 +74,7 @@ namespace mpt::keywords {
       If a value is not provided, it is taken from the tuple of default values.
     */
     template <std::size_t I, class Tuple, class... K>
-    static constexpr auto value_or_default(Tuple &&defaults, K &&... keyword) {
+    static constexpr auto value_or_default(Tuple &&defaults, K &&...keyword) {
 
       using current_keyword_type = mpt::type_at_t<I, R..., D...>;
 
@@ -98,7 +98,7 @@ namespace mpt::keywords {
     template <std::size_t... I, class Tuple, class... K>
     static constexpr base_type
     parse_keywords_with_defaults_impl(std::index_sequence<I...>,
-                                      Tuple &&defaults, K &&... keyword) {
+                                      Tuple &&defaults, K &&...keyword) {
 
       return {value_or_default<I>(std::forward<Tuple>(defaults),
                                   std::forward<K>(keyword)...)...};
@@ -125,7 +125,7 @@ namespace mpt::keywords {
     template <class Tuple, class... K>
     static constexpr base_type
     parse_keywords_with_defaults_and_required(Tuple &&defaults,
-                                              K &&... keywords) {
+                                              K &&...keywords) {
 
       check_defaults(defaults);
       check_required(keywords...);

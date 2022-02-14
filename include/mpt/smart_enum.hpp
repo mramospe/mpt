@@ -87,6 +87,8 @@ namespace mpt::smart_enum {
       return result;
     }
 
+    /// Helper function to throw an error if a string resolves to an unknown
+    /// value
     void throw_unknown_enumeration_type(std::string const &str) {
       throw std::runtime_error("The string \"" + str +
                                "\" resolves to an unknown enumeration value");
@@ -171,6 +173,38 @@ namespace mpt::smart_enum {
 
     // return the default value
     return to_string(properties_t<EnumType>::unknown_value);
+  }
+
+  namespace detail {
+    /// Implementation of the function to apply a functor depending on the value
+    /// of an enumeration type
+    template <std::size_t N, class EnumType, template <EnumType> class Functor,
+              class... Args>
+    constexpr auto apply_with_switch_impl(EnumType e, Args &&...args) {
+
+      using enum_properties = properties_t<EnumType>;
+
+      if constexpr (N > 0) {
+
+        constexpr auto compare = enum_properties::values_with_unknown[N];
+
+        if (e == compare)
+          return Functor<compare>{}(args...);
+        else
+          return apply_with_switch_impl<N - 1, EnumType, Functor>(
+              e, std::forward<Args>(args)...);
+      } else
+        return Functor<enum_properties::unknown_value>{}(args...);
+    }
+  } // namespace detail
+
+  /// Apply a functor depending on the value of an enumeration type
+  template <class EnumType, template <EnumType> class Functor, class... Args>
+  constexpr auto apply_with_switch(EnumType e, Args &&...args) {
+    using enum_properties = properties_t<EnumType>;
+    return detail::apply_with_switch_impl<enum_properties::size, EnumType,
+                                          Functor>(e,
+                                                   std::forward<Args>(args)...);
   }
 } // namespace mpt::smart_enum
 

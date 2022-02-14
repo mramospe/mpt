@@ -76,12 +76,37 @@ mpt::test::errors test_unknown() {
   return errors;
 }
 
+// Helpers for "test_switch"
+template <simple E> struct functor;
+
+template <> struct functor<simple_unknown> {
+  constexpr bool operator()(bool b) const { return b; }
+};
+
+template <> struct functor<simple_A> {
+  constexpr bool operator()(bool b) const { return b; }
+};
+
+template <> struct functor<simple_B> {
+  constexpr bool operator()(bool b) const { return b; }
+};
+
+/// Test the switch function
+mpt::test::errors test_switch() {
+  mpt::test::errors errors;
+  for (auto e : mpt::smart_enum::properties_t<simple>::values_with_unknown)
+    if (mpt::smart_enum::apply_with_switch<simple, functor>(e, false))
+      errors.push_back("Unable to use switch for \"" + to_string(e) + '"');
+  return errors;
+}
+
 int main() {
 
   mpt::test::collector smart_enums("smart enumerations");
   MPT_TEST_UTILS_ADD_TEST(smart_enums, test_properties);
   MPT_TEST_UTILS_ADD_TEST(smart_enums, test_adl);
   MPT_TEST_UTILS_ADD_TEST(smart_enums, test_unknown);
+  MPT_TEST_UTILS_ADD_TEST(smart_enums, test_switch);
 
   return mpt::test::is_success(smart_enums.run());
 }
