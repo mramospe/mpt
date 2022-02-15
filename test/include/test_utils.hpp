@@ -17,6 +17,9 @@ namespace mpt::test {
   /// Check if a status code is success
   bool is_success(status_code sc) { return sc == status_code::success; }
 
+  /// Transform a status code into a return code of a script
+  int to_return_code(status_code sc) { return !(sc == status_code::success); }
+
   /// Container of errors
   using errors = std::vector<std::string>;
 

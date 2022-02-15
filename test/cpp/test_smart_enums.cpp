@@ -108,5 +108,5 @@ int main() {
   MPT_TEST_UTILS_ADD_TEST(smart_enums, test_unknown);
   MPT_TEST_UTILS_ADD_TEST(smart_enums, test_switch);
 
-  return mpt::test::is_success(smart_enums.run());
+  return mpt::test::to_return_code(smart_enums.run());
 }

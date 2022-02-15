@@ -25,7 +25,5 @@ int main() {
   mpt::test::collector value_at("value accessor");
   MPT_TEST_UTILS_ADD_TEST(value_at, test_value_at);
 
-  return mpt::test::is_success(value_at.run());
-
-  return 0;
+  return mpt::test::to_return_code(value_at.run());
 }

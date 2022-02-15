@@ -22,6 +22,20 @@ namespace mpt {
   template <class Reference, class... T>
   static constexpr auto has_type_v = has_type<Reference, T...>::value;
 
+  /// Whether the type is in the given template type
+  template <class Reference, class Object> struct templated_object_has_type;
+
+  /// Whether the type is in the given template type
+  template <class Reference, template <class...> class Object, class... T>
+  struct templated_object_has_type<Reference, Object<T...>> {
+    static constexpr auto value = has_type_v<Reference, T...>;
+  };
+
+  /// Whether the type is in the given template type
+  template <class Reference, class Object>
+  static constexpr auto templated_object_has_type_v =
+      templated_object_has_type<Reference, Object>::value;
+
   /// Check if a list of template arguments has repeated types
   template <class... T>
   struct has_repeated_template_arguments : std::false_type {};
@@ -37,32 +51,23 @@ namespace mpt {
   static constexpr auto has_repeated_template_arguments_v =
       has_repeated_template_arguments<T...>::value;
 
-  /// Check at compile-time if a reference template is in the list of template
-  /// arguments
-  template <template <class> class Ref, template <class> class... T>
-  struct has_single_template : std::false_type {};
+  /// Whether the type is in the given template type
+  template <class Reference, class Object>
+  struct templated_object_has_repeated_template_arguments;
 
-  /// Check at compile-time if a reference template is in the list of template
-  /// arguments
-  template <template <class> class Ref>
-  struct has_single_template<Ref> : std::false_type {};
+  /// Whether the type is in the given template type
+  template <class Reference, template <class...> class Object, class... T>
+  struct templated_object_has_repeated_template_arguments<Reference,
+                                                          Object<T...>> {
+    static constexpr auto value =
+        has_repeated_template_arguments_v<Reference, T...>;
+  };
 
-  /// Check at compile-time if a reference template is in the list of template
-  /// arguments
-  template <template <class> class Ref, template <class> class T0,
-            template <class> class... T>
-  struct has_single_template<Ref, T0, T...> : has_single_template<Ref, T...> {};
-
-  /// Check at compile-time if a reference template is in the list of template
-  /// arguments
-  template <template <class> class Ref, template <class> class... T>
-  struct has_single_template<Ref, Ref, T...> : std::true_type {};
-
-  /// Check at compile-time if a reference template is in the list of template
-  /// arguments
-  template <template <class> class Ref, template <class> class... T>
-  static constexpr auto has_single_template_v =
-      has_single_template<Ref, T...>::value;
+  /// Whether the type is in the given template type
+  template <class Reference, class Object>
+  static constexpr auto templated_object_has_repeated_template_arguments_v =
+      templated_object_has_repeated_template_arguments<Reference,
+                                                       Object>::value;
 
   /// Get the index of the type in the list of types
   template <class Match, class... T> struct type_index;
@@ -84,26 +89,19 @@ namespace mpt {
   template <class Match, class... T>
   static constexpr auto type_index_v = type_index<Match, T...>::value;
 
-  /// Get the index of the type in the list of types
-  template <template <class> class Match, template <class> class... T>
-  struct template_index;
+  /// Whether the type is in the given template type
+  template <class Reference, class Object> struct templated_object_type_index;
 
-  /// Get the index of the type in the list of types
-  template <template <class> class Match, template <class> class T0,
-            template <class> class... T>
-  struct template_index<Match, T0, T...> {
-    static constexpr auto value = template_index<Match, T...>::value + 1;
+  /// Whether the type is in the given template type
+  template <class Reference, template <class...> class Object, class... T>
+  struct templated_object_type_index<Reference, Object<T...>> {
+    static constexpr auto value = type_index_v<Reference, T...>;
   };
 
-  /// Get the index of the type in the list of types
-  template <template <class> class Match, template <class> class... T>
-  struct template_index<Match, Match, T...> {
-    static constexpr auto value = 0u;
-  };
-
-  /// Get the type at the given position
-  template <template <class> class Match, template <class> class... T>
-  static constexpr auto template_index_v = template_index<Match, T...>::value;
+  /// Whether the type is in the given template type
+  template <class Reference, class Object>
+  static constexpr auto templated_object_type_index_v =
+      templated_object_type_index<Reference, Object>::value;
 
   /// Get the type at the given position
   template <std::size_t I, class T0, class... T> struct type_at {
@@ -119,19 +117,19 @@ namespace mpt {
   template <std::size_t I, class... T>
   using type_at_t = typename type_at<I, T...>::type;
 
-  /// Get the template argument at the given position
-  template <std::size_t I, template <class> class T0,
-            template <class> class... T>
-  struct template_at {
-    template <class V>
-    using tpl = typename template_at<I - 1, T...>::template tpl<V>;
+  /// Whether the type is in the given template type
+  template <std::size_t I, class Object> struct templated_object_type_at;
+
+  /// Whether the type is in the given template type
+  template <std::size_t I, template <class...> class Object, class... T>
+  struct templated_object_type_at<I, Object<T...>> {
+    using type = type_at_t<I, T...>;
   };
 
-  /// Get the template argument at the given position
-  template <template <class> class T0, template <class> class... T>
-  struct template_at<0, T0, T...> {
-    template <class V> using tpl = T0<V>;
-  };
+  /// Whether the type is in the given template type
+  template <std::size_t I, class Object>
+  using templated_object_type_at_t =
+      typename templated_object_type_at<I, Object>::type;
 
   namespace {
 

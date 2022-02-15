@@ -104,5 +104,5 @@ int main() {
   MPT_TEST_UTILS_ADD_TEST(keywords, test_with_required);
   MPT_TEST_UTILS_ADD_TEST(keywords, test_override);
 
-  return mpt::test::is_success(keywords.run());
+  return mpt::test::to_return_code(keywords.run());
 }
