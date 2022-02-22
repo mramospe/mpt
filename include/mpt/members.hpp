@@ -31,17 +31,20 @@ namespace mpt::members {
         Object const &, Input...)>>(f);
   }
 
-  /// The validator is only defined is the pointer to the member function has
-  /// the correct signature
+  /// Validator to check that a member function has the given signature
   template <class Signature, mpt::signature::function_pointer_type_t<Signature>>
+  struct member_function_validator {};
+
+  /// Validator for class members
+  template <class Object, class Type, Type Object::*>
   struct member_validator {};
 
-  /// Check if an object has a specific member function defined
+  /// Check if an object has a specific member defined
   template <class Object, class Checker> struct has_member {
     template <class T>
-    static constexpr std::true_type check(typename Checker::validator<T> *);
-    template <class T> static constexpr std::false_type check(...);
-    static constexpr auto value = decltype(check<Object>(0))::value;
+    static constexpr std::true_type __check(typename Checker::validator<T> *);
+    template <class T> static constexpr std::false_type __check(...);
+    static constexpr auto value = decltype(__check<Object>(0))::value;
   };
 
   /// Check if an object has a specific member function defined
