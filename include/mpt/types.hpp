@@ -5,7 +5,7 @@
 namespace mpt {
 
   /// Wrapper around a set of types
-  template <class... T> struct types_wrapper {};
+  template <class... T> struct types {};
 
   /// Whether the type is in the given list
   template <class Reference, class... T> struct has_type : std::false_type {};
@@ -140,16 +140,16 @@ namespace mpt {
 
     /// Expand a set of types with a new type, if it does not contain it yet
     template <class... T, class NewType>
-    struct expand_types_set<types_wrapper<T...>, NewType,
+    struct expand_types_set<types<T...>, NewType,
                             std::enable_if_t<!mpt::has_type_v<NewType, T...>>> {
-      using type = types_wrapper<T..., NewType>;
+      using type = types<T..., NewType>;
     };
 
     /// Expand a set of types with a new type, if it does not contain it yet
     template <class... T, class NewType>
-    struct expand_types_set<types_wrapper<T...>, NewType,
+    struct expand_types_set<types<T...>, NewType,
                             std::enable_if_t<mpt::has_type_v<NewType, T...>>> {
-      using type = types_wrapper<T...>;
+      using type = types<T...>;
     };
 
     /// Expand a set of types with a new type, if it does not contain it yet
@@ -162,21 +162,21 @@ namespace mpt {
   template <class TypesSet, class... T> struct types_set;
 
   /// Define a set of types with several types, avoiding repetitions
-  template <class... T> struct types_set<types_wrapper<T...>> {
-    using type = types_wrapper<T...>;
+  template <class... T> struct types_set<types<T...>> {
+    using type = types<T...>;
   };
 
   /// Define a set of types with several types, avoiding repetitions
   template <class... Types, class NewType, class... T>
-  struct types_set<types_wrapper<Types...>, NewType, T...> {
+  struct types_set<types<Types...>, NewType, T...> {
     using type =
-        typename types_set<expand_types_set_t<types_wrapper<Types...>, NewType>,
+        typename types_set<expand_types_set_t<types<Types...>, NewType>,
                            T...>::type;
   };
 
   /// Define a set of types with several types, avoiding repetitions
   template <class... NewTypes>
-  using types_set_t = typename types_set<types_wrapper<>, NewTypes...>::type;
+  using types_set_t = typename types_set<types<>, NewTypes...>::type;
 
   /// Make a set of types
   template <class... T> constexpr types_set_t<T...> make_type_set() {
@@ -185,29 +185,26 @@ namespace mpt {
 
   namespace {
 
-    /// Specialize a template using mpt::types_wrapper
+    /// Specialize a template using mpt::types
     template <template <class...> class Template, class... T>
-    struct specialize_template_from_types_wrapper;
+    struct specialize_template_from_types;
 
-    /// Specialize a template using mpt::types_wrapper
+    /// Specialize a template using mpt::types
     template <template <class...> class Template, class... T>
-    struct specialize_template_from_types_wrapper<Template,
-                                                  types_wrapper<T...>> {
+    struct specialize_template_from_types<Template, types<T...>> {
       using type = Template<T...>;
     };
 
-    /// Specialize a template using mpt::types_wrapper
+    /// Specialize a template using mpt::types
     template <template <class...> class Template, class TypesWrapper>
-    using specialize_template_from_types_wrapper_t =
-        typename specialize_template_from_types_wrapper<Template,
-                                                        TypesWrapper>::type;
+    using specialize_template_from_types_t =
+        typename specialize_template_from_types<Template, TypesWrapper>::type;
   } // namespace
 
   /// Specialize the given template
   template <template <class...> class Template, class... T>
   struct specialize_template {
-    using type =
-        specialize_template_from_types_wrapper_t<Template, types_wrapper<T...>>;
+    using type = specialize_template_from_types_t<Template, types<T...>>;
   };
 
   /// Specialize the given template
@@ -218,8 +215,7 @@ namespace mpt {
   /// Specialize the given template avoiding repetitions
   template <template <class...> class Template, class... T>
   struct specialize_template_avoid_repetitions {
-    using type =
-        specialize_template_from_types_wrapper_t<Template, types_set_t<T...>>;
+    using type = specialize_template_from_types_t<Template, types_set_t<T...>>;
   };
 
   /// Specialize the given template avoiding repetitions

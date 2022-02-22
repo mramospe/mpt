@@ -35,53 +35,50 @@ struct object_without_value {};
 struct size_checker {
 
   template <class T>
-  using signature =
-      mpt::signature::member_function_signature<std::size_t(T const &)>;
+  using signature = mpt::member_function_signature<std::size_t(T const &)>;
 
   template <class T>
-  using validator =
-      mpt::members::member_function_validator<signature<T>, &T::size>;
+  using validator = mpt::member_function_validator<signature<T>, &T::size>;
 };
 
 // Example of an object that checks if the member "value" is defined
 struct value_checker {
   template <class T>
-  using validator = mpt::members::member_validator<T, float, &T::value>;
+  using validator = mpt::member_validator<T, float, &T::value>;
 };
 
 int main() {
 
   // check function wrappers
-  mpt::members::make_function_wrapper(&function);
-  mpt::members::make_function_wrapper(&object::nonconst_call);
-  mpt::members::make_function_wrapper(&object::const_call);
+  mpt::make_function_wrapper(&function);
+  mpt::make_function_wrapper(&object::nonconst_call);
+  mpt::make_function_wrapper(&object::const_call);
 
   // check members
-  static_assert(mpt::members::has_member_v<object_with_value, value_checker>,
+  static_assert(mpt::has_member_v<object_with_value, value_checker>,
                 "Object has a member called \"value\" but \"has_member_v\" "
                 "evaluates to false");
   static_assert(
-      !mpt::members::has_member_v<object_with_value_const, value_checker>,
+      !mpt::has_member_v<object_with_value_const, value_checker>,
       "Object has a constant member called \"value\" but \"has_member_v\" "
       "evaluates to true");
+  static_assert(!mpt::has_member_v<object_with_value_wrong_type, value_checker>,
+                "Object has a member called \"value\" with the wrong type but "
+                "\"has_member_v\" evaluates to true");
   static_assert(
-      !mpt::members::has_member_v<object_with_value_wrong_type, value_checker>,
-      "Object has a member called \"value\" with the wrong type but "
-      "\"has_member_v\" evaluates to true");
-  static_assert(
-      !mpt::members::has_member_v<object_without_value, value_checker>,
+      !mpt::has_member_v<object_without_value, value_checker>,
       "Object does not have a member called \"value\" but \"has_member_v\" "
       "evaluates to true");
 
   // check member functions
-  static_assert(mpt::members::has_member_v<object_with_size, size_checker>,
+  static_assert(mpt::has_member_v<object_with_size, size_checker>,
                 "Object has a member function called \"size\" but "
                 "\"has_member_v\" evaluates to false");
   static_assert(
-      !mpt::members::has_member_v<object_with_nonconst_size, size_checker>,
+      !mpt::has_member_v<object_with_nonconst_size, size_checker>,
       "Object has a member function called \"size\" but is non-const and "
       "\"has_member_v\" evaluates to true");
-  static_assert(!mpt::members::has_member_v<object_without_size, size_checker>,
+  static_assert(!mpt::has_member_v<object_without_size, size_checker>,
                 "Object does not have a member function called \"size\" but "
                 "\"has_member_v\" evaluates to true");
 

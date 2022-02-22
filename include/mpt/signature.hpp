@@ -4,7 +4,7 @@
 #include <tuple>
 
 /// Determine signature of functions and functors
-namespace mpt::signature {
+namespace mpt {
 
   /// Represent the signature of a function
   template <class Function> struct function_signature;
@@ -198,4 +198,4 @@ namespace mpt::signature {
   /// Determine the std::function wrapper associated to the given callable
   template <class Callable>
   using stl_function_wrapper_t = typename stl_function_wrapper<Callable>::type;
-} // namespace mpt::signature
+} // namespace mpt

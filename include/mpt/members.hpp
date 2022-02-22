@@ -1,38 +1,36 @@
 #pragma once
 #include "mpt/signature.hpp"
 
-namespace mpt::members {
+namespace mpt {
 
   /// Wrapper around either a function or a member function
   template <class Signature> struct function_wrapper {
     using signature_type = Signature;
-    mpt::signature::function_pointer_type_t<Signature> function_pointer;
+    mpt::function_pointer_type_t<Signature> function_pointer;
   };
 
   /// Make a wrapper around a function
   template <class Output, class... Input>
   constexpr auto make_function_wrapper(Output (*f)(Input...)) {
-    return function_wrapper<
-        mpt::signature::function_signature<Output(Input...)>>(f);
+    return function_wrapper<mpt::function_signature<Output(Input...)>>(f);
   }
 
   /// Make a wrapper around a non-const member function
   template <class Object, class Output, class... Input>
   constexpr auto make_function_wrapper(Output (Object::*f)(Input...)) {
     return function_wrapper<
-        mpt::signature::member_function_signature<Output(Object &, Input...)>>(
-        f);
+        mpt::member_function_signature<Output(Object &, Input...)>>(f);
   }
 
   /// Make a wrapper around a const member function
   template <class Object, class Output, class... Input>
   constexpr auto make_function_wrapper(Output (Object::*f)(Input...) const) {
-    return function_wrapper<mpt::signature::member_function_signature<Output(
-        Object const &, Input...)>>(f);
+    return function_wrapper<
+        mpt::member_function_signature<Output(Object const &, Input...)>>(f);
   }
 
   /// Validator to check that a member function has the given signature
-  template <class Signature, mpt::signature::function_pointer_type_t<Signature>>
+  template <class Signature, mpt::function_pointer_type_t<Signature>>
   struct member_function_validator {};
 
   /// Validator for class members
@@ -50,4 +48,4 @@ namespace mpt::members {
   /// Check if an object has a specific member function defined
   template <class Object, class Checker>
   static constexpr auto has_member_v = has_member<Object, Checker>::value;
-} // namespace mpt::members
+} // namespace mpt
