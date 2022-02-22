@@ -10,11 +10,7 @@ before_script:
 build:
   stage: build
   script:
-  - mkdir build
-  - cd build
-  - cmake ../ -DINSTALL_TESTS=ON
-  - make install
-  - cd ..
+  - mkdir build; cd build; cmake ../ -DINSTALL_TESTS=ON; make install
   artifacts:
      paths:
      - build/
