@@ -1,0 +1,58 @@
+image: gitlab-registry.cern.ch/lhcb-docker/analysis-ci/cc7:latest
+
+stages:
+- build
+- test
+
+before_script:
+- source /cvmfs/sft.cern.ch/lcg/views/setupViews.sh LCG_99 x86_64-centos7-gcc10-opt
+
+build:
+  stage: build
+  script:
+  - mkdir build
+  - cd build
+  - cmake ../ -DINSTALL_TESTS=ON
+  - make install
+  - cd ..
+  artifacts:
+     paths:
+     - build/
+
+test:
+  stage: test
+  script:
+  - ./build/test/test_all
+  - ./build/test/test_keywords
+  - ./build/test/test_members
+  - ./build/test/test_signature
+  - ./build/test/test_smart_enum
+  - ./build/test/test_types
+  - ./build/test/test_values
+  dependencies:
+  - build-cpp
+
+cmake:
+  stage: test
+  script:
+  - mkdir test/cmake/build
+  - cd test/cmake/build
+  - CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:../../../build cmake ../
+  - make
+  - ./main
+  dependencies:
+  - build-cpp
+
+python:
+  stage: test
+  script:
+  - source vpython3/bin/activate
+  - pip install --force-reinstall -r test/python/requirements.txt
+  - pytest
+  dependencies:
+  - build-python
+
+format:
+  stage: test
+  script:
+  - clang-format $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror

@@ -1,0 +1,48 @@
+dist: xenial
+language: cpp
+
+os: linux
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-10
+    - cmake
+env:
+- CC=gcc-10 CXX=g++-10
+
+before_install:
+- ${CC} --version
+- ${CXX} --version
+- cmake --version
+
+install:
+- mkdir build
+- cd build
+- cmake ../ -DINSTALL_TESTS=ON -DCMAKE_CXX_COMPILER=${CXX}
+- make install
+- cd ..
+
+jobs:
+  include:
+  - name: cpp
+    script:
+    - ./build/test/test_all
+    - ./build/test/test_keywords
+    - ./build/test/test_members
+    - ./build/test/test_signature
+    - ./build/test/test_smart_enum
+    - ./build/test/test_types
+    - ./build/test/test_values
+    after_success: " "
+  - name: cmake
+    script:
+    - mkdir test/cmake/build
+    - cd test/cmake/build
+    - cmake -DCMAKE_INSTALL_PREFIX=../../../build/cmake
+    after_success: " "
+  - name: format
+    install: " "
+    script:
+    - clang-format $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
