@@ -8,9 +8,9 @@ addons:
     packages:
     - g++-10
     - cmake
-    - clang-format
+    - clang-format-10
 env:
-- CC=gcc-10 CXX=g++-10
+- CC=gcc-10 CXX=g++-10 CLANG_FORMAT=clang-format-10
 
 branches:
   only:
@@ -21,7 +21,7 @@ before_install:
 - ${CC} --version
 - ${CXX} --version
 - cmake --version
-- clang-format --version
+- ${CLANG_FORMAT} --version
 
 install:
 - mkdir build
@@ -51,4 +51,4 @@ jobs:
   - name: format
     install: " "
     script:
-    - clang-format $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
+    - ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
