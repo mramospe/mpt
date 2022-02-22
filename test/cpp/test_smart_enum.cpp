@@ -100,11 +100,11 @@ mpt::test::errors test_switch() {
 
 int main() {
 
-  mpt::test::collector smart_enums("smart enumerations");
-  MPT_TEST_UTILS_ADD_TEST(smart_enums, test_properties);
-  MPT_TEST_UTILS_ADD_TEST(smart_enums, test_adl);
-  MPT_TEST_UTILS_ADD_TEST(smart_enums, test_unknown);
-  MPT_TEST_UTILS_ADD_TEST(smart_enums, test_switch);
+  mpt::test::collector smart_enum("smart enumerations");
+  MPT_TEST_UTILS_ADD_TEST(smart_enum, test_properties);
+  MPT_TEST_UTILS_ADD_TEST(smart_enum, test_adl);
+  MPT_TEST_UTILS_ADD_TEST(smart_enum, test_unknown);
+  MPT_TEST_UTILS_ADD_TEST(smart_enum, test_switch);
 
-  return mpt::test::to_return_code(smart_enums.run());
+  return mpt::test::to_return_code(smart_enum.run());
 }
