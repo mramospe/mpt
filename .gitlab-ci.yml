@@ -33,7 +33,7 @@ cmake:
   script:
   - mkdir test/cmake/build
   - cd test/cmake/build
-  - CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:../../../build cmake ../
+  - cmake ../ -DCMAKE_INSTALL_PREFIX=../../../build/cmake
   - make
   - ./main
   dependencies:

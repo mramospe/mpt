@@ -24,6 +24,7 @@ before_install:
 - ${CC} --version
 - ${CXX} --version
 - cmake --version
+- clang-format --version
 
 install:
 - mkdir build
@@ -47,7 +48,9 @@ jobs:
     script:
     - mkdir test/cmake/build
     - cd test/cmake/build
-    - cmake -DCMAKE_INSTALL_PREFIX=../../../build/cmake
+    - cmake ../ -DCMAKE_INSTALL_PREFIX=../../../build/cmake
+    - make
+    - ./main
     after_success: " "
   - name: format
     install: " "
