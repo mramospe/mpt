@@ -26,14 +26,14 @@ namespace mpt {
   };
 
   /// Determine the input value at the given position
-  template <std::size_t I, class Signature> struct input_at {
+  template <std::size_t I, class Signature> struct signature_input_at {
     using type =
         mpt::templated_object_type_at_t<I, typename Signature::input_t>;
   };
 
   /// Type of the input value at the given position
   template <std::size_t I, class Signature>
-  using input_at_t = typename input_at<I, Signature>::type;
+  using signature_input_at_t = typename signature_input_at<I, Signature>::type;
 
   /*\brief Determine the signature of a callable
 

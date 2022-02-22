@@ -35,11 +35,12 @@ int main() {
   static_assert(std::is_same_v<typename function_signature::output_t,
                                function_example_output>,
                 "Output type has been wrongly determined");
-  static_assert(std::is_same_v<mpt::input_at_t<0, function_signature>,
-                               function_example_input_0> &&
-                    std::is_same_v<mpt::input_at_t<1, function_signature>,
-                                   function_example_input_1>,
-                "Input types have been wrongly determined");
+  static_assert(
+      std::is_same_v<mpt::signature_input_at_t<0, function_signature>,
+                     function_example_input_0> &&
+          std::is_same_v<mpt::signature_input_at_t<1, function_signature>,
+                         function_example_input_1>,
+      "Input types have been wrongly determined");
 
   // check member function signatures
   static_assert(
@@ -55,11 +56,12 @@ int main() {
   static_assert(std::is_same_v<typename functor_signature::output_t,
                                functor_example_output>,
                 "Unable to determine function signatures correctly");
-  static_assert(std::is_same_v<mpt::input_at_t<0, functor_signature>,
-                               functor_example_input_0> &&
-                    std::is_same_v<mpt::input_at_t<1, functor_signature>,
-                                   functor_example_input_1>,
-                "Input types have been wrongly determined");
+  static_assert(
+      std::is_same_v<mpt::signature_input_at_t<0, functor_signature>,
+                     functor_example_input_0> &&
+          std::is_same_v<mpt::signature_input_at_t<1, functor_signature>,
+                         functor_example_input_1>,
+      "Input types have been wrongly determined");
 
   return 0;
 }
