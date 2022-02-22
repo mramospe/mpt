@@ -46,8 +46,8 @@ int main() {
   static_assert(
       mpt::is_const_member_function_v<decltype(&functor_example::const_call)>,
       "Failed to check whether a callable is a const member function or not");
-  static_assert(mpt::is_nonconst_member_function_v<
-                    decltype(&functor_example::nonconst_call)>,
+  static_assert(mpt::is_nonconst_member_function_v<decltype(
+                    &functor_example::nonconst_call)>,
                 "Failed to check whether a callable is a non-const member "
                 "function or not");
 

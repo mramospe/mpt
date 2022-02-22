@@ -184,7 +184,7 @@ namespace mpt {
     /// of an enumeration type
     template <std::size_t N, class EnumType, template <EnumType> class Functor,
               class... Args>
-    constexpr auto apply_with_switch_impl(EnumType e, Args &&...args) {
+    constexpr auto apply_with_switch_impl(EnumType e, Args &&... args) {
 
       using enum_properties = smart_enum_properties_t<EnumType>;
 
@@ -204,7 +204,7 @@ namespace mpt {
 
   /// Apply a functor depending on the value of an enumeration type
   template <class EnumType, template <EnumType> class Functor, class... Args>
-  constexpr auto apply_with_switch(EnumType e, Args &&...args) {
+  constexpr auto apply_with_switch(EnumType e, Args &&... args) {
     using enum_properties = smart_enum_properties_t<EnumType>;
     return detail::apply_with_switch_impl<enum_properties::size, EnumType,
                                           Functor>(e,
