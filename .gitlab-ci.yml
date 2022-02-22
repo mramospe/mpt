@@ -30,7 +30,7 @@ test:
   - ./build/test/test_types
   - ./build/test/test_values
   dependencies:
-  - build-cpp
+  - build
 
 cmake:
   stage: test
@@ -41,16 +41,7 @@ cmake:
   - make
   - ./main
   dependencies:
-  - build-cpp
-
-python:
-  stage: test
-  script:
-  - source vpython3/bin/activate
-  - pip install --force-reinstall -r test/python/requirements.txt
-  - pytest
-  dependencies:
-  - build-python
+  - build
 
 format:
   stage: test
