@@ -1,5 +1,4 @@
 dist: focal
-sudo: require
 language: cpp
 compiler: gcc
 
