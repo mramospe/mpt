@@ -11,6 +11,7 @@ addons:
     packages:
     - g++-10
     - cmake
+    - clang-format-10
 env:
 - CC=gcc-10 CXX=g++-10
 
@@ -29,19 +30,18 @@ install:
 - cd build
 - cmake ../ -DINSTALL_TESTS=ON -DCMAKE_CXX_COMPILER=${CXX}
 - make install
-- cd ..
 
 jobs:
   include:
   - name: cpp
     script:
-    - ./build/test/test_all
-    - ./build/test/test_keywords
-    - ./build/test/test_members
-    - ./build/test/test_signature
-    - ./build/test/test_smart_enum
-    - ./build/test/test_types
-    - ./build/test/test_values
+    - ./build/test/cpp/test_all
+    - ./build/test/cpp/test_keywords
+    - ./build/test/cpp/test_members
+    - ./build/test/cpp/test_signature
+    - ./build/test/cpp/test_smart_enum
+    - ./build/test/cpp/test_types
+    - ./build/test/cpp/test_values
     after_success: " "
   - name: cmake
     script:
