@@ -39,8 +39,6 @@ int main() {
                          function_example_input_1>,
       "Input types have been wrongly determined");
 
-  using functor_signature =
-      mpt::signature::callable_signature_t<functor_example>;
   static_assert(
       mpt::signature::is_const_member_function_v<
           decltype(&functor_example::const_call)>,
@@ -49,6 +47,9 @@ int main() {
                     decltype(&functor_example::nonconst_call)>,
                 "Failed to check whether a callable is a non-const member "
                 "function or not");
+
+  using functor_signature =
+      mpt::signature::callable_signature_t<functor_example>;
   static_assert(std::is_same_v<typename functor_signature::output_t,
                                functor_example_output>,
                 "Unable to determine function signatures correctly");

@@ -13,21 +13,22 @@ namespace mpt::members {
   template <class Output, class... Input>
   constexpr auto make_function_wrapper(Output (*f)(Input...)) {
     return function_wrapper<
-        mpt::signature::function_signature<Output, Input...>>(f);
+        mpt::signature::function_signature<Output(Input...)>>(f);
   }
 
   /// Make a wrapper around a non-const member function
   template <class Object, class Output, class... Input>
   constexpr auto make_function_wrapper(Output (Object::*f)(Input...)) {
     return function_wrapper<
-        mpt::signature::member_function_signature<Object, Output, Input...>>(f);
+        mpt::signature::member_function_signature<Output(Object &, Input...)>>(
+        f);
   }
 
   /// Make a wrapper around a const member function
   template <class Object, class Output, class... Input>
   constexpr auto make_function_wrapper(Output (Object::*f)(Input...) const) {
-    return function_wrapper<mpt::signature::member_function_signature<
-        Object const, Output, Input...>>(f);
+    return function_wrapper<mpt::signature::member_function_signature<Output(
+        Object const &, Input...)>>(f);
   }
 
   /// The validator is only defined is the pointer to the member function has

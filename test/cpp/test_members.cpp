@@ -22,7 +22,7 @@ struct size_checker {
 
   template <class T>
   using signature =
-      mpt::signature::member_function_signature<T const, std::size_t>;
+      mpt::signature::member_function_signature<std::size_t(T const &)>;
 
   template <class T>
   using validator = mpt::members::member_validator<signature<T>, &T::size>;

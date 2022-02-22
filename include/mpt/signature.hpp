@@ -1,22 +1,28 @@
 #pragma once
 #include "mpt/types.hpp"
 #include <functional>
+#include <tuple>
 
 /// Determine signature of functions and functors
 namespace mpt::signature {
 
   /// Represent the signature of a function
-  template <class Output, class... Input> struct function_signature {
+  template <class Function> struct function_signature;
+
+  template <class Output, class... Input>
+  struct function_signature<Output(Input...)> {
     using output_t = Output;
-    using input_t = mpt::types_wrapper<Input...>;
+    using input_t = std::tuple<Input...>;
   };
 
   /// Represent the signature of a member function
+  template <class MemberFunction> struct member_function_signature;
+
   template <class Object, class Output, class... Input>
-  struct member_function_signature {
+  struct member_function_signature<Output(Object &, Input...)> {
     using output_t = Output;
     using object_t = Object;
-    using input_t = mpt::types_wrapper<Input...>;
+    using input_t = std::tuple<Input...>;
   };
 
   /// Determine the input value at the given position
@@ -44,19 +50,19 @@ namespace mpt::signature {
   /// Specialization for functions
   template <class Output, class... Input>
   struct callable_signature<Output (*)(Input...)> {
-    using type = function_signature<Output, Input...>;
+    using type = function_signature<Output(Input...)>;
   };
 
   /// Specialization for const member functions
   template <class Output, class Object, class... Input>
   struct callable_signature<Output (Object::*)(Input...) const> {
-    using type = member_function_signature<Object const, Output, Input...>;
+    using type = member_function_signature<Output(Object const &, Input...)>;
   };
 
   /// Specialization for non-const member functions
   template <class Output, class Object, class... Input>
   struct callable_signature<Output (Object::*)(Input...)> {
-    using type = member_function_signature<Object, Output, Input...>;
+    using type = member_function_signature<Output(Object &, Input...)>;
   };
 
   /// Determine the signature of a callable
@@ -68,7 +74,7 @@ namespace mpt::signature {
 
   /// Type wrapper that checks if the given signature is that of a function
   template <class Output, class... Input>
-  struct is_function_signature<function_signature<Output, Input...>>
+  struct is_function_signature<function_signature<Output(Input...)>>
       : std::true_type {};
 
   /// Whether the given signature is that of a function
@@ -85,7 +91,7 @@ namespace mpt::signature {
   /// function
   template <class Object, class Output, class... Input>
   struct is_const_member_function_signature<
-      member_function_signature<Object, Output, Input...>>
+      member_function_signature<Output(Object &, Input...)>>
       : std::conditional_t<std::is_const_v<Object>, std::true_type,
                            std::false_type> {};
 
@@ -103,7 +109,7 @@ namespace mpt::signature {
   /// member function
   template <class Object, class Output, class... Input>
   struct is_nonconst_member_function_signature<
-      member_function_signature<Object, Output, Input...>>
+      member_function_signature<Output(Object &, Input...)>>
       : std::conditional_t<!std::is_const_v<Object>, std::true_type,
                            std::false_type> {};
 
@@ -135,14 +141,14 @@ namespace mpt::signature {
 
   /// Determine the function pointer type for a given signature
   template <class Output, class... Input>
-  struct function_pointer_type<function_signature<Output, Input...>> {
+  struct function_pointer_type<function_signature<Output(Input...)>> {
     using type = Output (*)(Input...);
   };
 
   /// Determine the function pointer type for a given signature
   template <class Object, class Output, class... Input>
   struct function_pointer_type<
-      member_function_signature<Object, Output, Input...>> {
+      member_function_signature<Output(Object &, Input...)>> {
     using type = std::conditional_t<std::is_const_v<Object>,
                                     Output (Object::*)(Input...) const,
                                     Output (Object::*)(Input...)>;
@@ -172,13 +178,13 @@ namespace mpt::signature {
 
     template <class Output, class... Input>
     struct stl_function_wrapper_from_signature<
-        function_signature<Output, Input...>> {
+        function_signature<Output(Input...)>> {
       using type = std::function<Output(Input...)>;
     };
 
     template <class Object, class Output, class... Input>
     struct stl_function_wrapper_from_signature<
-        member_function_signature<Object, Output, Input...>> {
+        member_function_signature<Output(Object &, Input...)>> {
       using type = std::function<Output(Object const &, Input...)>;
     };
   } // namespace detail
