@@ -44,7 +44,6 @@ jobs:
     - ./build/test/cpp/test_smart_enum
     - ./build/test/cpp/test_types
     - ./build/test/cpp/test_values
-    after_success: " "
   - name: cmake
     script:
     - mkdir test/cmake/build
@@ -52,7 +51,6 @@ jobs:
     - cmake ../ -DCMAKE_INSTALL_PREFIX=../../../build/cmake
     - make
     - ./main
-    after_success: " "
   - name: format
     install: " "
     script:
