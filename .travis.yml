@@ -12,6 +12,11 @@ addons:
 env:
 - CC=gcc-10 CXX=g++-10
 
+branches:
+  only:
+  - master
+  - devel
+
 before_install:
 - ${CC} --version
 - ${CXX} --version
