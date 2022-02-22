@@ -14,9 +14,10 @@ namespace mpt {
   template <class Reference, class... T>
   struct has_type<Reference, Reference, T...> : std::true_type {};
 
-  /// Whether the type is in the given list
+#ifndef MPT_DOXYGEN_WARD
   template <class Reference, class T0, class... T>
   struct has_type<Reference, T0, T...> : has_type<Reference, T...> {};
+#endif
 
   /// Whether the type is in the given list
   template <class Reference, class... T>
@@ -25,11 +26,12 @@ namespace mpt {
   /// Whether the type is in the given template type
   template <class Reference, class Object> struct templated_object_has_type;
 
-  /// Whether the type is in the given template type
+#ifndef MPT_DOXYGEN_WARD
   template <class Reference, template <class...> class Object, class... T>
   struct templated_object_has_type<Reference, Object<T...>> {
     static constexpr auto value = has_type_v<Reference, T...>;
   };
+#endif
 
   /// Whether the type is in the given template type
   template <class Reference, class Object>
@@ -40,11 +42,12 @@ namespace mpt {
   template <class... T>
   struct has_repeated_template_arguments : std::false_type {};
 
-  /// Check if a list of template arguments has repeated types
+#ifndef MPT_DOXYGEN_WARD
   template <class T0, class... T>
   struct has_repeated_template_arguments<T0, T...>
       : std::conditional_t<has_type_v<T0, T...>, std::true_type,
                            has_repeated_template_arguments<T...>> {};
+#endif
 
   /// Check if a list of template arguments has repeated types
   template <class... T>
@@ -55,13 +58,14 @@ namespace mpt {
   template <class Reference, class Object>
   struct templated_object_has_repeated_template_arguments;
 
-  /// Whether the type is in the given template type
+#ifndef MPT_DOXYGEN_WARD
   template <class Reference, template <class...> class Object, class... T>
   struct templated_object_has_repeated_template_arguments<Reference,
                                                           Object<T...>> {
     static constexpr auto value =
         has_repeated_template_arguments_v<Reference, T...>;
   };
+#endif
 
   /// Whether the type is in the given template type
   template <class Reference, class Object>
@@ -72,18 +76,18 @@ namespace mpt {
   /// Get the index of the type in the list of types
   template <class Match, class... T> struct type_index;
 
-  /// Get the index of the type in the list of types
+#ifndef MPT_DOXYGEN_WARD
   template <class Match, class T0, class... T>
   struct type_index<Match, T0, T...> {
     static constexpr auto value = type_index<Match, T...>::value + 1;
   };
 
-  /// Get the index of the type in the list of types
   template <class Match, class... T> struct type_index<Match, Match, T...> {
     static_assert(!has_type_v<Match, T...>,
                   "Multiple matches found for the given type");
     static constexpr auto value = 0u;
   };
+#endif
 
   /// Get the type at the given position
   template <class Match, class... T>
@@ -92,11 +96,12 @@ namespace mpt {
   /// Whether the type is in the given template type
   template <class Reference, class Object> struct templated_object_type_index;
 
-  /// Whether the type is in the given template type
+#ifndef MPT_DOXYGEN_WARD
   template <class Reference, template <class...> class Object, class... T>
   struct templated_object_type_index<Reference, Object<T...>> {
     static constexpr auto value = type_index_v<Reference, T...>;
   };
+#endif
 
   /// Whether the type is in the given template type
   template <class Reference, class Object>
@@ -108,10 +113,11 @@ namespace mpt {
     using type = typename type_at<I - 1, T...>::type;
   };
 
-  /// Get the type at the given position
+#ifndef MPT_DOXYGEN_WARD
   template <class T0, class... T> struct type_at<0, T0, T...> {
     using type = T0;
   };
+#endif
 
   /// Get the template argument at the given position
   template <std::size_t I, class... T>
@@ -120,11 +126,12 @@ namespace mpt {
   /// Whether the type is in the given template type
   template <std::size_t I, class Object> struct templated_object_type_at;
 
-  /// Whether the type is in the given template type
+#ifndef MPT_DOXYGEN_WARD
   template <std::size_t I, template <class...> class Object, class... T>
   struct templated_object_type_at<I, Object<T...>> {
     using type = type_at_t<I, T...>;
   };
+#endif
 
   /// Whether the type is in the given template type
   template <std::size_t I, class Object>
@@ -161,18 +168,18 @@ namespace mpt {
   /// Define a set of types with several types, avoiding repetitions
   template <class TypesSet, class... T> struct types_set;
 
-  /// Define a set of types with several types, avoiding repetitions
+#ifndef MPT_DOXYGEN_WARD
   template <class... T> struct types_set<types<T...>> {
     using type = types<T...>;
   };
 
-  /// Define a set of types with several types, avoiding repetitions
   template <class... Types, class NewType, class... T>
   struct types_set<types<Types...>, NewType, T...> {
     using type =
         typename types_set<expand_types_set_t<types<Types...>, NewType>,
                            T...>::type;
   };
+#endif
 
   /// Define a set of types with several types, avoiding repetitions
   template <class... NewTypes>

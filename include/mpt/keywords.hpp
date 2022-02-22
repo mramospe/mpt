@@ -8,34 +8,38 @@ namespace mpt {
   /// Represent the description of a keyword argument
   template <class T> using keyword_argument = mpt::value_wrapper<T>;
 
-  /// Set of required keyword arguments
+#ifndef MPT_DOXYGEN_WARD
   template <class...> struct required_keyword_arguments;
+#endif
 
   /// Set of required keyword arguments
   template <class... T>
   struct required_keyword_arguments<keyword_argument<T>...> {};
 
-  /// Set of keyword arguments that have default values
+#ifndef MPT_DOXYGEN_WARD
   template <class...> struct keyword_arguments_with_default;
+#endif
 
   /// Set of keyword arguments that have default values
   template <class... T>
   struct keyword_arguments_with_default<keyword_argument<T>...> {};
 
+#ifndef MPT_DOXYGEN_WARD
+  template <class Required, class Defaulted> class keyword_arguments_parser;
+#endif
+
   /*!\brief Class that accepts keyword arguments in the constructor
 
-    Keyword arguments are wrappers around floating point and integral values
-    that are used in order to avoid having several inputs values with no visible
-    correspondence to parameters in the class. The use of keywords also allows
-    to provide the input arguments in any order.
+  Keyword arguments are wrappers around floating point and integral values
+  that are used in order to avoid having several inputs values with no visible
+  correspondence to parameters in the class. The use of keywords also allows
+  to provide the input arguments in any order.
 
-    The keyword arguments are stored within the class, which inherits from
-    \ref std::tuple. You can use the \ref keyword_arguments_parser::get and
-    \ref keyword_arguments_parser::set member functions to manipulate the
-    values.
-   */
-  template <class Required, class Defaulted> class keyword_arguments_parser;
-
+  The keyword arguments are stored within the class, which inherits from
+  \ref std::tuple. You can use the \ref keyword_arguments_parser::get and
+  \ref keyword_arguments_parser::set member functions to manipulate the
+  values.
+ */
   template <class... R, class... D>
   class keyword_arguments_parser<required_keyword_arguments<R...>,
                                  keyword_arguments_with_default<D...>>

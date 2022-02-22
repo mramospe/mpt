@@ -38,14 +38,14 @@ namespace mpt {
   struct member_validator {};
 
   /// Check if an object has a specific member defined
-  template <class Object, class Checker> struct has_member {
+  template <class Object, class Validator> struct has_member {
     template <class T>
-    static constexpr std::true_type __check(typename Checker::validator<T> *);
+    static constexpr std::true_type __check(typename Validator::validator<T> *);
     template <class T> static constexpr std::false_type __check(...);
     static constexpr auto value = decltype(__check<Object>(0))::value;
   };
 
   /// Check if an object has a specific member function defined
-  template <class Object, class Checker>
-  static constexpr auto has_member_v = has_member<Object, Checker>::value;
+  template <class Object, class Validator>
+  static constexpr auto has_member_v = has_member<Object, Validator>::value;
 } // namespace mpt

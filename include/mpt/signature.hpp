@@ -6,18 +6,22 @@
 /// Determine signature of functions and functors
 namespace mpt {
 
-  /// Represent the signature of a function
+#ifndef MPT_DOXYGEN_WARD
   template <class Function> struct function_signature;
+#endif
 
+  /// Represent the signature of a function
   template <class Output, class... Input>
   struct function_signature<Output(Input...)> {
     using output_t = Output;
     using input_t = std::tuple<Input...>;
   };
 
-  /// Represent the signature of a member function
+#ifndef MPT_DOXYGEN_WARD
   template <class MemberFunction> struct member_function_signature;
+#endif
 
+  /// Represent the signature of a member function
   template <class Object, class Output, class... Input>
   struct member_function_signature<Output(Object &, Input...)> {
     using output_t = Output;
@@ -25,15 +29,25 @@ namespace mpt {
     using input_t = std::tuple<Input...>;
   };
 
-  /// Determine the input value at the given position
+  /// Determine the input type at the given position
   template <std::size_t I, class Signature> struct signature_input_at {
     using type =
         mpt::templated_object_type_at_t<I, typename Signature::input_t>;
   };
 
-  /// Type of the input value at the given position
+  /// Type of the input type at the given position
   template <std::size_t I, class Signature>
   using signature_input_at_t = typename signature_input_at<I, Signature>::type;
+
+  /// Determine the output type at the given position
+  template <std::size_t I, class Signature> struct signature_output {
+    using type =
+        mpt::templated_object_type_at_t<I, typename Signature::output_t>;
+  };
+
+  /// Type of the output type at the given position
+  template <std::size_t I, class Signature>
+  using signature_output_t = typename signature_output<I, Signature>::type;
 
   /*\brief Determine the signature of a callable
 
@@ -47,23 +61,22 @@ namespace mpt {
         typename callable_signature<decltype(&Callable::operator())>::type;
   };
 
-  /// Specialization for functions
+#ifndef MPT_DOXYGEN_WARD
   template <class Output, class... Input>
   struct callable_signature<Output (*)(Input...)> {
     using type = function_signature<Output(Input...)>;
   };
 
-  /// Specialization for const member functions
   template <class Output, class Object, class... Input>
   struct callable_signature<Output (Object::*)(Input...) const> {
     using type = member_function_signature<Output(Object const &, Input...)>;
   };
 
-  /// Specialization for non-const member functions
   template <class Output, class Object, class... Input>
   struct callable_signature<Output (Object::*)(Input...)> {
     using type = member_function_signature<Output(Object &, Input...)>;
   };
+#endif
 
   /// Determine the signature of a callable
   template <class Callable>
@@ -72,10 +85,11 @@ namespace mpt {
   /// Type wrapper that checks if the given signature is that of a function
   template <class Signature> struct is_function_signature : std::false_type {};
 
-  /// Type wrapper that checks if the given signature is that of a function
+#ifndef MPT_DOXYGEN_WARD
   template <class Output, class... Input>
   struct is_function_signature<function_signature<Output(Input...)>>
       : std::true_type {};
+#endif
 
   /// Whether the given signature is that of a function
   template <class Signature>
@@ -87,31 +101,30 @@ namespace mpt {
   template <class Signature>
   struct is_const_member_function_signature : std::false_type {};
 
-  /// Type wrapper that checks if the given signature is that of a const member
-  /// function
+#ifndef MPT_DOXYGEN_WARD
   template <class Object, class Output, class... Input>
   struct is_const_member_function_signature<
       member_function_signature<Output(Object &, Input...)>>
       : std::conditional_t<std::is_const_v<Object>, std::true_type,
                            std::false_type> {};
+#endif
 
   /// Whether the given signature is that of a const member function
   template <class Signature>
   static constexpr auto is_const_member_function_signature_v =
       is_const_member_function_signature<Signature>::value;
 
-  /// Type wrapper that checks if the given signature is that of a non-const
-  /// member function
+  /// Checks if the given signature is that of a non-const member function
   template <class Signature>
   struct is_nonconst_member_function_signature : std::false_type {};
 
-  /// Type wrapper that checks if the given signature is that of a non-const
-  /// member function
+#ifndef MPT_DOXYGEN_WARD
   template <class Object, class Output, class... Input>
   struct is_nonconst_member_function_signature<
       member_function_signature<Output(Object &, Input...)>>
       : std::conditional_t<!std::is_const_v<Object>, std::true_type,
                            std::false_type> {};
+#endif
 
   /// Whether the given signature is that of a non-const member function
   template <class Signature>
