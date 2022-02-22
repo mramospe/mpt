@@ -41,5 +41,8 @@ cmake:
 
 format:
   stage: test
+  image: ubuntu:20.04
+  before_script:
+  - apt-get update && apt-get install -y clang-format
   script:
   - clang-format $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
