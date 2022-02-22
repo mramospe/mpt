@@ -1,27 +1,28 @@
 #include "mpt/keywords.hpp"
 #include "test_utils.hpp"
 
-struct alpha : mpt::keywords::argument<float> {};
-struct beta : mpt::keywords::argument<int> {};
-struct delta : mpt::keywords::argument<float> {};
+struct alpha : mpt::keyword_argument<float> {};
+struct beta : mpt::keyword_argument<int> {};
+struct delta : mpt::keyword_argument<float> {};
 
 /// Algorithm that tests keyword parsing with no required arguments
-class algorithm
-    : public mpt::keywords::parser<mpt::keywords::required<>,
-                                   mpt::keywords::defaulted<alpha, beta>> {
-  using base_class =
-      mpt::keywords::parser<mpt::keywords::required<>,
-                            mpt::keywords::defaulted<alpha, beta>>;
+class algorithm : public mpt::keyword_arguments_parser<
+                      mpt::required_keyword_arguments<>,
+                      mpt::keyword_arguments_with_default<alpha, beta>> {
+  using base_class = mpt::keyword_arguments_parser<
+      mpt::required_keyword_arguments<>,
+      mpt::keyword_arguments_with_default<alpha, beta>>;
   using base_class::base_class;
 };
 
 /// Algorithm that tests keyword parsing with required arguments
 class algorithm_with_required
-    : public mpt::keywords::parser<mpt::keywords::required<delta>,
-                                   mpt::keywords::defaulted<alpha, beta>> {
-  using base_class =
-      mpt::keywords::parser<mpt::keywords::required<delta>,
-                            mpt::keywords::defaulted<alpha, beta>>;
+    : public mpt::keyword_arguments_parser<
+          mpt::required_keyword_arguments<delta>,
+          mpt::keyword_arguments_with_default<alpha, beta>> {
+  using base_class = mpt::keyword_arguments_parser<
+      mpt::required_keyword_arguments<delta>,
+      mpt::keyword_arguments_with_default<alpha, beta>>;
   using base_class::base_class;
 };
 

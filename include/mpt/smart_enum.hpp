@@ -10,19 +10,19 @@
   A smart enumeration type is an enumeration type that can be created/converted
   from/to a string of characters.
  */
-namespace mpt::smart_enum {
+namespace mpt {
 
   /// Type of a buffer on a enumeration type declaration
-  template <std::size_t N> using buffer_type = std::array<char, N>;
+  template <std::size_t N> using array_buffer_type = std::array<char, N>;
 
   /// Type of the array of enumeration names
-  template <std::size_t N> using names_type = std::array<std::string_view, N>;
+  template <std::size_t N>
+  using array_of_string_view = std::array<std::string_view, N>;
 
   /// Type of an array of enumeration values
   template <class EnumType, std::size_t N>
-  using values_type = std::array<EnumType, N>;
+  using array_of_smart_enum = std::array<EnumType, N>;
 
-  /// Functions for developers only
   namespace detail {
 
     /// Create an array of characters corresponding to the input to the
@@ -41,9 +41,9 @@ namespace mpt::smart_enum {
 
     /// Determine the names of the enumeration values from a buffer string
     template <std::size_t N, std::size_t BufferSize>
-    constexpr auto make_names(buffer_type<BufferSize> const &buffer) {
+    constexpr auto make_names(array_buffer_type<BufferSize> const &buffer) {
 
-      names_type<N> result;
+      array_of_string_view<N> result;
 
       // we change the status to false once we have processed an enumeration
       // value, and we change it back to true once we find a separator (a comma
@@ -87,8 +87,7 @@ namespace mpt::smart_enum {
       return result;
     }
 
-    /// Helper function to throw an error if a string resolves to an unknown
-    /// value
+    /// Throw an error if a string resolves to an unknown value
     void throw_unknown_enumeration_type(std::string const &str) {
       throw std::runtime_error("The string \"" + str +
                                "\" resolves to an unknown enumeration value");
@@ -96,28 +95,30 @@ namespace mpt::smart_enum {
   } // namespace detail
 
   /// Access the properties of an enumeration type via ADL
-  template <class EnumType> struct properties {
-    using type = decltype(smart_enum_properties(EnumType{}));
+  template <class EnumType> struct smart_enum_properties {
+    using type = decltype(properties(EnumType{}));
   };
 
   /// Access the properties of an enumeration type via ADL
   template <class EnumType>
-  using properties_t = typename properties<EnumType>::type;
+  using smart_enum_properties_t =
+      typename smart_enum_properties<EnumType>::type;
 
   /// Whether the given value corresponds to an unknown value
   template <class EnumType> constexpr bool is_unknown(EnumType e) {
-    return e == properties_t<EnumType>::unknown_value;
+    return e == smart_enum_properties_t<EnumType>::unknown_value;
   }
 
   /// Determine the enumeration value from the given string
   template <class EnumType>
   constexpr auto from_string_view(std::string_view const &str) {
 
-    for (auto i = 0u; i < properties_t<EnumType>::size_with_unknown; ++i)
-      if (str == properties_t<EnumType>::names_with_unknown[i])
-        return properties_t<EnumType>::values_with_unknown[i];
+    for (auto i = 0u; i < smart_enum_properties_t<EnumType>::size_with_unknown;
+         ++i)
+      if (str == smart_enum_properties_t<EnumType>::names_with_unknown[i])
+        return smart_enum_properties_t<EnumType>::values_with_unknown[i];
 
-    return properties_t<EnumType>::unknown_value;
+    return smart_enum_properties_t<EnumType>::unknown_value;
   }
 
   /// Determine the enumeration value from the given string view, throwing an
@@ -127,7 +128,7 @@ namespace mpt::smart_enum {
 
     auto value = from_string_view<EnumType>(str);
 
-    if (value == properties_t<EnumType>::unknown_value)
+    if (value == smart_enum_properties_t<EnumType>::unknown_value)
       detail::throw_unknown_enumeration_type(
           std::string{str.data(), str.size()});
 
@@ -147,7 +148,7 @@ namespace mpt::smart_enum {
 
     auto value = from_string<EnumType>(str);
 
-    if (value == properties_t<EnumType>::unknown_value)
+    if (value == smart_enum_properties_t<EnumType>::unknown_value)
       detail::throw_unknown_enumeration_type(str);
 
     return value;
@@ -156,23 +157,26 @@ namespace mpt::smart_enum {
   /// Access the name of the given enumeration value
   template <class EnumType> constexpr auto to_string_view(EnumType e) {
 
-    for (auto i = 0u; i < properties_t<EnumType>::size_with_unknown; ++i)
-      if (e == properties_t<EnumType>::values_with_unknown[i])
-        return properties_t<EnumType>::names_with_unknown[i];
+    for (auto i = 0u; i < smart_enum_properties_t<EnumType>::size_with_unknown;
+         ++i)
+      if (e == smart_enum_properties_t<EnumType>::values_with_unknown[i])
+        return smart_enum_properties_t<EnumType>::names_with_unknown[i];
 
     // return the default value
-    return to_string_view(properties_t<EnumType>::unknown_value);
+    return to_string_view(smart_enum_properties_t<EnumType>::unknown_value);
   }
 
   /// Access the name of the given enumeration value
   template <class EnumType> constexpr auto to_string(EnumType e) {
 
-    for (auto i = 0u; i < properties_t<EnumType>::size_with_unknown; ++i)
-      if (e == properties_t<EnumType>::values_with_unknown[i])
-        return std::string{properties_t<EnumType>::names_with_unknown[i]};
+    for (auto i = 0u; i < smart_enum_properties_t<EnumType>::size_with_unknown;
+         ++i)
+      if (e == smart_enum_properties_t<EnumType>::values_with_unknown[i])
+        return std::string{
+            smart_enum_properties_t<EnumType>::names_with_unknown[i]};
 
     // return the default value
-    return to_string(properties_t<EnumType>::unknown_value);
+    return to_string(smart_enum_properties_t<EnumType>::unknown_value);
   }
 
   namespace detail {
@@ -182,7 +186,7 @@ namespace mpt::smart_enum {
               class... Args>
     constexpr auto apply_with_switch_impl(EnumType e, Args &&...args) {
 
-      using enum_properties = properties_t<EnumType>;
+      using enum_properties = smart_enum_properties_t<EnumType>;
 
       if constexpr (N > 0) {
 
@@ -201,17 +205,17 @@ namespace mpt::smart_enum {
   /// Apply a functor depending on the value of an enumeration type
   template <class EnumType, template <EnumType> class Functor, class... Args>
   constexpr auto apply_with_switch(EnumType e, Args &&...args) {
-    using enum_properties = properties_t<EnumType>;
+    using enum_properties = smart_enum_properties_t<EnumType>;
     return detail::apply_with_switch_impl<enum_properties::size, EnumType,
                                           Functor>(e,
                                                    std::forward<Args>(args)...);
   }
-} // namespace mpt::smart_enum
+} // namespace mpt
 
 #define MPT_DEFINE_STRING_CONVERTERS(enum_name)                                \
-  std::string to_string(enum_name e) { return mpt::smart_enum::to_string(e); } \
+  std::string to_string(enum_name e) { return mpt::to_string(e); }             \
   std::string_view to_string_view(enum_name e) {                               \
-    return mpt::smart_enum::to_string_view(e);                                 \
+    return mpt::to_string_view(e);                                             \
   }                                                                            \
   static_assert(true)
 
@@ -228,31 +232,26 @@ namespace mpt::smart_enum {
         static constexpr const char *value = #__VA_ARGS__;                     \
       };                                                                       \
       static constexpr auto unknown_value = unknown;                           \
-      static constexpr auto buffer =                                           \
-          mpt::smart_enum::detail::make_buffer<va_args>();                     \
+      static constexpr auto buffer = mpt::detail::make_buffer<va_args>();      \
       static constexpr auto buffer_with_unknown =                              \
-          mpt::smart_enum::detail::make_buffer<va_args_with_unknown>();        \
+          mpt::detail::make_buffer<va_args_with_unknown>();                    \
       static constexpr std::size_t size =                                      \
           std::count_if(buffer.cbegin(), buffer.cend(),                        \
                         [](auto const &v) { return v == ','; }) +              \
           1;                                                                   \
       static constexpr std::size_t size_with_unknown = size + 1;               \
-      static constexpr mpt::smart_enum::names_type<size> names =               \
-          mpt::smart_enum::detail::make_names<size>(buffer);                   \
-      static constexpr mpt::smart_enum::names_type<size_with_unknown>          \
+      static constexpr mpt::array_of_string_view<size> names =                 \
+          mpt::detail::make_names<size>(buffer);                               \
+      static constexpr mpt::array_of_string_view<size_with_unknown>            \
           names_with_unknown =                                                 \
-              mpt::smart_enum::detail::make_names<size_with_unknown>(          \
-                  buffer_with_unknown);                                        \
-      static constexpr mpt::smart_enum::values_type<enum_name, size> values =  \
-          {__VA_ARGS__};                                                       \
-      static constexpr mpt::smart_enum::values_type<enum_name,                 \
-                                                    size_with_unknown>         \
+              mpt::detail::make_names<size_with_unknown>(buffer_with_unknown); \
+      static constexpr mpt::array_of_smart_enum<enum_name, size> values = {    \
+          __VA_ARGS__};                                                        \
+      static constexpr mpt::array_of_smart_enum<enum_name, size_with_unknown>  \
           values_with_unknown = {unknown, __VA_ARGS__};                        \
     };                                                                         \
   }                                                                            \
-  constexpr enum_properties_name smart_enum_properties(enum_name) {            \
-    return {};                                                                 \
-  }                                                                            \
+  constexpr enum_properties_name properties(enum_name) { return {}; }          \
   MPT_DEFINE_STRING_CONVERTERS(enum_name);                                     \
   static_assert(true)
 

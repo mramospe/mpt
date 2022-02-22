@@ -3,22 +3,24 @@
 #include "mpt/values.hpp"
 #include <tuple>
 
-namespace mpt::keywords {
+namespace mpt {
 
   /// Represent the description of a keyword argument
-  template <class T> using argument = mpt::value_wrapper<T>;
+  template <class T> using keyword_argument = mpt::value_wrapper<T>;
 
   /// Set of required keyword arguments
-  template <class...> struct required;
+  template <class...> struct required_keyword_arguments;
 
   /// Set of required keyword arguments
-  template <class... T> struct required<argument<T>...> {};
+  template <class... T>
+  struct required_keyword_arguments<keyword_argument<T>...> {};
 
   /// Set of keyword arguments that have default values
-  template <class...> struct defaulted;
+  template <class...> struct keyword_arguments_with_default;
 
   /// Set of keyword arguments that have default values
-  template <class... T> struct defaulted<argument<T>...> {};
+  template <class... T>
+  struct keyword_arguments_with_default<keyword_argument<T>...> {};
 
   /*!\brief Class that accepts keyword arguments in the constructor
 
@@ -28,13 +30,15 @@ namespace mpt::keywords {
     to provide the input arguments in any order.
 
     The keyword arguments are stored within the class, which inherits from
-    \ref std::tuple. You can use the \ref keywords_parser::get and
-    \ref keywords_parser::set member functions to manipulate the values.
+    \ref std::tuple. You can use the \ref keyword_arguments_parser::get and
+    \ref keyword_arguments_parser::set member functions to manipulate the
+    values.
    */
-  template <class Required, class Defaulted> class parser;
+  template <class Required, class Defaulted> class keyword_arguments_parser;
 
   template <class... R, class... D>
-  class parser<required<R...>, defaulted<D...>>
+  class keyword_arguments_parser<required_keyword_arguments<R...>,
+                                 keyword_arguments_with_default<D...>>
       : protected std::tuple<typename R::value_type...,
                              typename D::value_type...> {
 
@@ -46,15 +50,16 @@ namespace mpt::keywords {
     using base_type =
         std::tuple<typename R::value_type..., typename D::value_type...>;
 
-    parser() = default;
-    parser(parser const &) = default;
-    parser(parser &&) = default;
-    parser &operator=(parser const &) = default;
-    parser &operator=(parser &&) = default;
+    keyword_arguments_parser() = default;
+    keyword_arguments_parser(keyword_arguments_parser const &) = default;
+    keyword_arguments_parser(keyword_arguments_parser &&) = default;
+    keyword_arguments_parser &
+    operator=(keyword_arguments_parser const &) = default;
+    keyword_arguments_parser &operator=(keyword_arguments_parser &&) = default;
 
     /// Constructor from the keyword arguments and a tuple of default values
     template <class Tuple, class... K>
-    parser(Tuple &&defaults, K &&...v) noexcept
+    keyword_arguments_parser(Tuple &&defaults, K &&...v) noexcept
         : base_type{parse_keywords_with_defaults_and_required(
               std::forward<Tuple>(defaults), std::forward<K>(v)...)} {}
 
@@ -135,4 +140,4 @@ namespace mpt::keywords {
           std::forward<Tuple>(defaults), std::forward<K>(keywords)...);
     }
   };
-} // namespace mpt::keywords
+} // namespace mpt

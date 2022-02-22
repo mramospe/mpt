@@ -8,7 +8,7 @@ template <class EnumType> mpt::test::errors test_properties_for_enum() {
 
   mpt::test::errors errors;
 
-  using properties = mpt::smart_enum::properties_t<EnumType>;
+  using properties = mpt::smart_enum_properties_t<EnumType>;
 
   if (properties::size + 1 != properties::size_with_unknown)
     errors.push_back(
@@ -35,8 +35,8 @@ mpt::test::errors test_adl() {
   if (to_string(simple_A) != "simple_A" || to_string(simple_B) != "simple_B")
     errors.push_back("Unable to convert enumeration types to strings");
 
-  if (mpt::smart_enum::from_string<simple>("simple_A") != simple_A ||
-      mpt::smart_enum::from_string<simple>("simple_B") != simple_B)
+  if (mpt::from_string<simple>("simple_A") != simple_A ||
+      mpt::from_string<simple>("simple_B") != simple_B)
     errors.push_back("Unable to create enumeration types from strings");
 
   return errors;
@@ -46,18 +46,16 @@ template <class EnumType> mpt::test::errors test_unknown_for_enum() {
 
   mpt::test::errors errors;
 
-  using properties = mpt::smart_enum::properties_t<EnumType>;
+  using properties = mpt::smart_enum_properties_t<EnumType>;
 
-  if (mpt::smart_enum::from_string<EnumType>("__protected__") !=
-      properties::unknown_value)
+  if (mpt::from_string<EnumType>("__protected__") != properties::unknown_value)
     errors.push_back("String didn't evaluate to unknown");
 
-  if (!mpt::smart_enum::is_unknown(
-          mpt::smart_enum::from_string<EnumType>("__protected__")))
+  if (!mpt::is_unknown(mpt::from_string<EnumType>("__protected__")))
     errors.push_back("String didn't evaluate to unknown");
 
   try {
-    mpt::smart_enum::from_string_throw_if_unknown<EnumType>("__protected__");
+    mpt::from_string_throw_if_unknown<EnumType>("__protected__");
     errors.push_back("Should have raised an error when trying to convert from "
                      "an unknown string");
   } catch (...) {
@@ -94,8 +92,8 @@ template <> struct functor<simple_B> {
 /// Test the switch function
 mpt::test::errors test_switch() {
   mpt::test::errors errors;
-  for (auto e : mpt::smart_enum::properties_t<simple>::values_with_unknown)
-    if (mpt::smart_enum::apply_with_switch<simple, functor>(e, false))
+  for (auto e : mpt::smart_enum_properties_t<simple>::values_with_unknown)
+    if (mpt::apply_with_switch<simple, functor>(e, false))
       errors.push_back("Unable to use switch for \"" + to_string(e) + '"');
   return errors;
 }
