@@ -42,4 +42,4 @@ cmake:
 format:
   stage: test
   script:
-  - clang-format-10 $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
+  - clang-format $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
