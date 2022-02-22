@@ -51,4 +51,4 @@ jobs:
   - name: format
     install: " "
     script:
-    - ${CLANG_FORMAT} --version $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
+    - ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
