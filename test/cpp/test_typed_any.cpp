@@ -1,6 +1,5 @@
 #include "mpt/typed_any.hpp"
 #include "test_utils.hpp"
-#include <iostream>
 #include <type_traits>
 
 // Test the construction of typed "any" objects
