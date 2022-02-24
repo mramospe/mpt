@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <variant>
 
 /*\brief Tools to handle smart enumeration types
 
@@ -180,35 +181,32 @@ namespace mpt {
   }
 
   namespace detail {
-    /// Implementation of the function to apply a functor depending on the value
-    /// of an enumeration type
-    template <std::size_t N, class EnumType, template <EnumType> class Functor,
-              class... Args>
-    constexpr auto apply_with_switch_impl(EnumType e, Args &&... args) {
-
-      using enum_properties = smart_enum_properties_t<EnumType>;
-
-      if constexpr (N > 0) {
-
-        constexpr auto compare = enum_properties::values_with_unknown[N];
-
-        if (e == compare)
-          return Functor<compare>{}(args...);
-        else
-          return apply_with_switch_impl<N - 1, EnumType, Functor>(
-              e, std::forward<Args>(args)...);
-      } else
-        return Functor<enum_properties::unknown_value>{}(args...);
+    /// Make the array of functors for a switch statement
+    template <class EnumType, template <EnumType> class Functor,
+              std::size_t... I>
+    constexpr std::array<std::variant<Functor<smart_enum_properties_t<
+                             EnumType>::values_with_unknown[I]>...>,
+                         sizeof...(I)>
+    make_array_of_functors(std::index_sequence<I...>) {
+      return {Functor<
+          smart_enum_properties_t<EnumType>::values_with_unknown[I]>{}...};
     }
   } // namespace detail
 
   /// Apply a functor depending on the value of an enumeration type
   template <class EnumType, template <EnumType> class Functor, class... Args>
   constexpr auto apply_with_switch(EnumType e, Args &&... args) {
+
     using enum_properties = smart_enum_properties_t<EnumType>;
-    return detail::apply_with_switch_impl<enum_properties::size, EnumType,
-                                          Functor>(e,
-                                                   std::forward<Args>(args)...);
+
+    constexpr auto functors = detail::make_array_of_functors<EnumType, Functor>(
+        std::make_index_sequence<enum_properties::size_with_unknown>());
+
+    // this part only works as long as the members of the enumeration type are
+    // consecutive starting at zero
+    return std::visit(
+        [&](auto &&functor) { return functor(std::forward<Args>(args)...); },
+        functors[static_cast<typename enum_properties::underlying_type>(e)]);
   }
 } // namespace mpt
 
@@ -221,7 +219,7 @@ namespace mpt {
 
 /// Declare a smart enumeration type
 #define MPT_SMART_ENUM(enum_name, enum_properties_name, type, unknown, ...)    \
-  enum enum_name : type { unknown, __VA_ARGS__ };                              \
+  enum enum_name : type { unknown = 0, __VA_ARGS__ };                          \
   namespace {                                                                  \
     struct enum_properties_name {                                              \
       using underlying_type = type;                                            \
