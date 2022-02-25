@@ -2,5 +2,4 @@
 *~
 build/
 docs/html/
-*.txt
 *.log
