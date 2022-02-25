@@ -5,7 +5,7 @@ option(INSTALL_TESTS "Whether to install the test scripts or not" OFF)
 
 set(PROJECT_LANGUAGES CXX)
 
-project("MPT" VERSION 0.1.0 DESCRIPTION "A header only c++ library with utilities for metaprogramming"
+project("MPT" VERSION 0.0.0 DESCRIPTION "A header only c++ library with utilities for metaprogramming"
   LANGUAGES ${PROJECT_LANGUAGES})
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
