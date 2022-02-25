@@ -3,6 +3,7 @@
 #include "mpt/members.hpp"
 #include "mpt/signature.hpp"
 #include "mpt/smart_enum.hpp"
+#include "mpt/typed_any.hpp"
 #include "mpt/types.hpp"
 #include "mpt/values.hpp"
 
