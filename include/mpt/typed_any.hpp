@@ -52,37 +52,40 @@ namespace mpt {
     better to use std::variant since all the containers store a pointer and an
     integer (i.e. are of the same size in memory).
    */
-  template <class... Type>
-  requires mpt::UniqueTemplateArguments<Type...>
-      &&mpt::NonEmptyTemplateArguments<Type...> class typed_any {
+  template <class IndexType, class... Type>
+  requires std::is_integral_v<IndexType> &&mpt::UniqueTemplateArguments<Type...>
+      &&mpt::NonEmptyTemplateArguments<Type...> class basic_typed_any {
 
     /// Object to build if using the default constructor
     using default_value_type =
         detail::first_object_default_constructible_t<Type...>;
 
   public:
+    /// Type for the index defining the actual type being stored
+    using index_type = IndexType;
+
     // Default constructors and assignment operators
-    typed_any() = default;
-    typed_any(typed_any const &) = default;
-    typed_any(typed_any &&) = default;
-    typed_any &operator=(typed_any const &) = default;
-    typed_any &operator=(typed_any &&) = default;
+    basic_typed_any() = default;
+    basic_typed_any(basic_typed_any const &) = default;
+    basic_typed_any(basic_typed_any &&) = default;
+    basic_typed_any &operator=(basic_typed_any const &) = default;
+    basic_typed_any &operator=(basic_typed_any &&) = default;
 
     /// Initialize the object from a value type, which must be in the template
     /// argument list
     template <class T>
-    requires mpt::HasType<T, Type...> constexpr typed_any(T const &t)
+    requires mpt::HasType<T, Type...> constexpr basic_typed_any(T const &t)
         : m_value{t}, m_type_index{mpt::type_index_v<T, Type...>} {}
     /// Initialize the object from a value type, which must be in the template
     /// argument list
     template <class T>
-    requires mpt::HasType<T, Type...> constexpr typed_any(T &&t)
+    requires mpt::HasType<T, Type...> constexpr basic_typed_any(T &&t)
         : m_value{std::forward<T>(t)}, m_type_index{
                                            mpt::type_index_v<T, Type...>} {}
     /// Assign the contained value another value that must be in the template
     /// argument list
     template <class T>
-    requires mpt::HasType<T, Type...> constexpr typed_any &
+    requires mpt::HasType<T, Type...> constexpr basic_typed_any &
     operator=(T const &t) {
       m_value = t;
       m_type_index = mpt::type_index_v<T, Type...>;
@@ -91,7 +94,8 @@ namespace mpt {
     /// Assign the contained value another value that must be in the template
     /// argument list
     template <class T>
-    requires mpt::HasType<T, Type...> constexpr typed_any &operator=(T &&t) {
+    requires mpt::HasType<T, Type...> constexpr basic_typed_any &
+    operator=(T &&t) {
       m_value = std::forward<T>(t);
       m_type_index = mpt::type_index_v<T, Type...>;
       return *this;
@@ -108,7 +112,7 @@ namespace mpt {
     /// Any object this class accepts
     std::any m_value = default_value_type{};
     /// Index of the current type
-    std::size_t m_type_index = mpt::type_index_v<default_value_type, Type...>;
+    index_type m_type_index = mpt::type_index_v<default_value_type, Type...>;
   };
 
   namespace detail {
@@ -131,20 +135,20 @@ namespace mpt {
       return function(std::any_cast<T>(std::move(a)));
     }
 
-    /// Requirements for any accessor to a mpt::typed_any object
+    /// Requirements for any accessor to a mpt::basic_typed_any object
     template <class Function, class... T>
     concept Accessor = (mpt::NonEmptyTemplateArguments<T...> &&
                         mpt::are_same_v<decltype(std::invoke(
                             std::declval<Function>(), std::declval<T>()))...>);
 
     /// Define an array of functions that are called for each type handled by
-    /// mpt::typed_any
+    /// mpt::basic_typed_any
     template <class TypedAny, class Function> struct accessors;
 
     /// Specialization for reference
-    template <class Function, class... T>
-    requires Accessor<Function, T...> struct accessors<typed_any<T...> &,
-                                                       Function> {
+    template <class Function, class IndexType, class... T>
+    requires Accessor<Function, T...> struct accessors<
+        basic_typed_any<IndexType, T...> &, Function> {
 
       using output_type = decltype(std::invoke(
           std::declval<Function>(), std::declval<mpt::type_at_t<0, T...>>()));
@@ -155,9 +159,9 @@ namespace mpt {
     };
 
     /// Specialization for constant reference
-    template <class Function, class... T>
-    requires Accessor<Function, T...> struct accessors<typed_any<T...> const &,
-                                                       Function> {
+    template <class Function, class IndexType, class... T>
+    requires Accessor<Function, T...> struct accessors<
+        basic_typed_any<IndexType, T...> const &, Function> {
 
       using output_type = decltype(
           std::invoke(std::declval<Function>(),
@@ -169,9 +173,9 @@ namespace mpt {
     };
 
     /// Specialization for move operations
-    template <class Function, class... T>
-    requires Accessor<Function, T...> struct accessors<typed_any<T...> &&,
-                                                       Function> {
+    template <class Function, class IndexType, class... T>
+    requires Accessor<Function, T...> struct accessors<
+        basic_typed_any<IndexType, T...> &&, Function> {
 
       using output_type = decltype(std::invoke(
           std::declval<Function>(), std::declval<mpt::type_at_t<0, T...>>()));
@@ -181,6 +185,13 @@ namespace mpt {
           value = {&access<Function, T>...};
     };
   } // namespace detail
+
+  /*!\brief Main definition a typed "any" object
+
+    To use other index types see mpt::basic_typed_any.
+  */
+  template <class... Type>
+  using typed_any = basic_typed_any<unsigned short int, Type...>;
 
   /// Apply a function on the given typed "any" object
   template <class Function, class TypedAny>

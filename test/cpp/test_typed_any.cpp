@@ -9,12 +9,12 @@ mpt::test::errors test_simple() {
 
   mpt::typed_any<int, float, double> a = 1.f;
 
-  if (a.type_index() != 1)
+  if (a.type_index() != 1u)
     errors.push_back("Wrong determination of the type index");
 
   a = 1;
 
-  if (a.type_index() != 0)
+  if (a.type_index() != 0u)
     errors.push_back(
         "Wrong determination of the type index after re-assigning the object");
 
