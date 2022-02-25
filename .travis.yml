@@ -2,6 +2,10 @@ dist: focal
 language: cpp
 compiler: gcc
 
+# needed to access tag names
+git:
+  depth: false
+
 os: linux
 addons:
   apt:
