@@ -33,6 +33,10 @@ namespace mpt {
   };
 #endif
 
+  /// Restriction to specializations where the given type is in the template
+  /// argument list
+  template <class R, class... T> concept HasType = has_type_v<R, T...>;
+
   /// Whether the type is in the given template type
   template <class Reference, class Object>
   static constexpr auto templated_object_has_type_v =
@@ -53,6 +57,11 @@ namespace mpt {
   template <class... T>
   static constexpr auto has_repeated_template_arguments_v =
       has_repeated_template_arguments<T...>::value;
+
+  /// Restriction to specializations where the given type is in the template
+  /// argument list
+  template <class... T>
+  concept UniqueTemplateArguments = !has_repeated_template_arguments_v<T...>;
 
   /// Whether the type is in the given template type
   template <class Reference, class Object>
@@ -137,6 +146,16 @@ namespace mpt {
   template <std::size_t I, class Object>
   using templated_object_type_at_t =
       typename templated_object_type_at<I, Object>::type;
+
+  /// Number of template arguments
+  template <class... T> struct template_object_elements {
+    static constexpr auto value = sizeof...(T);
+  };
+
+  /// Number of template arguments
+  template <class... T>
+  static constexpr auto template_object_elements_v =
+      template_object_elements<T...>::value;
 
   namespace {
 
@@ -229,5 +248,38 @@ namespace mpt {
   template <template <class...> class Template, class... T>
   using specialize_template_avoid_repetitions_t =
       typename specialize_template_avoid_repetitions<Template, T...>::type;
+
+  /// Restriction for templates that must have at least one argument
+  template <class... T> concept NonEmptyTemplateArguments = (sizeof...(T) > 0);
+
+  /// Check if two template arguments are the same (equivalent to std::is_same)
+  template <class U, class V> struct is_same;
+
+#ifndef MPT_DOXYGEN_WARD
+  template <class U, class V> struct is_same : std::false_type {};
+
+  template <class U> struct is_same<U, U> : std::true_type {};
+#endif
+
+  /// Check if two template arguments are the same (equivalent to std::is_same)
+  template <class U, class V>
+  static constexpr auto is_same_v = is_same<U, V>::value;
+
+  /// Check if all the template arguments are the same
+  template <class... T> struct are_same;
+
+#ifndef MPT_DOXYGEN_WARD
+  template <class T0, class T1, class... T>
+  struct are_same<T0, T1, T...> : std::false_type {};
+
+  template <class T0, class... T>
+  struct are_same<T0, T0, T...> : are_same<T0, T...> {};
+
+  template <class T> struct are_same<T> : std::true_type {};
+#endif
+
+  /// Check if all the template arguments are the same
+  template <class... T>
+  static constexpr auto are_same_v = are_same<T...>::value;
 
 } // namespace mpt
