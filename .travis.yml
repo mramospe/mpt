@@ -107,7 +107,7 @@ jobs:
       # Allow pushes
       token: ${GITHUB_TOKEN}
       # Location of the documentation
-      local_dir: docs/html
+      local_dir: doc/html
       # Use Github pages deploy process
       provider: pages
       # Keep builded pages
