@@ -94,3 +94,25 @@ jobs:
           branch:
           - devel
           - master
+  - name: documentation
+    if: branch IN (master, devel)
+    before_install: " "
+    install: " "
+    script: doxygen
+    before_deploy:
+    # Define the Git configuration
+    - git config --local user.name "Miguel Ramos Pernas"
+    - git config --local user.email "miguel.ramos.pernas@gmail.com"
+    deploy:
+      # Allow pushes
+      token: ${GITHUB_TOKEN}
+      # Location of the documentation
+      local_dir: docs/html
+      # Use Github pages deploy process
+      provider: pages
+      # Keep builded pages
+      skip-cleanup: true
+      # Incremental commit to keep old build/files from previous deployments
+      keep-history: true
+      # Git branch on which it should deploy (master, gh-pages...)
+      target_branch: gh-pages
