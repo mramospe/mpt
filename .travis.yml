@@ -105,15 +105,19 @@ jobs:
     - git config --local user.name "Miguel Ramos Pernas"
     - git config --local user.email "miguel.ramos.pernas@gmail.com"
     deploy:
+      # Use Github pages deploy process
+      provider: pages
       # Allow pushes
       token: ${GITHUB_TOKEN}
       # Location of the documentation
       local_dir: doc/html
-      # Use Github pages deploy process
-      provider: pages
       # Keep builded pages
       skip_cleanup: true
       # Incremental commit to keep old build/files from previous deployments
       keep_history: true
       # Git branch on which it should deploy (master, gh-pages...)
       target_branch: gh-pages
+      on:
+        branch:
+        - master
+        - enable-github-pages
