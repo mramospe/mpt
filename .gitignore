@@ -1,6 +1,4 @@
 # List of ignored patterns
-*~
-build/
-docs/html/
-*.txt
-*.log
+*
+*/
+!docs/html/

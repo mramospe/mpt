@@ -1,1 +1,0 @@
-The Metaprogramming Tools (MPT) package is a header-only C++ library which offers general utilities to handle compile-time expressions. The package is built over the STL using the C++20 features.
