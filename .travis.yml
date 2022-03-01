@@ -112,8 +112,8 @@ jobs:
       # Use Github pages deploy process
       provider: pages
       # Keep builded pages
-      skip-cleanup: true
+      skip_cleanup: true
       # Incremental commit to keep old build/files from previous deployments
-      keep-history: true
+      keep_history: true
       # Git branch on which it should deploy (master, gh-pages...)
       target_branch: gh-pages
