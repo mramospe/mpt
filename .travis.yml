@@ -20,6 +20,7 @@ branches:
   only:
   - master
   - devel
+  - enable-github-pages
 
 before_install:
 - ${CC} --version
