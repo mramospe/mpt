@@ -1,5 +1,5 @@
 # List of ignored patterns
 *~
 build/
-docs/html/
+doc/html/
 *.log
