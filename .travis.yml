@@ -95,7 +95,7 @@ jobs:
           - devel
           - master
   - name: documentation
-    if: branch IN (master, devel)
+    if: branch IN (master, devel, enable-github-pages)
     before_install: " "
     install: " "
     script: doxygen
