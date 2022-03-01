@@ -98,7 +98,7 @@ jobs:
   - name: documentation
     if: branch IN (master, devel, enable-github-pages)
     before_install: " "
-    install: sudo apt-get install -y doxygen
+    install: sudo apt-get install -y graphviz doxygen
     script: doxygen
     before_deploy:
     # Define the Git configuration
