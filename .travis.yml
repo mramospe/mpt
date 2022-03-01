@@ -20,7 +20,6 @@ branches:
   only:
   - master
   - devel
-  - enable-github-pages
 
 before_install:
 - ${CC} --version
@@ -96,7 +95,7 @@ jobs:
           - devel
           - master
   - name: documentation
-    if: branch IN (master, devel, enable-github-pages)
+    if: branch IN (master, devel)
     before_install: " "
     install: sudo apt-get install -y graphviz doxygen
     script: doxygen
@@ -120,4 +119,3 @@ jobs:
       on:
         branch:
         - master
-        - enable-github-pages
