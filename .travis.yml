@@ -79,7 +79,7 @@ jobs:
     - github_changelog_generator -u mramospe -p mpt -o ${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
     - github_changelog_generator -u mramospe -p mpt -o ${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
     before_install: " "
-    install: sudo apt-get install -y doxygen
+    install: " "
     script: " "
     deploy:
         provider: releases
@@ -98,7 +98,7 @@ jobs:
   - name: documentation
     if: branch IN (master, devel, enable-github-pages)
     before_install: " "
-    install: " "
+    install: sudo apt-get install -y doxygen
     script: doxygen
     before_deploy:
     # Define the Git configuration
