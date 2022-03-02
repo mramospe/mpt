@@ -11,8 +11,7 @@
 namespace mpt {
 
   namespace detail {
-    /// Find the first class in the template argument list that is
-    /// default-constructible
+    /// Find the first default-constructible class in the template argument list
     template <class... T> struct first_object_default_constructible;
 
 #ifndef MPT_DOXYGEN_WARD

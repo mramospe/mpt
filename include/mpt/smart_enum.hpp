@@ -269,6 +269,7 @@ namespace mpt {
 
     This function avoids having to write long \a switch-case expressions with
     all the enumeration values.
+    The provided functor in \a Functor must be default-constructible.
 
     \code{.cpp}
     MPT_SMART_ENUM(position, position_properties, int, unknown_position, bottom, middle, top);
