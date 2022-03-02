@@ -1,3 +1,7 @@
+/*!\file
+
+  Definition of a typed \a any type and functions to work with it.
+ */
 #pragma once
 #include "mpt/types.hpp"
 #include <any>

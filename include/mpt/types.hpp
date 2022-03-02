@@ -1,3 +1,9 @@
+/*!\file
+
+  General utilities to work with types and templates.
+  This includes accessing certain types for templated classes, checking the
+  presence of some types in template specializations , repetition of types, ...
+ */
 #pragma once
 #include <cstdlib>
 #include <type_traits>

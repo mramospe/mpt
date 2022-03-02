@@ -1,9 +1,12 @@
+/*!\file
+
+  Utilities to work with signatures of (member) functions and functors.
+ */
 #pragma once
 #include "mpt/types.hpp"
 #include <functional>
 #include <tuple>
 
-/// Determine signature of functions and functors
 namespace mpt {
 
 #ifndef MPT_DOXYGEN_WARD

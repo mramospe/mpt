@@ -1,3 +1,7 @@
+/*!\file
+
+  Manipulate values in templated inputs.
+ */
 #pragma once
 #include <cstdlib>
 
