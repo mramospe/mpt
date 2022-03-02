@@ -316,7 +316,7 @@ namespace mpt {
       double operator(double i) const { return i * 4.; }
     };
 
-    auto some_function(position p) {
+    auto optimal_function(position p) {
       return mpt::apply_with_switch<position, functor>(p, 2.);
     }
     \endcode

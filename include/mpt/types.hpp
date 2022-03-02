@@ -151,16 +151,6 @@ namespace mpt {
   using templated_object_type_at_t =
       typename templated_object_type_at<I, Object>::type;
 
-  /// Number of template arguments
-  template <class... T> struct template_object_elements {
-    static constexpr auto value = sizeof...(T);
-  };
-
-  /// Number of template arguments
-  template <class... T>
-  static constexpr auto template_object_elements_v =
-      template_object_elements<T...>::value;
-
   namespace {
 
     /// Expand a set of types object with a new type, if it does not contain it
