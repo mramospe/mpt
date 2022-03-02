@@ -133,8 +133,7 @@ namespace mpt {
   /*!\brief Access the properties of an enumeration type via ADL
 
     \code{.cpp}
-    MPT_SMART_ENUM(position, position_properties, int, unknown_position, bottom,
-    middle, top);
+    MPT_SMART_ENUM(position, position_properties, int, unknown_position, bottom, middle, top);
 
     static constexpr position_values = smart_enum_properties
     \endcode
@@ -269,8 +268,10 @@ namespace mpt {
   /*!\brief Apply a functor depending on the value of an enumeration type
 
     This function avoids having to write long \a switch-case expressions with
-    all the enumeration values. \code{.cpp} MPT_SMART_ENUM(position,
-    position_properties, int, unknown_position, bottom, middle, top);
+    all the enumeration values.
+
+    \code{.cpp}
+    MPT_SMART_ENUM(position, position_properties, int, unknown_position, bottom, middle, top);
 
     auto some_function(position p) {
 

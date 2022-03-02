@@ -52,7 +52,7 @@ namespace mpt {
   template <std::size_t I, class Signature>
   using signature_output_t = typename signature_output<I, Signature>::type;
 
-  /*\brief Determine the signature of a callable
+  /*!\brief Determine the signature of a callable
 
     By default it is assumed that the template argument is a functor with
     a single version of operator(). The other specializations cover cases
@@ -85,7 +85,7 @@ namespace mpt {
   template <class Callable>
   using callable_signature_t = typename callable_signature<Callable>::type;
 
-  /// Type wrapper that checks if the given signature is that of a function
+  /// Checks if the given signature is that of a function
   template <class Signature> struct is_function_signature : std::false_type {};
 
 #ifndef MPT_DOXYGEN_WARD
@@ -99,8 +99,7 @@ namespace mpt {
   static constexpr auto is_function_signature_v =
       is_function_signature<Signature>::value;
 
-  /// Type wrapper that checks if the given signature is that of a const member
-  /// function
+  /// Checks if the given signature is that of a const member function
   template <class Signature>
   struct is_const_member_function_signature : std::false_type {};
 
@@ -175,8 +174,7 @@ namespace mpt {
   using function_pointer_type_t =
       typename function_pointer_type<Signature>::type;
 
-  /// Type wrapper that checks if the given callable is a non-const member
-  /// function
+  /// Checks if the given callable is a non-const member function
   template <class Callable>
   struct is_nonconst_member_function
       : is_nonconst_member_function_signature<callable_signature_t<Callable>> {

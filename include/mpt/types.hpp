@@ -39,8 +39,7 @@ namespace mpt {
   };
 #endif
 
-  /// Restriction to specializations where the given type is in the template
-  /// argument list
+  /// Restriction where the given type is in the template parameter list
   template <class R, class... T> concept HasType = has_type_v<R, T...>;
 
   /// Whether the type is in the given template type
@@ -64,8 +63,7 @@ namespace mpt {
   static constexpr auto has_repeated_template_arguments_v =
       has_repeated_template_arguments<T...>::value;
 
-  /// Restriction to specializations where the given type is in the template
-  /// argument list
+  /// Restriction where the given type is in the template parameter list
   template <class... T>
   concept UniqueTemplateArguments = !has_repeated_template_arguments_v<T...>;
 

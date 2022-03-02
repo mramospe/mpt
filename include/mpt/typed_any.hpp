@@ -38,7 +38,7 @@ namespace mpt {
         typename first_object_default_constructible<T...>::type;
   } // namespace detail
 
-  /*\brief Represent an object that can hold any of a set of types, saving the
+  /*!\brief Represent an object that can hold any of a set of types, saving the
     index of the type
 
     The behaviour is quite similar to std::variant, but in this case the size of
@@ -139,17 +139,16 @@ namespace mpt {
       return function(std::any_cast<T>(std::move(a)));
     }
 
-    /// Requirements for any accessor to a mpt::basic_typed_any object
+    /// Requirements for any accessor to a \ref mpt::basic_typed_any object
     template <class Function, class... T>
     concept Accessor = (mpt::NonEmptyTemplateArguments<T...> &&
                         mpt::are_same_v<decltype(std::invoke(
                             std::declval<Function>(), std::declval<T>()))...>);
 
-    /// Define an array of functions that are called for each type handled by
-    /// mpt::basic_typed_any
+    /// Define an array of functions to work with \ref mpt::basic_typed_any
     template <class TypedAny, class Function> struct accessors;
 
-    /// Specialization for reference
+    /// Specialization by reference
     template <class Function, class IndexType, class... T>
     requires Accessor<Function, T...> struct accessors<
         basic_typed_any<IndexType, T...> &, Function> {
