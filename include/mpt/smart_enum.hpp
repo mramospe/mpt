@@ -135,7 +135,7 @@ namespace mpt {
     \code{.cpp}
     MPT_SMART_ENUM(position, position_properties, int, unknown_position, bottom, middle, top);
 
-    static constexpr position_values = smart_enum_properties
+    static constexpr auto position_values = smart_enum_properties_t<position>::values_with_unknown;
     \endcode
 
     \see mpt::smart_enum_properties
@@ -365,6 +365,29 @@ namespace mpt {
     enumeration types.
   - \a ...: list of names that define the members of the enumeration type.
 
+  The exposed \a enum_properties_name type will contain the following members
+
+  - \a underlying_type: type provided in \type
+  - \a va_args_with_unknown: (for internal use only) representation of the
+    input arguments as a string, enclosed in a dedicated type
+  - \a va_args: (for internal use only) similar to \a va_args_with_unknown, but
+    without the \a unknown value included
+  - \a unknown_value: value that is used in case of problems with parsing
+    enumeration values
+  - \a size: number of names in the enumeration type, wihtout the unknown
+  - \a size_with_unknown: total number of names in the enumeration type
+  - \a names: names of the enumeration values, saved as \ref std::string_view
+    objects
+  - \a names_with_unknown: similar to \ref names but with the unknown value
+    included
+  - \a values: values of the enumeration type saved in an array
+  - \a values_with_unknown: similar to \ref values but with the unknown value
+    included
+
+  Invoking this macro also creates a function called \a properties that is used
+  in order to access the aforementioned class via \ref mpt::smart_enum_properties
+  and \ref mpt::smart_enum_properties_t.
+
   \see
   mpt::smart_enum_properties
   mpt::smart_enum_properties_t
@@ -382,24 +405,24 @@ namespace mpt {
       using underlying_type = type;                                            \
       struct va_args_with_unknown {                                            \
         static constexpr const char *value = #unknown "," #__VA_ARGS__;        \
+        static constexpr auto buffer =                                         \
+            mpt::detail::make_buffer<va_args_with_unknown>();                  \
       };                                                                       \
       struct va_args {                                                         \
         static constexpr const char *value = #__VA_ARGS__;                     \
+        static constexpr auto buffer = mpt::detail::make_buffer<va_args>();    \
       };                                                                       \
       static constexpr auto unknown_value = unknown;                           \
-      static constexpr auto buffer = mpt::detail::make_buffer<va_args>();      \
-      static constexpr auto buffer_with_unknown =                              \
-          mpt::detail::make_buffer<va_args_with_unknown>();                    \
       static constexpr std::size_t size =                                      \
-          std::count_if(buffer.cbegin(), buffer.cend(),                        \
+          std::count_if(va_args::buffer.cbegin(), va_args::buffer.cend(),      \
                         [](auto const &v) { return v == ','; }) +              \
           1;                                                                   \
       static constexpr std::size_t size_with_unknown = size + 1;               \
       static constexpr mpt::array_of_string_view<size> names =                 \
-          mpt::detail::make_names<size>(buffer);                               \
+          mpt::detail::make_names<size>(va_args::buffer);                      \
       static constexpr mpt::array_of_string_view<size_with_unknown>            \
-          names_with_unknown =                                                 \
-              mpt::detail::make_names<size_with_unknown>(buffer_with_unknown); \
+          names_with_unknown = mpt::detail::make_names<size_with_unknown>(     \
+              va_args_with_unknown::buffer);                                   \
       static constexpr mpt::array_of_smart_enum<enum_name, size> values = {    \
           __VA_ARGS__};                                                        \
       static constexpr mpt::array_of_smart_enum<enum_name, size_with_unknown>  \
