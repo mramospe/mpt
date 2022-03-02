@@ -10,7 +10,7 @@
 
 namespace mpt {
 
-  namespace detail {
+  namespace {
     /// Find the first default-constructible class in the template argument list
     template <class... T> struct first_object_default_constructible;
 
@@ -35,7 +35,7 @@ namespace mpt {
     template <class... T>
     using first_object_default_constructible_t =
         typename first_object_default_constructible<T...>::type;
-  } // namespace detail
+  } // namespace
 
   /*!\brief Represent an object that can hold any of a set of types, saving the
     index of the type
@@ -60,8 +60,7 @@ namespace mpt {
       &&mpt::NonEmptyTemplateArguments<Type...> class basic_typed_any {
 
     /// Object to build if using the default constructor
-    using default_value_type =
-        detail::first_object_default_constructible_t<Type...>;
+    using default_value_type = first_object_default_constructible_t<Type...>;
 
   public:
     /// Type for the index defining the actual type being stored
@@ -118,7 +117,7 @@ namespace mpt {
     index_type m_type_index = mpt::type_index_v<default_value_type, Type...>;
   };
 
-  namespace detail {
+  namespace {
 
     /// Access a value on a std::any object
     template <class Function, class T>
@@ -186,7 +185,7 @@ namespace mpt {
                                   sizeof...(T)>
           value = {&access<Function, T>...};
     };
-  } // namespace detail
+  } // namespace
 
   /*!\brief Main definition a typed "any" object
 
@@ -202,16 +201,16 @@ namespace mpt {
     static constexpr auto is_rvalue_reference =
         std::is_rvalue_reference_v<decltype(any)>;
 
-    static constexpr auto accessors =
+    static constexpr auto array_of_accessors =
         std::conditional_t<is_rvalue_reference,
-                           detail::accessors<TypedAny &&, Function>,
-                           detail::accessors<TypedAny, Function>>::value;
+                           accessors<TypedAny &&, Function>,
+                           accessors<TypedAny, Function>>::value;
 
     if constexpr (is_rvalue_reference)
-      return accessors[any.type_index()](std::forward<Function>(function),
-                                         std::move(any.value()));
+      return array_of_accessors[any.type_index()](
+          std::forward<Function>(function), std::move(any.value()));
     else
-      return accessors[any.type_index()](std::forward<Function>(function),
-                                         any.value());
+      return array_of_accessors[any.type_index()](
+          std::forward<Function>(function), any.value());
   }
 } // namespace mpt

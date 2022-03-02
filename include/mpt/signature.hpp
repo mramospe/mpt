@@ -185,7 +185,7 @@ namespace mpt {
   static constexpr auto is_nonconst_member_function_v =
       is_nonconst_member_function<Callable>::value;
 
-  namespace detail {
+  namespace {
 
     /// Determine the STL function wrapper for a given signature
     template <class Signature> struct stl_function_wrapper_from_signature;
@@ -201,11 +201,11 @@ namespace mpt {
         member_function_signature<Output(Object &, Input...)>> {
       using type = std::function<Output(Object const &, Input...)>;
     };
-  } // namespace detail
+  } // namespace
 
   /// Determine the std::function wrapper associated to the given callable
   template <class Callable> struct stl_function_wrapper {
-    using type = typename detail::stl_function_wrapper_from_signature<
+    using type = typename stl_function_wrapper_from_signature<
         callable_signature_t<Callable>>::type;
   };
 
