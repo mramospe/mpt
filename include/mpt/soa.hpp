@@ -24,6 +24,10 @@
 namespace mpt {
 
 #ifndef MPT_DOXYGEN_WARD
+  template <class T, class Allocator> struct field;
+
+  template <class... Fields> struct composite_field;
+
   template <class...> class soa_value;
 
   template <class, class> class soa_proxy;
@@ -40,23 +44,6 @@ namespace mpt {
 
   template <class... Containers> class soa_const_zip;
 #endif
-
-  /// Define a basic field
-  template <class T, class Allocator = std::allocator<T>> struct field {
-    using field_type = field<T, Allocator>;
-    using value_type = T;
-    using allocator_type = Allocator;
-  };
-
-  /// Define a field that is composed by other fields
-  template <class... Fields> struct composite_field {
-    using field_type = composite_field<Fields...>;
-    template <class Container>
-    using proxy = soa_proxy<Container, mpt::types<Fields...>>;
-    template <class Container>
-    using const_proxy = soa_const_proxy<Container, mpt::types<Fields...>>;
-    using value_type = soa_value<Fields...>;
-  };
 
   /// Whether the given field type is basic
   template <class FieldType> struct is_basic_field_type : std::false_type {};
@@ -111,6 +98,42 @@ namespace mpt {
   /// Whether the given type is a valid field type
   template <class T> concept IsField = is_field_v<T>;
 
+  /*!\brief A field refering to a container of single value-types
+
+    Fields must be built inheriting from this class via
+    \code{.cpp}
+    struct position : mpt::field<float> { };
+    \endcode
+   */
+  template <class T, class Allocator = std::allocator<T>> struct field {
+    using field_type = field<T, Allocator>;
+    using value_type = T;
+    using allocator_type = Allocator;
+  };
+
+  /*!\brief A field that is composed by other fields
+
+    Fields must be built inheriting from this class via
+    \code{.cpp}
+    struct x : mpt::field<float> { };
+    struct y : mpt::field<float> { };
+    struct z : mpt::field<float> { };
+    struct position : mpt::composite_field<x, y, z> { };
+    \endcode
+
+    It is also possible to declare fields that depend on other
+    composite fields.
+   */
+  template <class... Fields>
+  requires(IsField<Fields> &&...) struct composite_field<Fields...> {
+    using field_type = composite_field<Fields...>;
+    template <class Container>
+    using proxy = soa_proxy<Container, mpt::types<Fields...>>;
+    template <class Container>
+    using const_proxy = soa_const_proxy<Container, mpt::types<Fields...>>;
+    using value_type = soa_value<Fields...>;
+  };
+
   namespace {
 
     /// Helper struct to determine the type of a container given the field type
@@ -128,11 +151,12 @@ namespace mpt {
     };
 #endif
 
-    /// Helper struct to determine the type of a container given the field type
+    /// Determines the type of a container given the field type
     template <class FieldType>
     using resolve_soa_vector_type_t =
         typename resolve_soa_vector_type<FieldType>::type;
 
+    /// Determines the index of the container with the given field
     template <std::size_t I, class Field, class... Containers>
     struct container_index_for_field_impl;
 
@@ -156,18 +180,22 @@ namespace mpt {
           container_index_for_field_impl<I + 1, Field, C...>::value;
     };
 
+    /// Determines the index of the container with the given field
     template <class Field, class... Containers>
     struct container_index_for_field {
       static constexpr auto value =
           container_index_for_field_impl<0, Field, Containers...>::value;
     };
 
+    /// Index of the container with the given field
     template <class Field, class... Containers>
     static constexpr auto container_index_for_field_v =
         container_index_for_field<Field, Containers...>::value;
 
+    /// Determines the subcontainer type associated to the given field
     template <class Container, class Field> struct container_type_for_field;
 
+#ifndef MPT_DOXYGEN_WARD
     template <class... F, class Field>
     requires HasType<Field, F...> struct container_type_for_field<
         soa_vector<F...>, Field> {
@@ -189,7 +217,9 @@ namespace mpt {
                          Containers...>,
           Field>::type;
     };
+#endif
 
+    /// Subcontainer type associated to the given field
     template <class Container, class Field>
     using container_type_for_field_t =
         typename container_type_for_field<Container, Field>::type;
@@ -197,6 +227,7 @@ namespace mpt {
     /// Determine the types of the values returned via the "get" accessors
     template <class Field> struct resolve_reference_types;
 
+#ifndef MPT_DOXYGEN_WARD
     template <class Field>
     requires IsBasicField<Field> struct resolve_reference_types<Field> {
       template <class> using reference_type = typename Field::value_type &;
@@ -213,16 +244,19 @@ namespace mpt {
       using const_reference_type = typename Field::template const_proxy<
           container_type_for_field_t<Container, Field>>;
     };
+#endif
 
+    /// Reference type for the given field
     template <class Container, class Field>
     using resolve_reference_type_t = typename resolve_reference_types<
         Field>::template reference_type<Container>;
 
+    /// Constant reference type for the given field
     template <class Container, class Field>
     using resolve_const_reference_type_t = typename resolve_reference_types<
         Field>::template const_reference_type<Container>;
 
-    ///
+    /// Helper struct to access elements on a container
     template <class Field, class Container> struct get_element_t {
 
       using container_type = Container;
@@ -239,6 +273,7 @@ namespace mpt {
       }
     };
 
+#ifndef MPT_DOXYGEN_WARD
     template <class Field>
     requires IsBasicField<Field> struct get_element_t<Field,
                                                       soa_vector<Field>> {
@@ -256,13 +291,16 @@ namespace mpt {
         return cont.at(index);
       }
     };
+#endif
 
+    /// Get the reference object for the given field
     template <class Field, class Container>
     auto get_element(Container &cont, typename Container::size_type index)
         -> decltype(get_element_t<Field, Container>{}(cont, index)) {
       return get_element_t<Field, Container>{}(cont, index);
     }
 
+    /// Get the constant reference object for the given field
     template <class Field, class Container>
     auto get_element(Container const &cont, typename Container::size_type index)
         -> decltype(get_element_t<Field, Container>{}(cont, index)) {
@@ -305,11 +343,12 @@ namespace mpt {
     using base_class_type = std::tuple<typename Fields::value_type...>;
 
   public:
+    /// The set of fields used
     using fields_type = mpt::types<Fields...>;
-
+    /// The reference type
     template <class Container, class FieldsSet>
     using proxy_type = soa_proxy<Container, FieldsSet>;
-
+    /// The constant reference type
     template <class Container, class FieldsSet>
     using const_proxy_type = soa_const_proxy<Container, FieldsSet>;
 
@@ -363,6 +402,7 @@ namespace mpt {
     /// Determine the SOA value type for the given field
     template <class Field> struct soa_value_for_field;
 
+#ifndef MPT_DOXYGEN_WARD
     template <class... Fields>
     struct soa_value_for_field<composite_field<Fields...>> {
       using type = soa_value<Fields...>;
@@ -371,6 +411,7 @@ namespace mpt {
     template <class Field> struct soa_value_for_field<field<Field>> {
       using type = typename Field::value_type;
     };
+#endif
 
     /// Determine the SOA value type for the given field
     template <class Field>
@@ -383,8 +424,10 @@ namespace mpt {
       return {std::forward<T>(v)...};
     }
 
+    /// Functor that converts proxies to values
     template <class Container, class TypeSet> struct soa_proxy_to_value_t;
 
+#ifndef MPT_DOXYGEN_WARD
     template <class Container, class... Fields>
     struct soa_proxy_to_value_t<Container, mpt::types<Fields...>> {
 
@@ -399,6 +442,7 @@ namespace mpt {
         return proxy;
       }
     };
+#endif
   } // namespace
 
   /// Make an SOA value for the given field
@@ -424,8 +468,6 @@ namespace mpt {
 
   /*!\brief Proxy that maintains constant the values of a container
    */
-  template <class Container, class FieldsSet> class soa_const_proxy;
-
   template <class Container, class... Fields>
   requires(IsField<Fields>
                &&...) class soa_const_proxy<Container, mpt::types<Fields...>>
@@ -433,18 +475,20 @@ namespace mpt {
                        Container const> {
 
   public:
+    /// Type of the container
     using container_type = Container;
+    /// The set of fields used
     using fields_type = mpt::types<Fields...>;
+    /// Base class
     using base_class_type =
         base_soa_proxy<soa_const_proxy<container_type, fields_type>,
                        container_type const>;
 
+    /// All constructors are implemented except for the empty constructor
     using base_class_type::base_class_type;
 
-    using proxy_type = soa_proxy<container_type, fields_type>;
-
     /// A constant proxy can be built from a proxy when this is constant
-    soa_const_proxy(proxy_type const &other)
+    soa_const_proxy(soa_proxy<container_type, fields_type> const &other)
         : base_class_type{other.m_ptr, other.m_index} {}
 
     /// Get the value of a field
@@ -456,33 +500,32 @@ namespace mpt {
 
   /*!\brief Proxy for an element of a container
    */
-  template <class Container, class FieldsSet> class soa_proxy;
-
   template <class Container, class... Fields>
   class soa_proxy<Container, mpt::types<Fields...>>
       : base_soa_proxy<soa_proxy<Container, mpt::types<Fields...>>, Container> {
 
   public:
+    /// Type of the container
     using container_type = Container;
+    /// The set of fields used
     using fields_type = mpt::types<Fields...>;
+    /// Base class
     using base_class_type =
         base_soa_proxy<soa_proxy<container_type, fields_type>, container_type>;
 
-    using value_type = soa_value<Fields...>;
-    using const_proxy_type = soa_const_proxy<container_type, fields_type>;
-
+    /// All constructors are implemented except for the empty constructor
     using base_class_type::base_class_type;
 
     /// Proxies that are const return constant proxies on access
     friend class soa_const_proxy<container_type, fields_type>;
 
     /// Assign the elements of the container from a value
-    soa_proxy &operator=(value_type const &other) {
+    soa_proxy &operator=(soa_value<Fields...> const &other) {
       ((this->template get<Fields>() = other.template get<Fields>()), ...);
       return *this;
     }
     /// Assign the elements of the container from a value
-    soa_proxy &operator=(value_type &&other) {
+    soa_proxy &operator=(soa_value<Fields...> &&other) {
       ((this->template get<Fields>() = std::move(other.template get<Fields>())),
        ...);
       return *this;
@@ -499,7 +542,8 @@ namespace mpt {
       return *this;
     }
     /// Assign the elements of the container from another proxy
-    soa_proxy &operator=(const_proxy_type const &other) {
+    soa_proxy &
+    operator=(soa_const_proxy<container_type, fields_type> const &other) {
       ((this->template get<Fields>() = other.template get<Fields>()), ...);
       return *this;
     }
@@ -610,19 +654,19 @@ namespace mpt {
 
   /*!\brief Iterator over a vector with a struct-of-arrays memory layout
    */
-  template <class Container, class FieldsSet> class soa_iterator;
-
   template <class Container, class... Fields>
   class soa_iterator<Container, mpt::types<Fields...>>
       : public base_soa_iterator<soa_iterator<Container, mpt::types<Fields...>>,
                                  Container> {
 
+  public:
+    /// Type of the container
     using container_type = Container;
+    /// The set of fields used
     using fields_type = mpt::types<Fields...>;
+    /// Base class
     using base_class_type =
         base_soa_iterator<soa_iterator<Container, fields_type>, container_type>;
-
-  public:
     /// Type of the proxy
     using reference_type =
         std::conditional_t<(sizeof...(Fields) > 1u),
@@ -633,8 +677,10 @@ namespace mpt {
         (sizeof...(Fields) > 1u), soa_const_proxy<container_type, fields_type>,
         typename mpt::type_at_t<0, Fields...>::value_type const &>;
 
+    /// Size type
     using size_type = std::size_t;
 
+    /// All constructors are implemented except for the empty constructor
     using base_class_type::base_class_type;
 
     /// Return a proxy to the current values
@@ -655,27 +701,31 @@ namespace mpt {
 
   /*!\brief Constant iterator over a vector with a SOA memory layout
    */
-  template <class Container, class FieldsSet> class soa_const_iterator;
-
   template <class Container, class... Fields>
   class soa_const_iterator<Container, mpt::types<Fields...>>
       : public base_soa_iterator<
             soa_const_iterator<Container, mpt::types<Fields...>>,
             Container const> {
 
+  public:
+    /// Type of the container
     using container_type = Container;
+    /// The set of fields used
     using fields_type = mpt::types<Fields...>;
+    /// Base class
     using base_class_type =
         base_soa_iterator<soa_const_iterator<container_type, fields_type>,
                           container_type const>;
 
-  public:
     /// Type of the constant proxy
     using const_reference_type = std::conditional_t<
         (sizeof...(Fields) > 1), soa_const_proxy<container_type, fields_type>,
         typename mpt::type_at_t<0, Fields...>::value_type const &>;
+
+    /// Size type
     using size_type = std::size_t;
 
+    /// All constructors are implemented except for the empty constructor
     using base_class_type::base_class_type;
 
     /// Return a constant proxy to the current values
@@ -697,8 +747,6 @@ namespace mpt {
                               typename Field::allocator_type> {
 
   protected:
-    using base_class_type =
-        std::vector<typename Field::value_type, typename Field::allocator_type>;
     using container_type = soa_vector<Field>;
 
   public:
@@ -710,7 +758,8 @@ namespace mpt {
     using reference_type = value_type &;
     using const_reference_type = value_type const &;
 
-    static constexpr auto number_of_fields = 1u;
+    using base_class_type =
+        std::vector<typename Field::value_type, typename Field::allocator_type>;
 
     soa_vector() = default;
     soa_vector(soa_vector const &) = default;
@@ -759,20 +808,30 @@ namespace mpt {
     using container_type = soa_vector<Fields...>;
 
   public:
+    /// The set of fields used
     using fields_type = mpt::types<Fields...>;
+    /// Iterator type
     using iterator_type = soa_iterator<soa_vector, fields_type>;
+    /// Constant iterator type
     using const_iterator_type = soa_const_iterator<soa_vector, fields_type>;
+    /// Reference type
     using proxy_type = soa_proxy<soa_vector, fields_type>;
+    /// Constant reference type
     using const_proxy_type = soa_const_proxy<soa_vector, fields_type>;
+    /// Size type
     using size_type = std::size_t;
+    /// Value type
     using value_type = soa_value<Fields...>;
 
-    static constexpr auto number_of_fields = sizeof...(Fields);
-
+    /// Build an empty vector
     soa_vector() = default;
+    /// Copy constructor
     soa_vector(soa_vector const &) = default;
+    /// Move constructor
     soa_vector(soa_vector &&) = default;
+    /// Copy assignment
     soa_vector &operator=(soa_vector const &) = default;
+    /// Move assignment
     soa_vector &operator=(soa_vector &&) = default;
 
     /// Construct a vector with \a n elements
@@ -822,12 +881,12 @@ namespace mpt {
 
     /// Reserve memory for the given number of elements
     void reserve(size_type n) {
-      reserve(n, std::make_index_sequence<number_of_fields>());
+      reserve(n, std::make_index_sequence<sizeof...(Fields)>());
     }
 
     /// Change the size of the vector
     void resize(size_type n) {
-      resize(n, std::make_index_sequence<number_of_fields>());
+      resize(n, std::make_index_sequence<sizeof...(Fields)>());
     }
 
     /// Size of the vector
@@ -853,39 +912,46 @@ namespace mpt {
 
   namespace {
 
+    /// Check if two sets have different fields
     template <class...> struct have_different_fields;
 
-    template <template <class...> class U, template <class...> class V,
-              class... u, class... v, class... F>
-    struct have_different_fields<U<u...>, V<v...>, F...> {
+#ifndef MPT_DOXYGEN_WARD
+    template <class... U, class... V, class... F>
+    struct have_different_fields<mpt::types<U...>, mpt::types<V...>, F...> {
       static constexpr auto value =
-          (!(has_type_v<u, v...> || ...) &&
-           (have_different_fields<U<u...>, F...>::value &&
-            have_different_fields<V<v...>, F...>::value));
+          (!(has_type_v<U, V...> || ...) &&
+           (have_different_fields<mpt::types<U...>, F...>::value &&
+            have_different_fields<mpt::types<V...>, F...>::value));
     };
 
-    template <template <class...> class U, template <class...> class V,
-              class... u, class... v>
-    struct have_different_fields<U<u...>, V<v...>> {
-      static constexpr auto value = !(has_type_v<u, v...> || ...);
+    template <class... U, class... V>
+    struct have_different_fields<mpt::types<U...>, mpt::types<V...>> {
+      static constexpr auto value = !(has_type_v<U, V...> || ...);
     };
+#endif
 
+    /// Whether the given packs of fields have intersecting fields or not
     template <class... FieldPacks>
     static constexpr auto have_different_fields_v =
         have_different_fields<FieldPacks...>::value;
 
+    /// Base class for SOA zip objects
     template <class... Containers>
-    class base_soa_zip : protected std::tuple<Containers *...> {
-
-      using base_class_type = std::tuple<Containers *...>;
+    requires NonEmptyTemplateArguments<Containers...> class base_soa_zip
+        : protected std::tuple<Containers *...> {
 
       static_assert(
           have_different_fields_v<typename Containers::fields_type...>,
           "Attempt to make a zip of vectors with clashing fields");
 
     public:
+      /// Base class
+      using base_class_type = std::tuple<Containers *...>;
+
+      /// Size type
       using size_type = std::size_t;
 
+      base_soa_zip() = delete;
       base_soa_zip(base_soa_zip const &) = default;
       base_soa_zip(base_soa_zip &&) = default;
       base_soa_zip &operator=(base_soa_zip const &) = default;
@@ -898,8 +964,10 @@ namespace mpt {
       base_soa_zip(Containers *... ptrs) : base_class_type{ptrs...} {}
     };
 
+    /// Build a concatenated set of fields
     template <class... FieldsPack> struct concatenated_field_types;
 
+#ifndef MPT_DOXYGEN_WARD
     template <class... U, class... V, class... FieldsPack>
     struct concatenated_field_types<mpt::types<U...>, mpt::types<V...>,
                                     FieldsPack...> {
@@ -911,27 +979,35 @@ namespace mpt {
     template <class... F> struct concatenated_field_types<mpt::types<F...>> {
       using type = mpt::types<F...>;
     };
+#endif
 
+    /// Concatenated set of fields
     template <class... FieldsPack>
     using concatenated_field_types_t =
         typename concatenated_field_types<FieldsPack...>::type;
 
+    /// Build the value associated to the given set of types
     template <class TypesSet> struct concatenated_value_types;
 
+#ifndef MPT_DOXYGEN_WARD
     template <class... F> struct concatenated_value_types<mpt::types<F...>> {
       using type = soa_value<F...>;
     };
+#endif
 
+    /// Value type associated to the given set of types
     template <class TypesSet>
     using concatenated_value_types_t =
         typename concatenated_value_types<TypesSet>::type;
 
+    /// Build the value type associated to the given sets of field types
     template <class... FieldsPack>
     struct concatenated_value_types_from_field_sets {
       using type =
           concatenated_value_types_t<concatenated_field_types_t<FieldsPack...>>;
     };
 
+    /// Value type associated to the given sets of field types
     template <class... FieldsPack>
     using concatenated_value_types_from_field_sets_t =
         typename concatenated_value_types_from_field_sets<FieldsPack...>::type;
@@ -945,20 +1021,30 @@ namespace mpt {
   template <class... Containers>
   class soa_zip : public base_soa_zip<Containers...> {
 
+  public:
+    /// Base class
     using base_class_type = base_soa_zip<Containers...>;
+    /// Type of the container
     using container_type = soa_zip<Containers...>;
 
-  public:
+    /// Enable default constructors and assignments (empty/copy/move)
     using base_class_type::base_class_type;
 
+    /// The set of fields used
     using fields_type =
         concatenated_field_types_t<typename Containers::fields_type...>;
+    /// Iterator type
     using iterator_type = soa_iterator<soa_zip, fields_type>;
+    /// Constant iterator type
     using const_iterator_type = soa_const_iterator<soa_zip, fields_type>;
+    /// Reference type
     using proxy_type = soa_proxy<soa_zip, fields_type>;
+    /// Constant reference type
     using const_proxy_type = soa_const_proxy<soa_zip, fields_type>;
+    /// Value type
     using value_type = concatenated_value_types_from_field_sets_t<
         typename Containers::fields_type...>;
+    /// Size type
     using size_type = base_class_type::size_type;
 
     /// Access the element at the given index
@@ -1001,9 +1087,11 @@ namespace mpt {
           index);
     }
 
+    /// The only function that can build zip objects
     friend soa_zip make_soa_zip<Containers...>(Containers &...);
 
   protected:
+    /// Constructor from the pointers to the containers
     soa_zip(Containers *... ptrs) : base_class_type{ptrs...} {}
   };
 
@@ -1015,18 +1103,25 @@ namespace mpt {
   template <class... Containers>
   class soa_const_zip : public base_soa_zip<Containers const...> {
 
-    using base_class_type = base_soa_zip<Containers const...>;
-    using container_type = soa_const_zip<Containers...>;
-
   public:
+    /// Base class
+    using base_class_type = base_soa_zip<Containers const...>;
+    /// Type of the container
+    using container_type = soa_const_zip<Containers...>;
+    /// Enable default constructors and assignments (empty/copy/move)
     using base_class_type::base_class_type;
 
+    /// The set of fields used
     using fields_type =
         concatenated_field_types_t<typename Containers::fields_type...>;
+    /// Constant iterator type
     using const_iterator_type = soa_const_iterator<soa_const_zip, fields_type>;
+    /// Constant reference type
     using const_proxy_type = soa_const_proxy<soa_const_zip, fields_type>;
+    /// Value type
     using value_type = concatenated_value_types_from_field_sets_t<
         typename Containers::fields_type...>;
+    /// Size type
     using size_type = base_class_type::size_type;
 
     /// Access the element at the given index
@@ -1053,9 +1148,11 @@ namespace mpt {
           index);
     }
 
+    /// The only function that can build zip objects
     friend soa_const_zip make_soa_zip<Containers...>(Containers const &...);
 
   protected:
+    /// Constructor from the pointers to the constant containers
     soa_const_zip(Containers const *... ptrs) : base_class_type{ptrs...} {}
   };
 
