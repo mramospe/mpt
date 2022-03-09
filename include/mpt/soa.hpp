@@ -17,13 +17,30 @@ namespace mpt {
 #ifndef MPT_DOXYGEN_WARD
   template <class...> class soa_value;
 
-  template <class...> class soa_proxy;
+  template <class, class> class soa_proxy;
 
-  template <class...> class soa_const_proxy;
+  template <class, class> class soa_const_proxy;
 
-  template <class, class...> class soa_iterator;
+  template <class, class> class soa_iterator;
 
-  template <class, class...> class soa_const_iterator;
+  template <class, class> class soa_const_iterator;
+
+  /*!\brief A vector with a struct-of-arrays memory layout
+
+    This object has a different structure depending whether it refers
+    to a single field (containing only one value) or several fields
+    (with several values).
+    The objects returned by the accessor operators act as proxies.
+    This means that a modification to the returned values implies a
+    modification of the values stored in the vector.
+    To obtain the corresponding value one can call to \ref
+    mpt::soa_proxy_to_value.
+  */
+  template <class... Fields> class soa_vector;
+
+  template <class... Containers> class soa_zip;
+
+  template <class... Containers> class soa_const_zip;
 #endif
 
   /// Define a basic field
@@ -36,8 +53,10 @@ namespace mpt {
   /// Define a field that is composed by other fields
   template <class... Fields> struct composite_field {
     using field_type = composite_field<Fields...>;
-    using proxy_type = soa_proxy<Fields...>;
-    using const_proxy_type = soa_const_proxy<Fields...>;
+    template <class Container>
+    using proxy = soa_proxy<Container, mpt::types<Fields...>>;
+    template <class Container>
+    using const_proxy = soa_const_proxy<Container, mpt::types<Fields...>>;
     using value_type = soa_value<Fields...>;
   };
 
@@ -94,58 +113,116 @@ namespace mpt {
   /// Whether the given type is a valid field type
   template <class T> concept IsField = is_field_v<T>;
 
-  /*!\brief A vector with a struct-of-arrays memory layout
-
-    This object has a different structure depending whether it refers
-    to a single field (containing only one value) or several fields
-    (with several values).
-    The objects returned by the accessor operators act as proxies.
-    This means that a modification to the returned values implies a
-    modification of the values stored in the vector.
-    To obtain the corresponding value one can call to \ref
-    mpt::soa_proxy_to_value.
-   */
-  template <class... Fields>
-      requires NonEmptyTemplateArguments<Fields...> &&
-      (IsField<Fields> && ...) class soa_vector;
-
   namespace {
+
+    /// Helper struct to determine the type of a container given the field type
+    template <class FieldType> struct resolve_soa_vector_type;
+
+#ifndef MPT_DOXYGEN_WARD
+    template <class T, class Allocator>
+    struct resolve_soa_vector_type<field<T, Allocator>> {
+      using type = soa_vector<field<T, Allocator>>;
+    };
+
+    template <class... Fields>
+    struct resolve_soa_vector_type<composite_field<Fields...>> {
+      using type = soa_vector<Fields...>;
+    };
+#endif
+
+    /// Helper struct to determine the type of a container given the field type
+    template <class FieldType>
+    using resolve_soa_vector_type_t =
+        typename resolve_soa_vector_type<FieldType>::type;
+
+    template <std::size_t I, class Field, class... Containers>
+    struct container_index_for_field_impl;
+
+    template <std::size_t I, class Field, class First, class... V>
+    requires mpt::templated_object_has_type_v<
+        Field,
+        typename First::
+            fields_type> struct container_index_for_field_impl<I, Field, First,
+                                                               V...> {
+      static constexpr auto value = I;
+    };
+
+    template <std::size_t I, class Field, class First, class... C>
+    requires(!mpt::templated_object_has_type_v<
+             Field,
+             typename First::
+                 fields_type>) struct container_index_for_field_impl<I, Field,
+                                                                     First,
+                                                                     C...> {
+      static constexpr auto value =
+          container_index_for_field_impl<I + 1, Field, C...>::value;
+    };
+
+    template <class Field, class... Containers>
+    struct container_index_for_field {
+      static constexpr auto value =
+          container_index_for_field_impl<0, Field, Containers...>::value;
+    };
+
+    template <class Field, class... Containers>
+    static constexpr auto container_index_for_field_v =
+        container_index_for_field<Field, Containers...>::value;
+
+    template <class Container, class Field> struct container_type_for_field;
+
+    template <class... F, class Field>
+    requires HasType<Field, F...> struct container_type_for_field<
+        soa_vector<F...>, Field> {
+      using type = resolve_soa_vector_type_t<typename Field::field_type>;
+    };
+
+    template <class... Containers, class Field>
+    struct container_type_for_field<soa_zip<Containers...>, Field> {
+      using type = typename container_type_for_field<
+          mpt::type_at_t<container_index_for_field_v<Field, Containers...>,
+                         Containers...>,
+          Field>::type;
+    };
+
+    template <class... Containers, class Field>
+    struct container_type_for_field<soa_const_zip<Containers...>, Field> {
+      using type = typename container_type_for_field<
+          mpt::type_at_t<container_index_for_field_v<Field, Containers...>,
+                         Containers...>,
+          Field>::type;
+    };
+
+    template <class Container, class Field>
+    using container_type_for_field_t =
+        typename container_type_for_field<Container, Field>::type;
 
     /// Determine the types of the values returned via the "get" accessors
     template <class Field> struct resolve_reference_types;
 
     template <class Field>
     requires IsBasicField<Field> struct resolve_reference_types<Field> {
-      using reference_type = typename Field::value_type &;
+      template <class> using reference_type = typename Field::value_type &;
+      template <class>
       using const_reference_type = typename Field::value_type const &;
     };
 
     template <class Field>
     requires IsCompositeField<Field> struct resolve_reference_types<Field> {
-      using reference_type = typename Field::proxy_type;
-      using const_reference_type = typename Field::const_proxy_type;
+      template <class Container>
+      using reference_type = typename Field::template proxy<
+          container_type_for_field_t<Container, Field>>;
+      template <class Container>
+      using const_reference_type = typename Field::template const_proxy<
+          container_type_for_field_t<Container, Field>>;
     };
 
-    /// Determine the types of the values returned via the "get" accessors
-    template <class... Field>
-    requires(
-        IsField<Field> &&...) struct resolve_reference_types_for_fields_pack {
-      using last_field_type = mpt::type_at_t<(sizeof...(Field) - 1), Field...>;
-      using reference_type =
-          typename resolve_reference_types<last_field_type>::reference_type;
-      using const_reference_type = typename resolve_reference_types<
-          last_field_type>::const_reference_type;
-    };
+    template <class Container, class Field>
+    using resolve_reference_type_t = typename resolve_reference_types<
+        Field>::template reference_type<Container>;
 
-    template <class... Field>
-    using resolve_reference_type_for_fields_pack_t =
-        typename resolve_reference_types_for_fields_pack<
-            Field...>::reference_type;
-
-    template <class... Field>
-    using resolve_const_reference_type_for_fields_pack_t =
-        typename resolve_reference_types_for_fields_pack<
-            Field...>::const_reference_type;
+    template <class Container, class Field>
+    using resolve_const_reference_type_t = typename resolve_reference_types<
+        Field>::template const_reference_type<Container>;
 
     /// Base of any proxy
     template <class DerivedProxy, class VectorType> class base_soa_proxy {
@@ -183,51 +260,56 @@ namespace mpt {
     using base_class_type = std::tuple<typename Fields::value_type...>;
 
   public:
-    using proxy_type = soa_proxy<Fields...>;
-    using const_proxy_type = soa_const_proxy<Fields...>;
+    using fields_type = mpt::types<Fields...>;
+
+    template <class Container, class FieldsSet>
+    using proxy_type = soa_proxy<Container, FieldsSet>;
+
+    template <class Container, class FieldsSet>
+    using const_proxy_type = soa_const_proxy<Container, FieldsSet>;
 
     /// Constructors inherited from \ref std::tuple
     using base_class_type::base_class_type;
     /// Constructor from a proxy
-    soa_value(proxy_type const &other)
+    template <class Container, class FieldsSet>
+    soa_value(proxy_type<Container, FieldsSet> const &other)
         : base_class_type{other.template get<Fields>()...} {}
     /// Constructor from a proxy
-    soa_value(proxy_type &&other)
+    template <class Container, class FieldsSet>
+    soa_value(proxy_type<Container, FieldsSet> &&other)
         : base_class_type{std::move(other.template get<Fields>())...} {}
     /// Constructor from a constant proxy
-    soa_value(const_proxy_type const &other)
+    template <class Container, class FieldsSet>
+    soa_value(const_proxy_type<Container, FieldsSet> const &other)
         : base_class_type{other.template get<Fields>()...} {}
     /// Assignment from a proxy
-    soa_value &operator=(proxy_type const &other) {
+    template <class Container, class FieldsSet>
+    soa_value &operator=(proxy_type<Container, FieldsSet> const &other) {
       ((this->template get<Fields>() = other.template get<Fields>()), ...);
       return *this;
     }
     /// Assignment from a proxy
-    soa_value &operator=(proxy_type &&other) {
+    template <class Container, class FieldsSet>
+    soa_value &operator=(proxy_type<Container, FieldsSet> &&other) {
       ((this->template get<Fields>() = std::move(other.template get<Fields>())),
        ...);
       return *this;
     }
     /// Assignment from a constant proxy
-    soa_value &operator=(const_proxy_type const &other) {
+    template <class Container, class FieldsSet>
+    soa_value &operator=(const_proxy_type<Container, FieldsSet> const &other) {
       ((this->template get<Fields>() = other.template get<Fields>()), ...);
       return *this;
     }
     /// Get the value of a field
-    template <class Field, class... Next> auto &get() {
-      if constexpr (sizeof...(Next) == 0)
-        return std::get<mpt::type_index_v<Field, Fields...>>(*this);
-      else
-        return std::get<mpt::type_index_v<Field, Fields...>>(*this)
-            .template get<Next...>();
+    template <class F> auto &get() {
+      return std::get<mpt::templated_object_type_index_v<F, fields_type>>(
+          *this);
     }
     /// Get the value of a field
-    template <class Field, class... Next> auto const &get() const {
-      if constexpr (sizeof...(Next) == 0)
-        return std::get<mpt::type_index_v<Field, Fields...>>(*this);
-      else
-        return std::get<mpt::type_index_v<Field, Fields...>>(*this)
-            .template get<Next...>();
+    template <class F> auto const &get() const {
+      return std::get<mpt::templated_object_type_index_v<F, fields_type>>(
+          *this);
     }
   };
 
@@ -264,54 +346,67 @@ namespace mpt {
   }
 
   /// Transform the given proxy to a value type
+  /*
   template <class... Fields>
   requires(IsField<Fields> &&...) soa_value<Fields...> soa_proxy_to_value(
       soa_proxy<Fields...> const &proxy) {
     return proxy;
   }
+  */
 
   /*!\brief Proxy that maintains constant the values of a container
    */
-  template <class... Fields>
-  class soa_const_proxy : base_soa_proxy<soa_const_proxy<Fields...>,
-                                         soa_vector<Fields...> const> {
+  template <class Container, class FieldsSet> class soa_const_proxy;
 
-    using base_class_type =
-        base_soa_proxy<soa_const_proxy<Fields...>, soa_vector<Fields...> const>;
+  template <class Container, class... Fields>
+  requires(IsField<Fields>
+               &&...) class soa_const_proxy<Container, mpt::types<Fields...>>
+      : base_soa_proxy<soa_const_proxy<Container, mpt::types<Fields...>>,
+                       Container const> {
 
   public:
+    using container_type = Container;
+    using fields_type = mpt::types<Fields...>;
+    using base_class_type =
+        base_soa_proxy<soa_const_proxy<container_type, fields_type>,
+                       container_type const>;
+
     using base_class_type::base_class_type;
 
-    using proxy_type = soa_proxy<Fields...>;
+    using proxy_type = soa_proxy<container_type, fields_type>;
 
     /// A constant proxy can be built from a proxy when this is constant
     soa_const_proxy(proxy_type const &other)
         : base_class_type{other.m_ptr, other.m_index} {}
 
     /// Get the value of a field
-    template <class... F>
-    resolve_const_reference_type_for_fields_pack_t<F...> get() const {
-      return this->m_ptr->template get<F...>(this->m_index);
+    template <class F>
+    resolve_const_reference_type_t<container_type, F> get() const {
+      return this->m_ptr->template get<F>(this->m_index);
     }
   };
 
   /*!\brief Proxy for an element of a container
    */
-  template <class... Fields>
-  class soa_proxy
-      : base_soa_proxy<soa_proxy<Fields...>, soa_vector<Fields...>> {
+  template <class Container, class FieldsSet> class soa_proxy;
 
-    using base_class_type =
-        base_soa_proxy<soa_proxy<Fields...>, soa_vector<Fields...>>;
+  template <class Container, class... Fields>
+  class soa_proxy<Container, mpt::types<Fields...>>
+      : base_soa_proxy<soa_proxy<Container, mpt::types<Fields...>>, Container> {
 
   public:
+    using container_type = Container;
+    using fields_type = mpt::types<Fields...>;
+    using base_class_type =
+        base_soa_proxy<soa_proxy<container_type, fields_type>, container_type>;
+
     using value_type = soa_value<Fields...>;
-    using const_proxy_type = soa_const_proxy<Fields...>;
+    using const_proxy_type = soa_const_proxy<container_type, fields_type>;
 
     using base_class_type::base_class_type;
 
     /// Proxies that are const return constant proxies on access
-    friend class soa_const_proxy<Fields...>;
+    friend class soa_const_proxy<container_type, fields_type>;
 
     /// Assign the elements of the container from a value
     soa_proxy &operator=(value_type const &other) {
@@ -341,13 +436,13 @@ namespace mpt {
       return *this;
     }
     /// Get the value of a field
-    template <class... F> resolve_reference_type_for_fields_pack_t<F...> get() {
-      return this->m_ptr->template get<F...>(this->m_index);
+    template <class F> resolve_reference_type_t<container_type, F> get() {
+      return this->m_ptr->template get<F>(this->m_index);
     }
     /// Get the value of a field
-    template <class... F>
-    resolve_const_reference_type_for_fields_pack_t<F...> get() const {
-      return this->m_ptr->template get<F...>(this->m_index);
+    template <class F>
+    resolve_const_reference_type_t<container_type, F> get() const {
+      return this->m_ptr->template get<F>(this->m_index);
     }
   };
 
@@ -447,23 +542,28 @@ namespace mpt {
 
   /*!\brief Iterator over a vector with a struct-of-arrays memory layout
    */
-  template <class F, class... Fields>
-  class soa_iterator : public base_soa_iterator<soa_iterator<F, Fields...>,
-                                                soa_vector<F, Fields...>> {
+  template <class Container, class FieldsSet> class soa_iterator;
 
+  template <class Container, class... Fields>
+  class soa_iterator<Container, mpt::types<Fields...>>
+      : public base_soa_iterator<soa_iterator<Container, mpt::types<Fields...>>,
+                                 Container> {
+
+    using container_type = Container;
+    using fields_type = mpt::types<Fields...>;
     using base_class_type =
-        base_soa_iterator<soa_iterator<F, Fields...>, soa_vector<F, Fields...>>;
+        base_soa_iterator<soa_iterator<Container, fields_type>, container_type>;
 
   public:
     /// Type of the proxy
     using reference_type =
-        std::conditional_t<(sizeof...(Fields) > 0), soa_proxy<F, Fields...>,
-                           typename F::value_type &>;
+        std::conditional_t<(sizeof...(Fields) > 1u),
+                           soa_proxy<container_type, fields_type>,
+                           typename mpt::type_at_t<0, Fields...>::value_type &>;
     /// Type of the constant proxy
-    using const_reference_type =
-        std::conditional_t<(sizeof...(Fields) > 0),
-                           soa_const_proxy<F, Fields...>,
-                           typename F::value_type const &>;
+    using const_reference_type = std::conditional_t<
+        (sizeof...(Fields) > 1u), soa_const_proxy<container_type, fields_type>,
+        typename mpt::type_at_t<0, Fields...>::value_type const &>;
 
     using size_type = std::size_t;
 
@@ -471,14 +571,14 @@ namespace mpt {
 
     /// Return a proxy to the current values
     reference_type operator*() {
-      if constexpr (sizeof...(Fields) > 0)
+      if constexpr (sizeof...(Fields) > 1u)
         return {this->m_ptr, this->m_index};
       else
         return this->m_ptr->at(this->m_index);
     }
     /// Return a constant proxy to the current values
     const_reference_type operator*() const {
-      if constexpr (sizeof...(Fields) > 0)
+      if constexpr (sizeof...(Fields) > 1u)
         return {this->m_ptr, this->m_index};
       else
         return this->m_ptr->at(this->m_index);
@@ -487,55 +587,37 @@ namespace mpt {
 
   /*!\brief Constant iterator over a vector with a SOA memory layout
    */
-  template <class F, class... Fields>
-  class soa_const_iterator
-      : public base_soa_iterator<soa_const_iterator<F, Fields...>,
-                                 soa_vector<F, Fields...> const> {
+  template <class Container, class FieldsSet> class soa_const_iterator;
 
-    using base_class_type = base_soa_iterator<soa_const_iterator<F, Fields...>,
-                                              soa_vector<F, Fields...> const>;
+  template <class Container, class... Fields>
+  class soa_const_iterator<Container, mpt::types<Fields...>>
+      : public base_soa_iterator<
+            soa_const_iterator<Container, mpt::types<Fields...>>,
+            Container const> {
+
+    using container_type = Container;
+    using fields_type = mpt::types<Fields...>;
+    using base_class_type =
+        base_soa_iterator<soa_const_iterator<container_type, fields_type>,
+                          container_type const>;
 
   public:
     /// Type of the constant proxy
-    using const_reference_type =
-        std::conditional_t<(sizeof...(Fields) > 0),
-                           soa_const_proxy<F, Fields...>,
-                           typename F::value_type const &>;
+    using const_reference_type = std::conditional_t<
+        (sizeof...(Fields) > 1), soa_const_proxy<container_type, fields_type>,
+        typename mpt::type_at_t<0, Fields...>::value_type const &>;
     using size_type = std::size_t;
 
     using base_class_type::base_class_type;
 
     /// Return a constant proxy to the current values
     const_reference_type operator*() const {
-      if constexpr (sizeof...(Fields) > 0)
+      if constexpr (sizeof...(Fields) > 1)
         return {this->m_ptr, this->m_index};
       else
         return this->m_ptr->at(this->m_index);
     }
   };
-
-  namespace {
-
-    /// Helper struct to determine the type of a container given the field type
-    template <class FieldType> struct resolve_soa_vector_type;
-
-#ifndef MPT_DOXYGEN_WARD
-    template <class T, class Allocator>
-    struct resolve_soa_vector_type<field<T, Allocator>> {
-      using type = soa_vector<field<T, Allocator>>;
-    };
-
-    template <class... Fields>
-    struct resolve_soa_vector_type<composite_field<Fields...>> {
-      using type = soa_vector<Fields...>;
-    };
-#endif
-
-    /// Helper struct to determine the type of a container given the field type
-    template <class FieldType>
-    using resolve_soa_vector_type_t =
-        typename resolve_soa_vector_type<FieldType>::type;
-  } // namespace
 
   /*!\brief A vector with a struct-of-arrays memory layout
 
@@ -549,10 +631,12 @@ namespace mpt {
   protected:
     using base_class_type =
         std::vector<typename Field::value_type, typename Field::allocator_type>;
+    using container_type = soa_vector<Field>;
 
   public:
-    using iterator_type = soa_iterator<Field>;
-    using const_iterator_type = soa_const_iterator<Field>;
+    using fields_type = mpt::types<Field>;
+    using iterator_type = soa_iterator<soa_vector, fields_type>;
+    using const_iterator_type = soa_const_iterator<soa_vector, fields_type>;
     using size_type = std::size_t;
     using value_type = typename Field::value_type;
     using reference_type = value_type &;
@@ -599,13 +683,19 @@ namespace mpt {
    */
   template <class... Fields>
       requires NonEmptyTemplateArguments<Fields...> &&
-      (IsField<Fields> && ...) class soa_vector {
+      (IsField<Fields> && ...) class soa_vector<Fields...> {
+
+    static_assert(!mpt::has_repeated_template_arguments_v<Fields...>,
+                  "Repeated fields in SOA vector definition");
+
+    using container_type = soa_vector<Fields...>;
 
   public:
-    using iterator_type = soa_iterator<Fields...>;
-    using const_iterator_type = soa_const_iterator<Fields...>;
-    using proxy_type = soa_proxy<Fields...>;
-    using const_proxy_type = soa_const_proxy<Fields...>;
+    using fields_type = mpt::types<Fields...>;
+    using iterator_type = soa_iterator<soa_vector, fields_type>;
+    using const_iterator_type = soa_const_iterator<soa_vector, fields_type>;
+    using proxy_type = soa_proxy<soa_vector, fields_type>;
+    using const_proxy_type = soa_const_proxy<soa_vector, fields_type>;
     using size_type = std::size_t;
     using value_type = soa_value<Fields...>;
 
@@ -647,26 +737,19 @@ namespace mpt {
     const_iterator_type cend() const { return {this, size()}; }
 
     /// Access the proxy of a field at the given index
-    template <class Field, class... Next>
-    resolve_reference_type_for_fields_pack_t<Field, Next...>
-    get(size_type index) {
-      if constexpr (sizeof...(Next) == 0)
-        return std::get<mpt::type_index_v<Field, Fields...>>(m_containers)
-            .at(index);
-      else
-        return std::get<mpt::type_index_v<Field, Fields...>>(m_containers)
-            .template get<Next...>(index);
+    template <class F>
+    resolve_reference_type_t<container_type, F> get(size_type index) {
+      return std::get<mpt::templated_object_type_index_v<F, fields_type>>(
+                 m_containers)
+          .at(index);
     }
     /// Access the constant proxy of a field at the given index
-    template <class Field, class... Next>
-    resolve_const_reference_type_for_fields_pack_t<Field, Next...>
+    template <class F>
+    resolve_const_reference_type_t<container_type, F>
     get(size_type index) const {
-      if constexpr (sizeof...(Next) == 0)
-        return std::get<mpt::type_index_v<Field, Fields...>>(m_containers)
-            .at(index);
-      else
-        return std::get<mpt::type_index_v<Field, Fields...>>(m_containers)
-            .template get<Next...>(index);
+      return std::get<mpt::templated_object_type_index_v<F, fields_type>>(
+                 m_containers)
+          .at(index);
     }
 
     /// Reserve memory for the given number of elements
@@ -699,4 +782,221 @@ namespace mpt {
     }
 #endif
   };
+
+  namespace {
+
+    template <class...> struct have_different_fields;
+
+    template <template <class...> class U, template <class...> class V,
+              class... u, class... v, class... F>
+    struct have_different_fields<U<u...>, V<v...>, F...> {
+      static constexpr auto value =
+          (!(has_type_v<u, v...> || ...) &&
+           (have_different_fields<U<u...>, F...>::value &&
+            have_different_fields<V<v...>, F...>::value));
+    };
+
+    template <template <class...> class U, template <class...> class V,
+              class... u, class... v>
+    struct have_different_fields<U<u...>, V<v...>> {
+      static constexpr auto value = !(has_type_v<u, v...> || ...);
+    };
+
+    template <class... FieldPacks>
+    static constexpr auto have_different_fields_v =
+        have_different_fields<FieldPacks...>::value;
+
+    template <class... Containers>
+    class base_soa_zip : protected std::tuple<Containers *...> {
+
+      using base_class_type = std::tuple<Containers *...>;
+
+      static_assert(
+          have_different_fields_v<typename Containers::fields_type...>,
+          "Attempt to make a zip of vectors with clashing fields");
+
+    public:
+      using size_type = std::size_t;
+
+      base_soa_zip(base_soa_zip const &) = default;
+      base_soa_zip(base_soa_zip &&) = default;
+      base_soa_zip &operator=(base_soa_zip const &) = default;
+      base_soa_zip &operator=(base_soa_zip &&) = default;
+
+      /// Size of the containers
+      size_type size() const { return std::get<0>(*this)->size(); }
+
+    protected:
+      base_soa_zip(Containers *... ptrs) : base_class_type{ptrs...} {}
+    };
+
+    template <class... FieldsPack> struct concatenated_field_types;
+
+    template <class... U, class... V, class... FieldsPack>
+    struct concatenated_field_types<mpt::types<U...>, mpt::types<V...>,
+                                    FieldsPack...> {
+      using type =
+          typename concatenated_field_types<mpt::types_set_t<U..., V...>,
+                                            FieldsPack...>::type;
+    };
+
+    template <class... F> struct concatenated_field_types<mpt::types<F...>> {
+      using type = mpt::types<F...>;
+    };
+
+    template <class... FieldsPack>
+    using concatenated_field_types_t =
+        typename concatenated_field_types<FieldsPack...>::type;
+
+    template <class TypesSet> struct concatenated_value_types;
+
+    template <class... F> struct concatenated_value_types<mpt::types<F...>> {
+      using type = soa_value<F...>;
+    };
+
+    template <class TypesSet>
+    using concatenated_value_types_t =
+        typename concatenated_value_types<TypesSet>::type;
+
+    template <class... FieldsPack>
+    struct concatenated_value_types_from_field_sets {
+      using type =
+          concatenated_value_types_t<concatenated_field_types_t<FieldsPack...>>;
+    };
+
+    template <class... FieldsPack>
+    using concatenated_value_types_from_field_sets_t =
+        typename concatenated_value_types_from_field_sets<FieldsPack...>::type;
+  } // namespace
+
+  /*!\brief A zip of containers
+
+    This object stores pointers (without ownership) to containers and allows
+    to iterate over them simultaneously.
+   */
+  template <class... Containers>
+  class soa_zip : public base_soa_zip<Containers...> {
+
+    using base_class_type = base_soa_zip<Containers...>;
+    using container_type = soa_zip<Containers...>;
+
+  public:
+    using base_class_type::base_class_type;
+
+    using fields_type =
+        concatenated_field_types_t<typename Containers::fields_type...>;
+    using iterator_type = soa_iterator<soa_zip, fields_type>;
+    using const_iterator_type = soa_const_iterator<soa_zip, fields_type>;
+    using proxy_type = soa_proxy<soa_zip, fields_type>;
+    using const_proxy_type = soa_const_proxy<soa_zip, fields_type>;
+    using value_type = concatenated_value_types_from_field_sets_t<
+        typename Containers::fields_type...>;
+    using size_type = base_class_type::size_type;
+
+    /// Access the element at the given index
+    proxy_type at(size_type index) { return {this, index}; }
+
+    /// Access the element at the given index
+    const_proxy_type at(size_type index) const { return {this, index}; }
+
+    /// Iterator pointing to the beginning of the vector
+    iterator_type begin() { return {this, 0u}; }
+
+    /// Iterator pointing to the end of the vector
+    iterator_type end() { return {this, this->size()}; }
+
+    /// Constant iterator pointing to the beginning of the vector
+    const_iterator_type begin() const { return {this, 0u}; }
+
+    /// Constant iterator pointing to the end of the vector
+    const_iterator_type end() const { return {this, this->size()}; }
+
+    /// Constant iterator pointing to the beginning of the vector
+    const_iterator_type cbegin() const { return {this, 0u}; }
+
+    /// Constant iterator pointing to the end of the vector
+    const_iterator_type cend() const { return {this, this->size()}; }
+
+    /// Access the proxy of a field at the given index
+    template <class F>
+    resolve_reference_type_t<container_type, F> get(size_type index) {
+      return std::get<container_index_for_field_v<F, Containers...>>(*this)
+          ->template get<F>(index);
+    }
+    /// Access the constant proxy of a field at the given index
+    template <class F>
+    resolve_const_reference_type_t<container_type, F>
+    get(size_type index) const {
+      return std::get<container_index_for_field_v<F, Containers...>>(*this)
+          ->template get<F>(index);
+    }
+
+    friend soa_zip make_soa_zip<Containers...>(Containers &...);
+
+  protected:
+    soa_zip(Containers *... ptrs) : base_class_type{ptrs...} {}
+  };
+
+  /*!\brief A zip of constant containers
+
+    This object stores pointers (without ownership) to containers and allows
+    to iterate over them simultaneously.
+   */
+  template <class... Containers>
+  class soa_const_zip : public base_soa_zip<Containers const...> {
+
+    using base_class_type = base_soa_zip<Containers const...>;
+    using container_type = soa_const_zip<Containers...>;
+
+  public:
+    using base_class_type::base_class_type;
+
+    using fields_type =
+        concatenated_field_types_t<typename Containers::fields_type...>;
+    using const_iterator_type = soa_const_iterator<soa_const_zip, fields_type>;
+    using const_proxy_type = soa_const_proxy<soa_const_zip, fields_type>;
+    using value_type = concatenated_value_types_from_field_sets_t<
+        typename Containers::fields_type...>;
+    using size_type = base_class_type::size_type;
+
+    /// Access the element at the given index
+    const_proxy_type at(size_type index) const { return {this, index}; }
+
+    /// Constant iterator pointing to the beginning of the vector
+    const_iterator_type begin() const { return {this, 0u}; }
+
+    /// Constant iterator pointing to the end of the vector
+    const_iterator_type end() const { return {this, this->size()}; }
+
+    /// Constant iterator pointing to the beginning of the vector
+    const_iterator_type cbegin() const { return {this, 0u}; }
+
+    /// Constant iterator pointing to the end of the vector
+    const_iterator_type cend() const { return {this, this->size()}; }
+
+    /// Access the constant proxy of a field at the given index
+    template <class F>
+    resolve_const_reference_type_t<container_type, F>
+    get(size_type index) const {
+      return std::get<container_index_for_field_v<F, Containers...>>(*this)
+          ->template get<F>(index);
+    }
+
+    friend soa_const_zip make_soa_zip<Containers...>(Containers const &...);
+
+  protected:
+    soa_const_zip(Containers const *... ptrs) : base_class_type{ptrs...} {}
+  };
+
+  /// Create a zip of the given containers
+  template <class... Containers>
+  soa_zip<Containers...> make_soa_zip(Containers &... v) {
+    return {&v...};
+  }
+
+  /// Create a constant zip of the given containers
+  template <class... Containers>
+  soa_const_zip<Containers...> make_soa_zip(Containers const &... v) {
+    return {&v...};
+  }
 } // namespace mpt
