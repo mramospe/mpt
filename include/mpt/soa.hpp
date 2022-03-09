@@ -6,6 +6,15 @@
   in calculations.
   The container accessors return proxies that modify the associated
   container if any of their values are modified.
+
+  Vectors have a different structure depending whether it refers
+  to a single field (containing only one value) or several fields
+  (with several values).
+  The objects returned by the accessor operators act as proxies.
+  This means that a modification to the returned values implies a
+  modification of the values stored in the vector.
+  To obtain the corresponding value one can call to \ref
+  mpt::soa_proxy_to_value.
  */
 #pragma once
 #include "mpt/types.hpp"
@@ -25,17 +34,6 @@ namespace mpt {
 
   template <class, class> class soa_const_iterator;
 
-  /*!\brief A vector with a struct-of-arrays memory layout
-
-    This object has a different structure depending whether it refers
-    to a single field (containing only one value) or several fields
-    (with several values).
-    The objects returned by the accessor operators act as proxies.
-    This means that a modification to the returned values implies a
-    modification of the values stored in the vector.
-    To obtain the corresponding value one can call to \ref
-    mpt::soa_proxy_to_value.
-  */
   template <class... Fields> class soa_vector;
 
   template <class... Containers> class soa_zip;
@@ -224,6 +222,53 @@ namespace mpt {
     using resolve_const_reference_type_t = typename resolve_reference_types<
         Field>::template const_reference_type<Container>;
 
+    ///
+    template <class Field, class Container> struct get_element_t {
+
+      using container_type = Container;
+      using size_type = typename container_type::size_type;
+
+      resolve_reference_type_t<container_type, Field>
+      operator()(container_type &cont, size_type index) const {
+        return cont.template get<Field>(index);
+      }
+
+      resolve_const_reference_type_t<container_type, Field>
+      operator()(container_type const &cont, size_type index) const {
+        return cont.template get<Field>(index);
+      }
+    };
+
+    template <class Field>
+    requires IsBasicField<Field> struct get_element_t<Field,
+                                                      soa_vector<Field>> {
+
+      using container_type = soa_vector<Field>;
+      using size_type = typename container_type::size_type;
+
+      resolve_reference_type_t<container_type, Field>
+      operator()(container_type &cont, size_type index) const {
+        return cont.at(index);
+      }
+
+      resolve_const_reference_type_t<container_type, Field>
+      operator()(container_type const &cont, size_type index) const {
+        return cont.at(index);
+      }
+    };
+
+    template <class Field, class Container>
+    auto get_element(Container &cont, typename Container::size_type index)
+        -> decltype(get_element_t<Field, Container>{}(cont, index)) {
+      return get_element_t<Field, Container>{}(cont, index);
+    }
+
+    template <class Field, class Container>
+    auto get_element(Container const &cont, typename Container::size_type index)
+        -> decltype(get_element_t<Field, Container>{}(cont, index)) {
+      return get_element_t<Field, Container>{}(cont, index);
+    }
+
     /// Base of any proxy
     template <class DerivedProxy, class VectorType> class base_soa_proxy {
 
@@ -337,6 +382,23 @@ namespace mpt {
     make_soa_value_impl(T &&... v) {
       return {std::forward<T>(v)...};
     }
+
+    template <class Container, class TypeSet> struct soa_proxy_to_value_t;
+
+    template <class Container, class... Fields>
+    struct soa_proxy_to_value_t<Container, mpt::types<Fields...>> {
+
+      soa_value<Fields...> operator()(
+          soa_proxy<Container, mpt::types<Fields...>> const &proxy) const {
+        return proxy;
+      }
+
+      soa_value<Fields...>
+      operator()(soa_const_proxy<Container, mpt::types<Fields...>> const &proxy)
+          const {
+        return proxy;
+      }
+    };
   } // namespace
 
   /// Make an SOA value for the given field
@@ -346,13 +408,19 @@ namespace mpt {
   }
 
   /// Transform the given proxy to a value type
-  /*
-  template <class... Fields>
-  requires(IsField<Fields> &&...) soa_value<Fields...> soa_proxy_to_value(
-      soa_proxy<Fields...> const &proxy) {
-    return proxy;
+  template <class T> auto soa_proxy_to_value(T const &value) { return value; }
+
+  /// Transform the given proxy to a value type
+  template <class Container, class TypesSet>
+  auto soa_proxy_to_value(soa_proxy<Container, TypesSet> const &proxy) {
+    return soa_proxy_to_value_t<Container, TypesSet>{}(proxy);
   }
-  */
+
+  /// Transform the given proxy to a value type
+  template <class Container, class TypesSet>
+  auto soa_proxy_to_value(soa_const_proxy<Container, TypesSet> const &proxy) {
+    return soa_proxy_to_value_t<Container, TypesSet>{}(proxy);
+  }
 
   /*!\brief Proxy that maintains constant the values of a container
    */
@@ -920,15 +988,17 @@ namespace mpt {
     /// Access the proxy of a field at the given index
     template <class F>
     resolve_reference_type_t<container_type, F> get(size_type index) {
-      return std::get<container_index_for_field_v<F, Containers...>>(*this)
-          ->template get<F>(index);
+      return get_element<F>(
+          *std::get<container_index_for_field_v<F, Containers...>>(*this),
+          index);
     }
     /// Access the constant proxy of a field at the given index
     template <class F>
     resolve_const_reference_type_t<container_type, F>
     get(size_type index) const {
-      return std::get<container_index_for_field_v<F, Containers...>>(*this)
-          ->template get<F>(index);
+      return get_element<F>(
+          *std::get<container_index_for_field_v<F, Containers...>>(*this),
+          index);
     }
 
     friend soa_zip make_soa_zip<Containers...>(Containers &...);
@@ -978,8 +1048,9 @@ namespace mpt {
     template <class F>
     resolve_const_reference_type_t<container_type, F>
     get(size_type index) const {
-      return std::get<container_index_for_field_v<F, Containers...>>(*this)
-          ->template get<F>(index);
+      return get_element<F>(
+          *std::get<container_index_for_field_v<F, Containers...>>(*this),
+          index);
     }
 
     friend soa_const_zip make_soa_zip<Containers...>(Containers const &...);

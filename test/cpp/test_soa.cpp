@@ -34,8 +34,10 @@ template <class Container> mpt::test::errors test_iterations(Container &av) {
     [[maybe_unused]] value_type v = *it;
 
   // foreach iteration
-  for ([[maybe_unused]] auto e : av)
+  for ([[maybe_unused]] auto e : av) {
     e = value_type{};
+    mpt::soa_proxy_to_value(e);
+  }
 
   // test the iterator properties
   auto it = av.begin();
@@ -127,9 +129,19 @@ mpt::test::errors test_zip() {
 
   auto zip = mpt::make_soa_zip(ps, d);
 
-  auto errors = test_iterations(zip);
+  return test_iterations(zip);
+}
 
-  return errors;
+mpt::test::errors test_concatenated_zip() {
+
+  mpt::soa_vector<scale> s(100);
+  mpt::soa_vector<position> p(100);
+  mpt::soa_vector<direction> d(100);
+
+  auto fz = mpt::make_soa_zip(s, p);
+  auto sz = mpt::make_soa_zip(fz, d);
+
+  return test_iterations(sz);
 }
 
 int main() {
@@ -142,6 +154,7 @@ int main() {
 
   mpt::test::collector soa_zip("soa_zip");
   MPT_TEST_UTILS_ADD_TEST(soa_zip, test_zip);
+  MPT_TEST_UTILS_ADD_TEST(soa_zip, test_concatenated_zip);
 
   return mpt::test::to_return_code(soa_vector.run()) ||
          mpt::test::to_return_code(soa_zip.run());
