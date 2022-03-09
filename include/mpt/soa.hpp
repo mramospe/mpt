@@ -1,4 +1,4 @@
-/*\file soa.hpp
+/*!\file soa.hpp
 
   Implement types defining containers with a struct-of-arrays memory
   layout.
@@ -308,28 +308,28 @@ namespace mpt {
     }
 
     /// Base of any proxy
-    template <class DerivedProxy, class VectorType> class base_soa_proxy {
+    template <class DerivedProxy, class ContainerType> class base_soa_proxy {
 
       using derived_proxy_type = DerivedProxy;
 
     public:
-      /// Type of the vector that this class is a proxy of
-      using vector_type = VectorType;
+      /// Type of the container that this class is a proxy of
+      using container_type = ContainerType;
       /// Type of the size
-      using size_type = typename vector_type::size_type;
+      using size_type = typename container_type::size_type;
 
       // No default constructor
       base_soa_proxy() = delete;
       base_soa_proxy(base_soa_proxy const &) = default;
       base_soa_proxy(base_soa_proxy &&) = default;
 
-      /// Build the class from a pointer to a vector and an index
-      base_soa_proxy(vector_type *vector, size_type index)
-          : m_ptr{vector}, m_index{index} {}
+      /// Build the class from a pointer to a container and an index
+      base_soa_proxy(container_type *container, size_type index)
+          : m_ptr{container}, m_index{index} {}
 
     protected:
-      /// Pointer to the SOA vector
-      vector_type *m_ptr = nullptr;
+      /// Pointer to the SOA container
+      container_type *m_ptr = nullptr;
       /// Index associated to the proxy
       size_type m_index = 0;
     };
@@ -561,22 +561,31 @@ namespace mpt {
   namespace {
 
     /// Base class of any SOA iterator
-    template <class Iterator, class VectorType> class base_soa_iterator {
+    template <class Iterator, class ContainerType> class base_soa_iterator {
 
     public:
+      /// Actual derived iterator
       using derived_iterator_type = Iterator;
+      /// Type returned when subtracting iterators
       using difference_type = std::ptrdiff_t;
-      using vector_type = VectorType;
-      using size_type = typename vector_type::size_type;
+      /// Type of the container
+      using container_type = ContainerType;
+      /// Size type
+      using size_type = typename container_type::size_type;
 
+      /// An iterator must always have a reference to the container
       base_soa_iterator() = delete;
+      /// Copy constructor
       base_soa_iterator(base_soa_iterator const &) = default;
+      /// Move constructor
       base_soa_iterator(base_soa_iterator &&) = default;
+      /// Copy assignment
       base_soa_iterator &operator=(base_soa_iterator const &) = default;
+      /// Move assignment
       base_soa_iterator &operator=(base_soa_iterator &&) = default;
-
-      base_soa_iterator(vector_type *vector, size_type index)
-          : m_ptr{vector}, m_index{index} {}
+      /// Constructor from the reference to the container and the index
+      base_soa_iterator(container_type *container, size_type index)
+          : m_ptr{container}, m_index{index} {}
 
       auto operator==(derived_iterator_type const &other) {
         return other.m_ptr == m_ptr && other.m_index == m_index;
@@ -647,12 +656,14 @@ namespace mpt {
       }
 
     protected:
-      vector_type *m_ptr = nullptr;
+      /// Pointer to the container
+      container_type *m_ptr = nullptr;
+      /// Index in the container
       size_type m_index = 0;
     };
   } // namespace
 
-  /*!\brief Iterator over a vector with a struct-of-arrays memory layout
+  /*!\brief Iterator over a container with a struct-of-arrays memory layout
    */
   template <class Container, class... Fields>
   class soa_iterator<Container, mpt::types<Fields...>>
@@ -699,7 +710,7 @@ namespace mpt {
     }
   };
 
-  /*!\brief Constant iterator over a vector with a SOA memory layout
+  /*!\brief Constant iterator over a container with a SOA memory layout
    */
   template <class Container, class... Fields>
   class soa_const_iterator<Container, mpt::types<Fields...>>
@@ -737,9 +748,9 @@ namespace mpt {
     }
   };
 
-  /*!\brief A vector with a struct-of-arrays memory layout
+  /*!\brief A container with a struct-of-arrays memory layout
 
-    Specialization for a vector with a single field.
+    Specialization for a container with a single field.
  */
   template <class Field>
   requires IsBasicField<Field> class soa_vector<Field>
@@ -794,9 +805,9 @@ namespace mpt {
     size_type size() const { return base_class_type::size(); };
   };
 
-  /*!\brief A vector with a struct-of-arrays memory layout
+  /*!\brief A container with a struct-of-arrays memory layout
 
-    Specialization for a vector containing several fields.
+    Specialization for a container containing several fields.
    */
   template <class... Fields>
       requires NonEmptyTemplateArguments<Fields...> &&
@@ -942,7 +953,7 @@ namespace mpt {
 
       static_assert(
           have_different_fields_v<typename Containers::fields_type...>,
-          "Attempt to make a zip of vectors with clashing fields");
+          "Attempt to make a zip of containers with clashing fields");
 
     public:
       /// Base class
@@ -1053,22 +1064,22 @@ namespace mpt {
     /// Access the element at the given index
     const_proxy_type at(size_type index) const { return {this, index}; }
 
-    /// Iterator pointing to the beginning of the vector
+    /// Iterator pointing to the beginning of the container
     iterator_type begin() { return {this, 0u}; }
 
-    /// Iterator pointing to the end of the vector
+    /// Iterator pointing to the end of the container
     iterator_type end() { return {this, this->size()}; }
 
-    /// Constant iterator pointing to the beginning of the vector
+    /// Constant iterator pointing to the beginning of the container
     const_iterator_type begin() const { return {this, 0u}; }
 
-    /// Constant iterator pointing to the end of the vector
+    /// Constant iterator pointing to the end of the container
     const_iterator_type end() const { return {this, this->size()}; }
 
-    /// Constant iterator pointing to the beginning of the vector
+    /// Constant iterator pointing to the beginning of the container
     const_iterator_type cbegin() const { return {this, 0u}; }
 
-    /// Constant iterator pointing to the end of the vector
+    /// Constant iterator pointing to the end of the container
     const_iterator_type cend() const { return {this, this->size()}; }
 
     /// Access the proxy of a field at the given index
@@ -1127,16 +1138,16 @@ namespace mpt {
     /// Access the element at the given index
     const_proxy_type at(size_type index) const { return {this, index}; }
 
-    /// Constant iterator pointing to the beginning of the vector
+    /// Constant iterator pointing to the beginning of the container
     const_iterator_type begin() const { return {this, 0u}; }
 
-    /// Constant iterator pointing to the end of the vector
+    /// Constant iterator pointing to the end of the container
     const_iterator_type end() const { return {this, this->size()}; }
 
-    /// Constant iterator pointing to the beginning of the vector
+    /// Constant iterator pointing to the beginning of the container
     const_iterator_type cbegin() const { return {this, 0u}; }
 
-    /// Constant iterator pointing to the end of the vector
+    /// Constant iterator pointing to the end of the container
     const_iterator_type cend() const { return {this, this->size()}; }
 
     /// Access the constant proxy of a field at the given index
