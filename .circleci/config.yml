@@ -20,8 +20,8 @@ jobs:
             cd build
             cmake ../ -DINSTALL_TESTS=ON -DCMAKE_CXX_COMPILER=${CXX}
             make install
-            cp -r build /tmp/artifacts
             cd ..
+            cp -r build /tmp/artifacts
       - run:
           name: Run the main tests
           command: |
