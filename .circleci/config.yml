@@ -74,6 +74,8 @@ jobs:
           name: Generate changelogs
           command: |
             # Define the new and previous tags
+            ls
+            pwd -P
             export NEW_TAG=v$(cat version.txt)
             if [[ ! ${NEW_TAG} =~ "dev" ]]; then export EXCLUDE_PATTERN='*dev*'; fi
             export LATEST_TAG=$(git describe --tags $(git rev-list --exclude=${EXCLUDE_PATTERN} --tags --max-count=1))
