@@ -58,16 +58,15 @@ jobs:
           command: ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
   deploy:
     docker:
-      - image: circleci/golang:1.10
+      - image: cibuilds/github:0.10
     steps:
       - run:
           name: Install dependencies
           command: |
-            sudo go get github.com/tcnksm/ghr
-            sudo apt-get update -y
-            sudo apt-get install -y ruby
+            apt-get update -y
+            apt-get install -y ruby
             ruby --version
-            sudo gem install github_changelog_generator -v 1.15.2
+            gem install github_changelog_generator -v 1.15.2
       - run:
           name: Define tags
           command: |
