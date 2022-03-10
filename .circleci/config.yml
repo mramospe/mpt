@@ -62,4 +62,7 @@ workflows:
       - format:
           filters:
             branches:
-              only: master, devel, change-ci-provider
+              only:
+                - master
+                - devel
+                - change-ci-provider
