@@ -80,13 +80,13 @@ jobs:
             if [[ -z ${NEW_TAG} || -z ${LATEST_TAG} ]]; then exit 1; fi
             # Change the name of the tag if we are not in master
             if [ ${RELEASE_BRANCH} != master ]; then export RELEASE_TAG=devel-${NEW_TAG}; else export RELEASE_TAG=${NEW_TAG}; fi
-            echo ${RELEASE_TAG} >> deployment_files/tag.txt
+            echo ${RELEASE_TAG} >> deployment/tag.txt
             # Generate the changelogs
-            github_changelog_generator -u mramospe -p mpt -o deployment_files/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
-            github_changelog_generator -u mramospe -p mpt -o deployment_files/${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o deployment/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o deployment/${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
       - save_cache:
           key: deployment-cache
-          paths: deployment_files
+          paths: deployment/
   deploy:
     docker:
       - image: cibuilds/github:0.10
@@ -97,7 +97,7 @@ jobs:
       - run:
           name: Publish release
           command: |
-            ghr -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} -delete $(cat deployment_files/tag.txt) deployment_files/*.md
+            ghr -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} -delete $(cat deployment/tag.txt) deployment/*.md
 
 filters-ci: &filters-ci
   filters:
