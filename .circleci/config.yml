@@ -4,12 +4,12 @@ jobs:
     docker:
       - image: ubuntu:20.04
     steps:
-      - checkout
       - run:
           name: Install dependencies
           command: |
             apt-get update -y
-            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y cmake g++-10
+            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y git cmake g++-10
+      - checkout
       - run:
           name: Install the package
           environment:
@@ -46,12 +46,12 @@ jobs:
     docker:
       - image: ubuntu:20.04
     steps:
-      - checkout
       - run:
           name: Install dependencies
           command: |
             apt-get update -y
-            apt-get install -y clang-format-10
+            apt-get install -y git clang-format-10
+      - checkout
       - run:
           name: Check C++ format
           environment:
@@ -61,7 +61,6 @@ jobs:
     docker:
       - image: ubuntu:20.04
     steps:
-      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -70,6 +69,7 @@ jobs:
             ruby --version
             gem install github_changelog_generator -v 1.15.2
             mkdir /tmp/deployment
+      - checkout
       - run:
           name: Generate changelogs
           command: |
