@@ -68,7 +68,7 @@ jobs:
             apt-get install -y git ruby
             ruby --version
             gem install github_changelog_generator -v 1.15.2
-            mkdir /tmp/deployment
+            mkdir -p /tmp/deployment/changelogs
       - checkout
       - run:
           name: Generate changelogs
@@ -84,8 +84,8 @@ jobs:
             if [ ${CIRCLE_BRANCH} != master ]; then export RELEASE_TAG=devel-${NEW_TAG}; else export RELEASE_TAG=${NEW_TAG}; fi
             echo ${RELEASE_TAG} >> /tmp/deployment/tag.txt
             # Generate the changelogs
-            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
-            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
       - save_cache:
           key: deployment
           paths:
@@ -100,7 +100,8 @@ jobs:
           name: Publish release
           command: |
             ls /tmp/deployment
-            ghr -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} -delete $(cat /tmp/deployment/tag.txt) /tmp/deployment/*.md
+	    export TAG=$(cat /tmp/deployment/tag.txt)
+            ghr -recreate  -draft -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} ${TAG} /tmp/deployment/changelogs
 
 filters-ci: &filters-ci
   filters:
