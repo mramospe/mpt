@@ -92,14 +92,16 @@ jobs:
             - deployment
   deploy:
     docker:
-      - image: cibuilds/github:0.10
+      - image: ubuntu:20.04
     steps:
       - attach_workspace:
           at: /tmp
       - run:
+          name: Install GitHub interface
+          command: snap install gh
+      - run:
           name: Publish release
-          command: |
-            ghr -replace -draft -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/
+          command: gh release create --draft --target ${CIRCLE_SHA1} $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
   documentation:
     docker:
       - image: ubuntu:20.04
