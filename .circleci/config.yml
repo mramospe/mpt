@@ -64,7 +64,7 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update -y
-            apt-get install -y ruby
+            apt-get install -y git ruby
             ruby --version
             gem install github_changelog_generator -v 1.15.2
             mkdir deployment_files
