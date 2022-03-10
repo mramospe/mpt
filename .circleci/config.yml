@@ -97,9 +97,9 @@ jobs:
       - attach_workspace:
           at: /tmp
       - run:
-        name: Install dependencies
-        command: |
-          go get github.com/github-release/github-release
+          name: Install dependencies
+          command: |
+            go get github.com/github-release/github-release
       - run:
           name: Publish release
           command: |
