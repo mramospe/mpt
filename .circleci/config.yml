@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build-and-test:
     docker:
-      - image: ubuntu:20.04
+      - image: ubuntu-2004:202201
     steps:
       - checkout
       - run:
@@ -44,7 +44,7 @@ jobs:
             ./main
   format:
     docker:
-      - image: ubuntu:20.04
+      - image: ubuntu-2004:202201
     steps:
       - checkout
       - run:
@@ -59,7 +59,7 @@ jobs:
           command: ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
   changelogs:
     docker:
-      - image: ubuntu:20.04
+      - image: ubuntu-2004:202201
     steps:
       - checkout
       - run:
