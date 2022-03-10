@@ -74,8 +74,6 @@ jobs:
           name: Generate changelogs
           command: |
             # Define the new and previous tags
-            ls
-            pwd -P
             export NEW_TAG=v$(cat version.txt)
             if [[ ! ${NEW_TAG} =~ "dev" ]]; then export EXCLUDE_PATTERN='*dev*'; fi
             export LATEST_TAG=$(git describe --tags $(git rev-list --exclude=${EXCLUDE_PATTERN} --tags --max-count=1))
@@ -83,7 +81,7 @@ jobs:
             # Display the tags
             echo "Using tags: ${NEW_TAG} (new) ${LATEST_TAG} (latest)"
             # Change the name of the tag if we are not in master
-            if [ ${RELEASE_BRANCH} != master ]; then export RELEASE_TAG=devel-${NEW_TAG}; else export RELEASE_TAG=${NEW_TAG}; fi
+            if [ ${CIRCLE_BRANCH} != master ]; then export RELEASE_TAG=devel-${NEW_TAG}; else export RELEASE_TAG=${NEW_TAG}; fi
             echo ${RELEASE_TAG} >> /tmp/deployment/tag.txt
             # Generate the changelogs
             github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
