@@ -10,6 +10,6 @@ jobs:
           command: echo success
 
 workflows:
-  success:
+  gh-pages:
     jobs:
       - success-ward
