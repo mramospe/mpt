@@ -69,7 +69,7 @@ jobs:
             apt-get install -y git ruby
             ruby --version
             gem install github_changelog_generator -v 1.15.2
-            mkdir deployment_files
+            mkdir deployment
       - run:
           name: Generate changelogs
           command: |
