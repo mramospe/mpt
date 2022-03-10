@@ -6,7 +6,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Implement a test script for the GitHub pages branch
+          name: Run a simple command
           command: echo success
 
 workflows:
