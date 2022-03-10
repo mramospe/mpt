@@ -1,0 +1,15 @@
+version: 2.1
+
+jobs:
+  success-ward:
+    docker:
+      - image: cimg/base:stable
+  steps:
+    - run:
+      name: Implement a test script for the GitHub pages branch
+      command: echo success
+
+workflows:
+  success:
+    jobs:
+      - success-ward
