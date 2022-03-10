@@ -99,6 +99,7 @@ jobs:
       - run:
           name: Publish release
           command: |
+            ls /tmp/deployment
             ghr -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} -delete $(cat /tmp/deployment/tag.txt) /tmp/deployment/*.md
 
 filters-ci: &filters-ci
