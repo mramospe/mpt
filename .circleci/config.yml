@@ -106,7 +106,9 @@ jobs:
     steps:
       - run:
           name: Install dependencies
-          command: apt-get install -y git graphviz doxygen
+          command: |
+            apt-get update -y
+            apt-get install -y git graphviz doxygen
       - checkout
       - run:
           name: Build documentation
