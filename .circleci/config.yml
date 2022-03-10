@@ -123,6 +123,7 @@ jobs:
     steps:
       - attach_workspace:
           at: doc
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -131,7 +132,6 @@ jobs:
             # Define the Git configuration
             git config --local user.name "Miguel Ramos Pernas"
             git config --local user.email "miguel.ramos.pernas@gmail.com"
-      - checkout
       - run:
           name: Deploy documentation
           command: gh-pages -u mramospe -r mpt --dotfiles --message "documentation updated from the CI" --dist docs/html
