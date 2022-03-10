@@ -9,7 +9,7 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update -y
-            apt-get install -y cmake g++-10
+            TZ=Etc/UTC apt-get install -y cmake g++-10
       - run:
           name: Install the package
           environment:
