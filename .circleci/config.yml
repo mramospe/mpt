@@ -4,10 +4,10 @@ jobs:
   success-ward:
     docker:
       - image: cimg/base:stable
-  steps:
-    - run:
-      name: Implement a test script for the GitHub pages branch
-      command: echo success
+    steps:
+      - run:
+          name: Implement a test script for the GitHub pages branch
+          command: echo success
 
 workflows:
   success:
