@@ -134,7 +134,7 @@ jobs:
             git config --local user.email "miguel.ramos.pernas@gmail.com"
       - run:
           name: Deploy documentation
-          command: gh-pages -r mpt --dotfiles --message "documentation updated from the CI" --dist doc/html
+          command: gh-pages --dotfiles --message "documentation updated from the CI" --dist doc/html
 
 
 filters-ci: &filters-ci
