@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command:
+          command: |
             apt-get update -y
             apt-get install -y cmake g++-10
       - run:
