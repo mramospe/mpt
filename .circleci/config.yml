@@ -21,7 +21,6 @@ jobs:
             cmake ../ -DINSTALL_TESTS=ON -DCMAKE_CXX_COMPILER=${CXX}
             make install
             cd ..
-            cp -r build /tmp/artifacts
       - run:
           name: Run the main tests
           command: |
