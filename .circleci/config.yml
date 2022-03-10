@@ -108,7 +108,7 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update -y
-            apt-get install -y git graphviz doxygen
+            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y git graphviz doxygen
       - checkout
       - run:
           name: Build documentation
