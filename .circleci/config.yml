@@ -99,8 +99,7 @@ jobs:
       - run:
           name: Publish release
           command: |
-            ls /tmp/deployment
-	    export TAG=$(cat /tmp/deployment/tag.txt)
+            export TAG=$(cat /tmp/deployment/tag.txt)
             ghr -recreate  -draft -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} ${TAG} /tmp/deployment/changelogs
 
 filters-ci: &filters-ci
