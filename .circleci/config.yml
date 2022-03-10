@@ -95,10 +95,13 @@ jobs:
       - image: cibuilds/github:0.10
     steps:
       - attach_workspace:
-          at: /tmp/deployment
+          at: /tmp
       - run:
           name: Publish release
           command: |
+            ls /tmp
+            ls /tmp/deployment
+            ls /tmp/deployment/changelogs
             export TAG=$(cat /tmp/deployment/tag.txt)
             ghr -recreate -draft -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} ${TAG} /tmp/deployment/changelogs/
 
