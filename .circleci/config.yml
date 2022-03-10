@@ -7,7 +7,9 @@ jobs:
       - checkout
       - run:
           name: Install dependencies
-          command: apt-get install -y cmake g++-10
+          command:
+            apt-get update -y
+            apt-get install -y cmake g++-10
       - run:
           name: Install the package
           environment:
@@ -44,7 +46,9 @@ jobs:
     steps:
       - run:
           name: Install dependencies
-          command: apt-get install -y clang-format-10
+          command: |
+            apt-get update -y
+            apt-get install -y clang-format-10
       - run:
           name: Check C++ format
           environment:
@@ -58,7 +62,10 @@ workflows:
       - build-and-test:
           filters:
             branches:
-              only: master, devel, change-ci-provider
+              only:
+                - master
+                - devel
+                - change-ci-provider
       - format:
           filters:
             branches:
