@@ -63,11 +63,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            go get github.com/tcnksm/ghr
-            apt-get update -y
-            apt-get install -y ruby
+            sudo go get github.com/tcnksm/ghr
+            sudo apt-get update -y
+            sudo apt-get install -y ruby
             ruby --version
-            gem install github_changelog_generator -v 1.15.2
+            sudo gem install github_changelog_generator -v 1.15.2
       - run:
           name: Define tags
           command: |
