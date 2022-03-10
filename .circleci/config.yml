@@ -11,8 +11,8 @@ jobs:
       - run:
           name: Install the package
           environment:
-            CC=gcc-10
-            CXX=g++-10
+            CC: gcc-10
+            CXX: g++-10
           command: |
             mkdir build
             cd build
@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Check C++ format
           environment:
-            CLANG_FORMAT=clang-format-10
+            CLANG_FORMAT: clang-format-10
           command: ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
 
 workflows:
