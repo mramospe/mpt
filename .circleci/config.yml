@@ -58,7 +58,7 @@ jobs:
           command: ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
   deploy:
     docker:
-      - image: circleci/golang:1.8
+      - image: circleci/golang:1.10
     steps:
       - run:
           name: Install dependencies
