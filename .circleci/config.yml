@@ -1,0 +1,65 @@
+version: 2.1
+jobs:
+  build-and-test:
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: apt-get install -y cmake g++-10
+      - run:
+          name: Install the package
+          environment:
+            CC=gcc-10
+            CXX=g++-10
+          command: |
+            mkdir build
+            cd build
+            cmake ../ -DINSTALL_TESTS=ON -DCMAKE_CXX_COMPILER=${CXX}
+            make install
+            cp -r build /tmp/artifacts
+            cd ..
+      - run:
+          name: Run the main tests
+          command: |
+            ./build/test/cpp/test_all
+            ./build/test/cpp/test_keywords
+            ./build/test/cpp/test_members
+            ./build/test/cpp/test_signature
+            ./build/test/cpp/test_smart_enum
+            ./build/test/cpp/test_types
+            ./build/test/cpp/test_values
+      - run:
+          name: Test the installation of a CMake dependent project
+          command: |
+            mkdir test/cmake/build
+            cd test/cmake/build
+            cmake ../ -DCMAKE_INSTALL_PREFIX=../../../build/cmake
+            make
+            ./main
+  format:
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - run:
+          name: Install dependencies
+          command: apt-get install -y clang-format-10
+      - run:
+          name: Check C++ format
+          environment:
+            CLANG_FORMAT=clang-format-10
+          command: ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              only: master, devel, change-ci-provider
+      - format:
+          filters:
+            branches:
+              only: master, devel, change-ci-provider
