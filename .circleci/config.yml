@@ -107,7 +107,7 @@ jobs:
             github-release delete -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG}
             github-release release --draft -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG} -c ${CIRCLE_SHA1}
             for changelog in /tmp/deployment/changelogs/*.md; do
-              github-release upload -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG} --name full-changelog -n ${changelog} -f /tmp/deployment/changelogs/${changelog}
+              github-release upload -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG} -n ${changelog} -f /tmp/deployment/changelogs/${changelog}
             done
 
 filters-ci: &filters-ci
