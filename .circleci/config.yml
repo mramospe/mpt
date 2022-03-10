@@ -90,6 +90,7 @@ jobs:
           key: deployment
           paths:
             - /tmp/deployment
+            - /tmp/deployment/changelogs
   deploy:
     docker:
       - image: cibuilds/github:0.10
