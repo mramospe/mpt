@@ -46,6 +46,7 @@ jobs:
     docker:
       - image: ubuntu:20.04
     steps:
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -60,6 +61,7 @@ jobs:
     docker:
       - image: ubuntu:20.04
     steps:
+      - checkout
       - run:
           name: Install dependencies
           command: |
@@ -91,6 +93,7 @@ jobs:
     docker:
       - image: cibuilds/github:0.10
     steps:
+      - checkout
       - run:
           name: Install dependencies
           command: |
