@@ -103,7 +103,10 @@ jobs:
       - run:
           name: Publish release
           command: |
-            github-release --draft --replace -u mramospe -r mpt -s ${GITHUB_TOKEN} -c ${CIRCLE_SHA1} -t $(cat /tmp/deployment/tag.txt) -f /tmp/deployment/changelogs
+            export TAG=$(cat /tmp/deployment/tag.txt)
+            github-release delete -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG}
+            github-release release --draft -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG} -c ${CIRCLE_SHA1}
+            github-release upload -u mramospe -r mpt -s ${GITHUB_TOKEN} -t ${TAG} -f /tmp/deployment/changelogs
 
 filters-ci: &filters-ci
   filters:
