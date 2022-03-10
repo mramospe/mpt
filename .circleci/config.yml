@@ -110,25 +110,16 @@ filters-ci: &filters-ci
       only:
         - master
         - devel
+        - change-ci-provider
 
 workflows:
   version: 2
   test:
     jobs:
       - build-and-test:
-          filters:
-            branches:
-              only:
-                - master
-                - devel
-                - change-ci-provider
+          <<: *filters-ci
       - format:
-          filters:
-            branches:
-              only:
-                - master
-                - devel
-                - change-ci-provider
+          <<: *filters-ci
   deploy:
     jobs:
       - changelogs
