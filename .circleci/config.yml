@@ -86,21 +86,19 @@ jobs:
             # Generate the changelogs
             github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
             github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
-      - save_cache:
-          key: deployment
+      - persist_to_workspace:
+          root: /tmp
           paths:
-            - /tmp/deployment
-            - /tmp/deployment/changelogs
+            - deployment
   deploy:
     docker:
       - image: cibuilds/github:0.10
     steps:
-      - restore_cache:
-          key: deployment
+      - attach_workspace:
+          at: /tmp/deployment
       - run:
           name: Publish release
           command: |
-            ls /tmp/deployment/changelogs
             export TAG=$(cat /tmp/deployment/tag.txt)
             ghr -recreate -draft -t ${GITHUB_TOKEN} -u mramospe -r mpt -c ${CIRCLE_SHA1} ${TAG} /tmp/deployment/changelogs/
 
