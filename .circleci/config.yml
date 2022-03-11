@@ -122,8 +122,8 @@ jobs:
           name: Build documentation
           command: |
              doxygen
-             mkdir -p /tmp/doc/html
-             cp -r doc/html /tmp/doc/html
+             mkdir -p /tmp/doc
+             cp -r doc/html /tmp/doc/
       - persist_to_workspace:
           root: /tmp
           paths:
