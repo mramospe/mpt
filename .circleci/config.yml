@@ -163,7 +163,7 @@ workflows:
     jobs:
       - build-and-test
       - format
-  deploy:
+  project:
     jobs:
       - changelogs:
           <<: *basic-deploy-filters
