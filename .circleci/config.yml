@@ -141,14 +141,12 @@ jobs:
       - run:
           name: Deploy documentation
           command: |
-            git config --local user.name "Miguel Ramos Pernas"
-            git config --local user.email "miguel.ramos.pernas@gmail.com"
             git checkout gh-pages
             git rm -r ./
             cp -r /tmp/doc/html/* ./
             git add ./
             git commit -m "Update from the CI"
-            git push
+            git push https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
 
 filters-ci: &filters-ci
   filters:
