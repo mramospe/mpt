@@ -150,7 +150,7 @@ jobs:
             git commit -m "Update from the CI"
             git push https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
 
-filters-ci: &filters-ci
+basic-deploy-filters: &basic-deploy-filters
   filters:
     branches:
       only:
@@ -161,15 +161,13 @@ workflows:
   version: 2
   test:
     jobs:
-      - build-and-test:
-          <<: *filters-ci
-      - format:
-          <<: *filters-ci
+      - build-and-test
+      - format
   deploy:
     jobs:
-      - changelogs
+      - changelogs:
+          <<: *basic-deploy-filters
       - deploy:
-          <<: *filters-ci
           requires:
             - changelogs
       - documentation
