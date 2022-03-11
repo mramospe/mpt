@@ -74,14 +74,14 @@ jobs:
           name: Generate changelogs
           command: |
             # Define the new and previous tags
-            export VERSION=v$(cat version.txt)
-            if [[ ! ${VERSION} =~ "dev" ]]; then export EXCLUDE_PATTERN='*dev*'; fi
-            export LATEST_TAG=$(git describe --tags $(git rev-list --exclude=${EXCLUDE_PATTERN} --tags --max-count=1))
+            VERSION=v$(cat version.txt)
+            if [[ ! ${VERSION} =~ "dev" ]]; then EXCLUDE_PATTERN='*dev*'; fi
+            LATEST_TAG=$(git describe --tags $(git rev-list --exclude=${EXCLUDE_PATTERN} --tags --max-count=1))
             if [[ -z ${VERSION} || -z ${LATEST_TAG} ]]; then exit 1; fi
             # Display the tags
             echo "Using tags: ${VERSION} (new) ${LATEST_TAG} (latest)"
             # Change the name of the tag if we are not in master
-            if [ ${CIRCLE_BRANCH} != master ]; then export RELEASE_TAG=devel-${VERSION}; else export RELEASE_TAG=${VERSION}; fi
+            if [ ${CIRCLE_BRANCH} != master ]; then RELEASE_TAG=devel-${VERSION}; else RELEASE_TAG=${VERSION}; fi
             echo ${RELEASE_TAG} >> /tmp/deployment/tag.txt
             # Generate the changelogs
             github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-changelog.md --since-tag ${LATEST_TAG} --future-release ${VERSION} -t ${GITHUB_TOKEN}
@@ -103,10 +103,12 @@ jobs:
       - run:
           name: Publish release
           command: |
-            export VERSION=v$(cat version.txt)
+            VERSION=v$(cat version.txt)
+            RELEASE_TAG=$(cat /tmp/deployment/tag.txt)
+            RELEASE_NOTES=/tmp/deployment/changelogs/${VERSION}-changelog.md
+            CHANGELOGS=/tmp/deployment/changelogs/*.md
             git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
-            echo "Use tag $(cat /tmp/deployment/tag.txt)"
-            gh release create --draft --target ${CIRCLE_SHA1} --notes-file /tmp/deployment/changelogs/${VERSION}-changelog.md $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
+            gh release create --draft --notes-file ${RELEASE_NOTES} --target ${CIRCLE_SHA1} --title ${RELEASE_TAG} ${RELEASE_TAG} ${CHANGELOGS}
   documentation:
     docker:
       - image: ubuntu:20.04
@@ -135,8 +137,6 @@ jobs:
           name: Install dependencies
           command: |
             npm install -g --silent gh-pages@2.0.1
-            git config --local user.name "Miguel Ramos Pernas"
-            git config --local user.email "miguel.ramos.pernas@gmail.com"
             git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
       - run:
           name: Deploy documentation
@@ -174,3 +174,4 @@ workflows:
             branches:
               only:
                 - master
+                - change-ci-provider
