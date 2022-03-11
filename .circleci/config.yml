@@ -107,7 +107,6 @@ jobs:
             RELEASE_TAG=$(cat /tmp/deployment/tag.txt)
             RELEASE_NOTES=/tmp/deployment/changelogs/${VERSION}-changelog.md
             CHANGELOGS=/tmp/deployment/changelogs/*.md
-            git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
             gh release create --draft --notes-file ${RELEASE_NOTES} --target ${CIRCLE_SHA1} --title ${RELEASE_TAG} ${RELEASE_TAG} ${CHANGELOGS}
   documentation:
     docker:
@@ -139,7 +138,6 @@ jobs:
             npm install -g --silent gh-pages@2.0.1
             git config --local user.name "Miguel Ramos Pernas"
             git config --local user.email "miguel.ramos.pernas@gmail.com"
-            git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
       - run:
           name: Deploy documentation
           command: gh-pages --dotfiles --message "documentation updated from the CI" --dist doc/html
