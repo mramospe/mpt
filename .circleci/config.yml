@@ -137,6 +137,8 @@ jobs:
           name: Install dependencies
           command: |
             npm install -g --silent gh-pages@2.0.1
+            git config --local user.name "Miguel Ramos Pernas"
+            git config --local user.email "miguel.ramos.pernas@gmail.com"
             git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
       - run:
           name: Deploy documentation
