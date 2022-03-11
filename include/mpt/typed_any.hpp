@@ -1,3 +1,7 @@
+/*!\file
+
+  Definition of a typed \a any type and functions to work with it.
+ */
 #pragma once
 #include "mpt/types.hpp"
 #include <any>
@@ -6,9 +10,8 @@
 
 namespace mpt {
 
-  namespace detail {
-    /// Find the first class in the template argument list that is
-    /// default-constructible
+  namespace {
+    /// Find the first default-constructible class in the template argument list
     template <class... T> struct first_object_default_constructible;
 
 #ifndef MPT_DOXYGEN_WARD
@@ -32,9 +35,9 @@ namespace mpt {
     template <class... T>
     using first_object_default_constructible_t =
         typename first_object_default_constructible<T...>::type;
-  } // namespace detail
+  } // namespace
 
-  /*\brief Represent an object that can hold any of a set of types, saving the
+  /*!\brief Represent an object that can hold any of a set of types, saving the
     index of the type
 
     The behaviour is quite similar to std::variant, but in this case the size of
@@ -57,8 +60,7 @@ namespace mpt {
       &&mpt::NonEmptyTemplateArguments<Type...> class basic_typed_any {
 
     /// Object to build if using the default constructor
-    using default_value_type =
-        detail::first_object_default_constructible_t<Type...>;
+    using default_value_type = first_object_default_constructible_t<Type...>;
 
   public:
     /// Type for the index defining the actual type being stored
@@ -115,7 +117,7 @@ namespace mpt {
     index_type m_type_index = mpt::type_index_v<default_value_type, Type...>;
   };
 
-  namespace detail {
+  namespace {
 
     /// Access a value on a std::any object
     template <class Function, class T>
@@ -135,17 +137,16 @@ namespace mpt {
       return function(std::any_cast<T>(std::move(a)));
     }
 
-    /// Requirements for any accessor to a mpt::basic_typed_any object
+    /// Requirements for any accessor to a \ref mpt::basic_typed_any object
     template <class Function, class... T>
     concept Accessor = (mpt::NonEmptyTemplateArguments<T...> &&
                         mpt::are_same_v<decltype(std::invoke(
                             std::declval<Function>(), std::declval<T>()))...>);
 
-    /// Define an array of functions that are called for each type handled by
-    /// mpt::basic_typed_any
+    /// Define an array of functions to work with \ref mpt::basic_typed_any
     template <class TypedAny, class Function> struct accessors;
 
-    /// Specialization for reference
+    /// Specialization by reference
     template <class Function, class IndexType, class... T>
     requires Accessor<Function, T...> struct accessors<
         basic_typed_any<IndexType, T...> &, Function> {
@@ -184,7 +185,7 @@ namespace mpt {
                                   sizeof...(T)>
           value = {&access<Function, T>...};
     };
-  } // namespace detail
+  } // namespace
 
   /*!\brief Main definition a typed "any" object
 
@@ -200,16 +201,16 @@ namespace mpt {
     static constexpr auto is_rvalue_reference =
         std::is_rvalue_reference_v<decltype(any)>;
 
-    static constexpr auto accessors =
+    static constexpr auto array_of_accessors =
         std::conditional_t<is_rvalue_reference,
-                           detail::accessors<TypedAny &&, Function>,
-                           detail::accessors<TypedAny, Function>>::value;
+                           accessors<TypedAny &&, Function>,
+                           accessors<TypedAny, Function>>::value;
 
     if constexpr (is_rvalue_reference)
-      return accessors[any.type_index()](std::forward<Function>(function),
-                                         std::move(any.value()));
+      return array_of_accessors[any.type_index()](
+          std::forward<Function>(function), std::move(any.value()));
     else
-      return accessors[any.type_index()](std::forward<Function>(function),
-                                         any.value());
+      return array_of_accessors[any.type_index()](
+          std::forward<Function>(function), any.value());
   }
 } // namespace mpt
