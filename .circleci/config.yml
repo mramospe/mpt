@@ -105,6 +105,7 @@ jobs:
           command: |
             export VERSION=v$(cat version.txt)
             git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
+            echo "Use tag $(cat /tmp/deployment/tag.txt)"
             gh release create --draft --target ${CIRCLE_SHA1} --notes-file /tmp/deployment/changelogs/${VERSION}-changelog.md $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
   documentation:
     docker:
