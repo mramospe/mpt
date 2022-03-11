@@ -100,7 +100,7 @@ jobs:
           name: Install GitHub interface
           command: |
             apt-get update -y
-            apt-get install -y snap
+            apt-get install -y snapcraft
             snap install gh
       - run:
           name: Publish release
