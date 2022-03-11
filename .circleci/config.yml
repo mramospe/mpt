@@ -120,28 +120,33 @@ jobs:
       - checkout
       - run:
           name: Build documentation
-          command: doxygen
+          command: |
+             doxygen
+             mkdir -p /tmp/doc/html
+             cp -r doc/html /tmp/doc/html
       - persist_to_workspace:
-          root: doc
+          root: /tmp
           paths:
-            - html
+            - doc
   gh-pages:
     docker:
-      - image: node:8.10.0
+      - image: alpine:latest
     steps:
-      - checkout
       - attach_workspace:
-          at: doc
+          at: /tmp
       - run:
-          name: Install dependencies
-          command: |
-            npm install -g --silent gh-pages@2.0.1
-            git config --local user.name "Miguel Ramos Pernas"
-            git config --local user.email "miguel.ramos.pernas@gmail.com"
+          name: Install GitHub interface
+          command: apk add git github-cli openssh
+      - checkout
       - run:
           name: Deploy documentation
-          command: gh-pages --dotfiles --message "documentation updated from the CI" --dist doc/html
-
+          command: |
+            git checkout gh-pages
+            git rm -r doc/html
+            cp -r /tmp/doc/html doc/html
+            git add doc/html
+            git commit -m "Update from the CI"
+            git push
 
 filters-ci: &filters-ci
   filters:
