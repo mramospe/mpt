@@ -141,6 +141,8 @@ jobs:
       - run:
           name: Deploy documentation
           command: |
+            git config --local user.name "Miguel Ramos Pernas"
+            git config --local user.email "miguel.ramos.pernas@gmail.com"
             git checkout gh-pages
             git rm -r ./
             cp -r /tmp/doc/html/* ./
