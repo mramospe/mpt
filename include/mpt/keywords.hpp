@@ -1,3 +1,26 @@
+/*!\file
+  Utilities to handle classes with more friendly default-value settings.
+  The different classes and functions in this file allow to define classes built
+  from arguments that might (or not) be required or have default values. The
+  most straightforward use-case appears when defining classes that are
+  configured from several numerical values (with defaults) in which we might
+  need to modify some arguments without specifying others for which we want to
+  use the default values:
+
+  \code{.cpp}
+  class algorithm {
+    public:
+      algorithm(double alpha, int beta=1, float delta=2.) : m_alpha{alpha},
+  m_beta{beta}, m_delta{delta} { } private: double m_alpha; int m_beta; float
+  m_delta;
+  };
+
+  void some_function() {
+    algorithm op(1., 1, 4.); // here we must specify "beta" if we want to change
+  "delta"
+  }
+  \endcode
+*/
 #pragma once
 #include "mpt/types.hpp"
 #include "mpt/values.hpp"
@@ -30,16 +53,48 @@ namespace mpt {
 
   /*!\brief Class that accepts keyword arguments in the constructor
 
-  Keyword arguments are wrappers around floating point and integral values
-  that are used in order to avoid having several inputs values with no visible
-  correspondence to parameters in the class. The use of keywords also allows
-  to provide the input arguments in any order.
+    Keyword arguments are wrappers around floating point and integral values
+    that are used in order to avoid having several inputs values with no visible
+    correspondence to parameters in the class. The use of keywords also allows
+    to provide the input arguments in any order.
 
-  The keyword arguments are stored within the class, which inherits from
-  \ref std::tuple. You can use the \ref keyword_arguments_parser::get and
-  \ref keyword_arguments_parser::set member functions to manipulate the
-  values.
- */
+    The keyword arguments are stored within the class, which inherits from
+    \ref std::tuple. You can use the \ref mpt::keyword_arguments_parser::get and
+    \ref mpt::keyword_arguments_parser::set member functions to manipulate the
+    values.
+
+    An example of this class would be:
+    \code{.cpp}
+    struct alpha : mpt::keyword_argument<float> {};
+    struct beta : mpt::keyword_argument<int> {};
+    struct delta : mpt::keyword_argument<float> {};
+
+    class algorithm : public
+    mpt::keyword_arguments_parser<mpt::required_keyword_arguments<alpha>,
+                                                           mpt::keyword_arguments_with_default<beta,
+    delta>> {
+
+      using base_class =
+    mpt::keyword_arguments_parser<mpt::required_keyword_arguments<alpha>,
+                                                       mpt::keyword_arguments_with_default<beta,
+    delta>>; using base_class::base_class;
+    };
+
+    void some_function(double a) {
+
+      algorithm algo(std::make_tuple(beta{1}, delta{2.}), delta{4.f}, alpha{a});
+
+      ...
+
+      auto stored_alpha = algo.get<alpha>();
+
+      ...
+    }
+    \endcode
+
+    In this case, the value of \a alpha will be overwritten by the value passed
+    to \a some_function. Note that the order of the arguments can be arbitrary.
+  */
   template <class... R, class... D>
   class keyword_arguments_parser<required_keyword_arguments<R...>,
                                  keyword_arguments_with_default<D...>>

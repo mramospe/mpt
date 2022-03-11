@@ -1,7 +1,7 @@
 MPT
 ===
 
-[![Build Status](https://travis-ci.com/mramospe/mpt.svg?branch=master)](https://travis-ci.com/mramospe/mpt)
+[![Build Status](https://circleci.com/gh/mramospe/mpt/tree/master.svg?style=svg)](https://circleci.com/gh/mramospe/mpt/tree/master)
 [![Documentation Status](https://img.shields.io/badge/documentation-doxygen-blue)](https://mramospe.github.io/mpt)
 
 The Metaprogramming Tools (MPT) package provides additional functionality to treat compile-time expressions.

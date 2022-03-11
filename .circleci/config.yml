@@ -1,0 +1,180 @@
+version: 2.1
+jobs:
+  build-and-test:
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update -y
+            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y git cmake g++-10
+      - checkout
+      - run:
+          name: Install the package
+          environment:
+            CC: gcc-10
+            CXX: g++-10
+          command: |
+            mkdir build
+            cd build
+            cmake ../ -DINSTALL_TESTS=ON -DCMAKE_CXX_COMPILER=${CXX}
+            make install
+            cd ..
+      - run:
+          name: Run the main tests
+          command: |
+            ./build/test/cpp/test_all
+            ./build/test/cpp/test_keywords
+            ./build/test/cpp/test_members
+            ./build/test/cpp/test_signature
+            ./build/test/cpp/test_smart_enum
+            ./build/test/cpp/test_types
+            ./build/test/cpp/test_values
+      - run:
+          name: Test the installation of a CMake dependent project
+          environment:
+            CC: gcc-10
+            CXX: g++-10
+          command: |
+            mkdir test/cmake/build
+            cd test/cmake/build
+            cmake ../ -DCMAKE_INSTALL_PREFIX=../../../build/cmake -DCMAKE_CXX_COMPILER=${CXX}
+            make
+            ./main
+  format:
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update -y
+            apt-get install -y git clang-format-10
+      - checkout
+      - run:
+          name: Check C++ format
+          environment:
+            CLANG_FORMAT: clang-format-10
+          command: ${CLANG_FORMAT} $(find ./ -regex "\./\(include\|test\).*\(hpp\|cpp\)" -type f) --dry-run --Werror
+  changelogs:
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update -y
+            apt-get install -y git ruby
+            ruby --version
+            gem install github_changelog_generator -v 1.15.2
+            mkdir -p /tmp/deployment/changelogs
+      - checkout
+      - run:
+          name: Generate changelogs
+          command: |
+            # Define the new and previous tags
+            VERSION=v$(cat version.txt)
+            if [[ ! ${VERSION} =~ "dev" ]]; then EXCLUDE_PATTERN='*dev*'; fi
+            LATEST_TAG=$(git describe --tags $(git rev-list --exclude=${EXCLUDE_PATTERN} --tags --max-count=1))
+            if [[ -z ${VERSION} || -z ${LATEST_TAG} ]]; then exit 1; fi
+            # Display the tags
+            echo "Using tags: ${VERSION} (new) ${LATEST_TAG} (latest)"
+            # Change the name of the tag if we are not in master
+            if [ ${CIRCLE_BRANCH} != master ]; then RELEASE_TAG=devel-${VERSION}; else RELEASE_TAG=${VERSION}; fi
+            echo ${RELEASE_TAG} >> /tmp/deployment/tag.txt
+            # Generate the changelogs
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-changelog.md --since-tag ${LATEST_TAG} --future-release ${VERSION} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-full-changelog.md --since-tag v0.0.0 --future-release ${VERSION} -t ${GITHUB_TOKEN}
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - deployment
+  deploy:
+    docker:
+      - image: alpine:latest
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Install GitHub interface
+          command: apk add git github-cli openssh
+      - checkout
+      - run:
+          name: Publish release
+          command: |
+            VERSION=v$(cat version.txt)
+            RELEASE_TAG=$(cat /tmp/deployment/tag.txt)
+            RELEASE_NOTES=/tmp/deployment/changelogs/${VERSION}-changelog.md
+            CHANGELOGS=/tmp/deployment/changelogs/*.md
+            gh release create --draft --notes-file ${RELEASE_NOTES} --target ${CIRCLE_SHA1} --title ${RELEASE_TAG} ${RELEASE_TAG} ${CHANGELOGS}
+  documentation:
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update -y
+            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y git graphviz doxygen
+      - checkout
+      - run:
+          name: Build documentation
+          command: |
+             doxygen
+             mkdir -p /tmp/doc
+             cp -r doc/html /tmp/doc/
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - doc
+  gh-pages:
+    docker:
+      - image: alpine:latest
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Install GitHub interface
+          command: apk add git github-cli openssh
+      - checkout
+      - run:
+          name: Deploy documentation
+          command: |
+            git config --local user.name "Miguel Ramos Pernas"
+            git config --local user.email "miguel.ramos.pernas@gmail.com"
+            git checkout gh-pages
+            git rm -r ./
+            cp -r /tmp/doc/html/* ./
+            git add ./
+            git commit -m "Update from the CI"
+            git push https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
+
+basic-deploy-filters: &basic-deploy-filters
+  filters:
+    branches:
+      only:
+        - master
+        - devel
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - build-and-test
+      - format
+  project:
+    jobs:
+      - changelogs:
+          <<: *basic-deploy-filters
+      - deploy:
+          requires:
+            - changelogs
+      - documentation
+      - gh-pages:
+          requires:
+            - documentation
+          filters:
+            branches:
+              only:
+                - master

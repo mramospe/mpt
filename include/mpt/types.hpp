@@ -1,3 +1,9 @@
+/*!\file
+
+  General utilities to work with types and templates.
+  This includes accessing certain types for templated classes, checking the
+  presence of some types in template specializations , repetition of types, ...
+ */
 #pragma once
 #include <cstdlib>
 #include <type_traits>
@@ -33,8 +39,7 @@ namespace mpt {
   };
 #endif
 
-  /// Restriction to specializations where the given type is in the template
-  /// argument list
+  /// Restriction where the given type is in the template parameter list
   template <class R, class... T> concept HasType = has_type_v<R, T...>;
 
   /// Whether the type is in the given template type
@@ -58,8 +63,7 @@ namespace mpt {
   static constexpr auto has_repeated_template_arguments_v =
       has_repeated_template_arguments<T...>::value;
 
-  /// Restriction to specializations where the given type is in the template
-  /// argument list
+  /// Restriction where the given type is in the template parameter list
   template <class... T>
   concept UniqueTemplateArguments = !has_repeated_template_arguments_v<T...>;
 
@@ -146,16 +150,6 @@ namespace mpt {
   template <std::size_t I, class Object>
   using templated_object_type_at_t =
       typename templated_object_type_at<I, Object>::type;
-
-  /// Number of template arguments
-  template <class... T> struct template_object_elements {
-    static constexpr auto value = sizeof...(T);
-  };
-
-  /// Number of template arguments
-  template <class... T>
-  static constexpr auto template_object_elements_v =
-      template_object_elements<T...>::value;
 
   namespace {
 
