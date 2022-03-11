@@ -142,9 +142,9 @@ jobs:
           name: Deploy documentation
           command: |
             git checkout gh-pages
-            git rm -r doc/html
-            cp -r /tmp/doc/html doc/html
-            git add doc/html
+            git rm -r ./
+            cp -r /tmp/doc/html/* ./
+            git add ./
             git commit -m "Update from the CI"
             git push
 
