@@ -98,7 +98,10 @@ jobs:
           at: /tmp
       - run:
           name: Install GitHub interface
-          command: apk add github-cli
+          command: |
+            apk add git
+            apk add github-cli
+      - checkout
       - run:
           name: Publish release
           command: gh release create --draft --target ${CIRCLE_SHA1} $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
