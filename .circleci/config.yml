@@ -92,13 +92,13 @@ jobs:
             - deployment
   deploy:
     docker:
-      - image: snapcore/snapcraft:latest
+      - image: alpine:latest
     steps:
       - attach_workspace:
           at: /tmp
       - run:
           name: Install GitHub interface
-          command: snap install gh
+          command: apk add github-cli
       - run:
           name: Publish release
           command: gh release create --draft --target ${CIRCLE_SHA1} $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
