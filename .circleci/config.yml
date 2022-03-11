@@ -156,7 +156,6 @@ filters-ci: &filters-ci
       only:
         - master
         - devel
-        - change-ci-provider
 
 workflows:
   version: 2
@@ -181,4 +180,3 @@ workflows:
             branches:
               only:
                 - master
-                - change-ci-provider
