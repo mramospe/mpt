@@ -98,9 +98,7 @@ jobs:
           at: /tmp
       - run:
           name: Install GitHub interface
-          command: |
-            apk add git
-            apk add github-cli
+          command: apk add git github-cli openssh
       - checkout
       - run:
           name: Publish release
