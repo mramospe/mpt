@@ -74,18 +74,18 @@ jobs:
           name: Generate changelogs
           command: |
             # Define the new and previous tags
-            export NEW_TAG=v$(cat version.txt)
-            if [[ ! ${NEW_TAG} =~ "dev" ]]; then export EXCLUDE_PATTERN='*dev*'; fi
+            export VERSION=v$(cat version.txt)
+            if [[ ! ${VERSION} =~ "dev" ]]; then export EXCLUDE_PATTERN='*dev*'; fi
             export LATEST_TAG=$(git describe --tags $(git rev-list --exclude=${EXCLUDE_PATTERN} --tags --max-count=1))
-            if [[ -z ${NEW_TAG} || -z ${LATEST_TAG} ]]; then exit 1; fi
+            if [[ -z ${VERSION} || -z ${LATEST_TAG} ]]; then exit 1; fi
             # Display the tags
-            echo "Using tags: ${NEW_TAG} (new) ${LATEST_TAG} (latest)"
+            echo "Using tags: ${VERSION} (new) ${LATEST_TAG} (latest)"
             # Change the name of the tag if we are not in master
-            if [ ${CIRCLE_BRANCH} != master ]; then export RELEASE_TAG=devel-${NEW_TAG}; else export RELEASE_TAG=${NEW_TAG}; fi
+            if [ ${CIRCLE_BRANCH} != master ]; then export RELEASE_TAG=devel-${VERSION}; else export RELEASE_TAG=${VERSION}; fi
             echo ${RELEASE_TAG} >> /tmp/deployment/tag.txt
             # Generate the changelogs
-            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${NEW_TAG}-changelog.md --since-tag ${LATEST_TAG} --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
-            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${NEW_TAG}-full-changelog.md --since-tag v0.0.0 --future-release ${NEW_TAG} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-changelog.md --since-tag ${LATEST_TAG} --future-release ${VERSION} -t ${GITHUB_TOKEN}
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-full-changelog.md --since-tag v0.0.0 --future-release ${VERSION} -t ${GITHUB_TOKEN}
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -103,8 +103,9 @@ jobs:
       - run:
           name: Publish release
           command: |
+            export VERSION=v$(cat version.txt)
             git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
-            gh release create --draft --target ${CIRCLE_SHA1} $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
+            gh release create --draft --target ${CIRCLE_SHA1} --notes-file /tmp/deployment/changelogs/${VERSION}-changelog.md $(cat /tmp/deployment/tag.txt) /tmp/deployment/changelogs/*.md
   documentation:
     docker:
       - image: ubuntu:20.04
