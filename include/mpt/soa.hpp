@@ -139,7 +139,6 @@ namespace mpt {
     /// Helper struct to determine the type of a container given the field type
     template <class FieldType> struct resolve_soa_vector_type;
 
-#ifndef MPT_DOXYGEN_WARD
     template <class T, class Allocator>
     struct resolve_soa_vector_type<field<T, Allocator>> {
       using type = soa_vector<field<T, Allocator>>;
@@ -149,7 +148,6 @@ namespace mpt {
     struct resolve_soa_vector_type<composite_field<Fields...>> {
       using type = soa_vector<Fields...>;
     };
-#endif
 
     /// Determines the type of a container given the field type
     template <class FieldType>
@@ -179,14 +177,14 @@ namespace mpt {
       static constexpr auto value =
           container_index_for_field_impl<I + 1, Field, C...>::value;
     };
-
+#ifndef MPT_DOXYGEN_WARD
     /// Determines the index of the container with the given field
     template <class Field, class... Containers>
     struct container_index_for_field {
       static constexpr auto value =
           container_index_for_field_impl<0, Field, Containers...>::value;
     };
-
+#endif
     /// Index of the container with the given field
     template <class Field, class... Containers>
     static constexpr auto container_index_for_field_v =
@@ -195,7 +193,6 @@ namespace mpt {
     /// Determines the subcontainer type associated to the given field
     template <class Container, class Field> struct container_type_for_field;
 
-#ifndef MPT_DOXYGEN_WARD
     template <class... F, class Field>
     requires HasType<Field, F...> struct container_type_for_field<
         soa_vector<F...>, Field> {
@@ -217,7 +214,6 @@ namespace mpt {
                          Containers...>,
           Field>::type;
     };
-#endif
 
     /// Subcontainer type associated to the given field
     template <class Container, class Field>
@@ -227,7 +223,6 @@ namespace mpt {
     /// Determine the types of the values returned via the "get" accessors
     template <class Field> struct resolve_reference_types;
 
-#ifndef MPT_DOXYGEN_WARD
     template <class Field>
     requires IsBasicField<Field> struct resolve_reference_types<Field> {
       template <class> using reference_type = typename Field::value_type &;
@@ -244,7 +239,6 @@ namespace mpt {
       using const_reference_type = typename Field::template const_proxy<
           container_type_for_field_t<Container, Field>>;
     };
-#endif
 
     /// Reference type for the given field
     template <class Container, class Field>
@@ -273,7 +267,6 @@ namespace mpt {
       }
     };
 
-#ifndef MPT_DOXYGEN_WARD
     template <class Field>
     requires IsBasicField<Field> struct get_element_t<Field,
                                                       soa_vector<Field>> {
@@ -291,7 +284,6 @@ namespace mpt {
         return cont.at(index);
       }
     };
-#endif
 
     /// Get the reference object for the given field
     template <class Field, class Container>
@@ -306,34 +298,34 @@ namespace mpt {
         -> decltype(get_element_t<Field, Container>{}(cont, index)) {
       return get_element_t<Field, Container>{}(cont, index);
     }
-
-    /// Base of any proxy
-    template <class DerivedProxy, class ContainerType> class base_soa_proxy {
-
-      using derived_proxy_type = DerivedProxy;
-
-    public:
-      /// Type of the container that this class is a proxy of
-      using container_type = ContainerType;
-      /// Type of the size
-      using size_type = typename container_type::size_type;
-
-      // No default constructor
-      base_soa_proxy() = delete;
-      base_soa_proxy(base_soa_proxy const &) = default;
-      base_soa_proxy(base_soa_proxy &&) = default;
-
-      /// Build the class from a pointer to a container and an index
-      base_soa_proxy(container_type *container, size_type index)
-          : m_ptr{container}, m_index{index} {}
-
-    protected:
-      /// Pointer to the SOA container
-      container_type *m_ptr = nullptr;
-      /// Index associated to the proxy
-      size_type m_index = 0;
-    };
   } // namespace
+
+  /// Base of any proxy
+  template <class DerivedProxy, class ContainerType> class base_soa_proxy {
+
+    using derived_proxy_type = DerivedProxy;
+
+  public:
+    /// Type of the container that this class is a proxy of
+    using container_type = ContainerType;
+    /// Type of the size
+    using size_type = typename container_type::size_type;
+
+    // No default constructor
+    base_soa_proxy() = delete;
+    base_soa_proxy(base_soa_proxy const &) = default;
+    base_soa_proxy(base_soa_proxy &&) = default;
+
+    /// Build the class from a pointer to a container and an index
+    base_soa_proxy(container_type *container, size_type index)
+        : m_ptr{container}, m_index{index} {}
+
+  protected:
+    /// Pointer to the SOA container
+    container_type *m_ptr = nullptr;
+    /// Index associated to the proxy
+    size_type m_index = 0;
+  };
 
   /*!\brief Associated value of a struct-of-arrays layout element
    */
@@ -402,7 +394,6 @@ namespace mpt {
     /// Determine the SOA value type for the given field
     template <class Field> struct soa_value_for_field;
 
-#ifndef MPT_DOXYGEN_WARD
     template <class... Fields>
     struct soa_value_for_field<composite_field<Fields...>> {
       using type = soa_value<Fields...>;
@@ -411,7 +402,6 @@ namespace mpt {
     template <class Field> struct soa_value_for_field<field<Field>> {
       using type = typename Field::value_type;
     };
-#endif
 
     /// Determine the SOA value type for the given field
     template <class Field>
@@ -427,7 +417,6 @@ namespace mpt {
     /// Functor that converts proxies to values
     template <class Container, class TypeSet> struct soa_proxy_to_value_t;
 
-#ifndef MPT_DOXYGEN_WARD
     template <class Container, class... Fields>
     struct soa_proxy_to_value_t<Container, mpt::types<Fields...>> {
 
@@ -442,7 +431,6 @@ namespace mpt {
         return proxy;
       }
     };
-#endif
   } // namespace
 
   /// Make an SOA value for the given field
@@ -466,7 +454,9 @@ namespace mpt {
     return soa_proxy_to_value_t<Container, TypesSet>{}(proxy);
   }
 
-  /*!\brief Proxy that maintains constant the values of a container
+  /*!\brief Base class for container proxies
+
+    Constant and non-constant proxies inherit from this object.
    */
   template <class Container, class... Fields>
   requires(IsField<Fields>
@@ -558,110 +548,107 @@ namespace mpt {
     }
   };
 
-  namespace {
+  /// Base class of any SOA iterator
+  template <class Iterator, class ContainerType> class base_soa_iterator {
 
-    /// Base class of any SOA iterator
-    template <class Iterator, class ContainerType> class base_soa_iterator {
+  public:
+    /// Actual derived iterator
+    using derived_iterator_type = Iterator;
+    /// Type returned when subtracting iterators
+    using difference_type = std::ptrdiff_t;
+    /// Type of the container
+    using container_type = ContainerType;
+    /// Size type
+    using size_type = typename container_type::size_type;
 
-    public:
-      /// Actual derived iterator
-      using derived_iterator_type = Iterator;
-      /// Type returned when subtracting iterators
-      using difference_type = std::ptrdiff_t;
-      /// Type of the container
-      using container_type = ContainerType;
-      /// Size type
-      using size_type = typename container_type::size_type;
+    /// An iterator must always have a reference to the container
+    base_soa_iterator() = delete;
+    /// Copy constructor
+    base_soa_iterator(base_soa_iterator const &) = default;
+    /// Move constructor
+    base_soa_iterator(base_soa_iterator &&) = default;
+    /// Copy assignment
+    base_soa_iterator &operator=(base_soa_iterator const &) = default;
+    /// Move assignment
+    base_soa_iterator &operator=(base_soa_iterator &&) = default;
+    /// Constructor from the reference to the container and the index
+    base_soa_iterator(container_type *container, size_type index)
+        : m_ptr{container}, m_index{index} {}
 
-      /// An iterator must always have a reference to the container
-      base_soa_iterator() = delete;
-      /// Copy constructor
-      base_soa_iterator(base_soa_iterator const &) = default;
-      /// Move constructor
-      base_soa_iterator(base_soa_iterator &&) = default;
-      /// Copy assignment
-      base_soa_iterator &operator=(base_soa_iterator const &) = default;
-      /// Move assignment
-      base_soa_iterator &operator=(base_soa_iterator &&) = default;
-      /// Constructor from the reference to the container and the index
-      base_soa_iterator(container_type *container, size_type index)
-          : m_ptr{container}, m_index{index} {}
+    auto operator==(derived_iterator_type const &other) {
+      return other.m_ptr == m_ptr && other.m_index == m_index;
+    }
 
-      auto operator==(derived_iterator_type const &other) {
-        return other.m_ptr == m_ptr && other.m_index == m_index;
-      }
+    auto operator!=(derived_iterator_type const &other) {
+      return !(*this == other);
+    }
 
-      auto operator!=(derived_iterator_type const &other) {
-        return !(*this == other);
-      }
+    auto operator>(derived_iterator_type const &other) {
+      return m_index > other.m_index;
+    }
 
-      auto operator>(derived_iterator_type const &other) {
-        return m_index > other.m_index;
-      }
+    auto operator<(derived_iterator_type const &other) {
+      return m_index < other.m_index;
+    }
 
-      auto operator<(derived_iterator_type const &other) {
-        return m_index < other.m_index;
-      }
+    auto operator>=(derived_iterator_type const &other) {
+      return m_index >= other.m_index;
+    }
 
-      auto operator>=(derived_iterator_type const &other) {
-        return m_index >= other.m_index;
-      }
+    auto operator<=(derived_iterator_type const &other) {
+      return m_index <= other.m_index;
+    }
 
-      auto operator<=(derived_iterator_type const &other) {
-        return m_index <= other.m_index;
-      }
+    difference_type operator-(derived_iterator_type const &other) {
+      return m_index - other.m_index;
+    }
 
-      difference_type operator-(derived_iterator_type const &other) {
-        return m_index - other.m_index;
-      }
+    derived_iterator_type operator+(difference_type n) {
+      return {m_ptr, m_index + n};
+    }
 
-      derived_iterator_type operator+(difference_type n) {
-        return {m_ptr, m_index + n};
-      }
+    derived_iterator_type operator-(difference_type n) {
+      return {m_ptr, m_index - n};
+    }
 
-      derived_iterator_type operator-(difference_type n) {
-        return {m_ptr, m_index - n};
-      }
+    derived_iterator_type &operator+=(difference_type n) {
+      m_index += n;
+      return *static_cast<derived_iterator_type *>(this);
+    }
 
-      derived_iterator_type &operator+=(difference_type n) {
-        m_index += n;
-        return *static_cast<derived_iterator_type *>(this);
-      }
+    derived_iterator_type &operator-=(difference_type n) {
+      m_index -= n;
+      return *static_cast<derived_iterator_type *>(this);
+    }
 
-      derived_iterator_type &operator-=(difference_type n) {
-        m_index -= n;
-        return *static_cast<derived_iterator_type *>(this);
-      }
+    derived_iterator_type &operator++() {
+      ++m_index;
+      return *static_cast<derived_iterator_type *>(this);
+    }
 
-      derived_iterator_type &operator++() {
-        ++m_index;
-        return *static_cast<derived_iterator_type *>(this);
-      }
+    derived_iterator_type operator++(int) {
+      derived_iterator_type copy{*this};
+      ++m_index;
+      return copy;
+    }
 
-      derived_iterator_type operator++(int) {
-        derived_iterator_type copy{*this};
-        ++m_index;
-        return copy;
-      }
+    derived_iterator_type &operator--() {
+      --m_index;
+      return *static_cast<derived_iterator_type *>(this);
+    }
 
-      derived_iterator_type &operator--() {
-        --m_index;
-        return *static_cast<derived_iterator_type *>(this);
-      }
+    derived_iterator_type operator--(int) {
+      derived_iterator_type copy{*this};
+      --m_index;
+      return copy;
+    }
 
-      derived_iterator_type operator--(int) {
-        derived_iterator_type copy{*this};
-        --m_index;
-        return copy;
-      }
-
-    protected:
-      /// Pointer to the container
-      container_type *m_ptr = nullptr;
-      /// Index in the container
-      size_type m_index = 0;
-    };
-  } // namespace
+  protected:
+    /// Pointer to the container
+    container_type *m_ptr = nullptr;
+    /// Index in the container
+    size_type m_index = 0;
+  };
 
   /*!\brief Iterator over a container with a struct-of-arrays memory layout
    */
@@ -926,7 +913,6 @@ namespace mpt {
     /// Check if two sets have different fields
     template <class...> struct have_different_fields;
 
-#ifndef MPT_DOXYGEN_WARD
     template <class... U, class... V, class... F>
     struct have_different_fields<mpt::types<U...>, mpt::types<V...>, F...> {
       static constexpr auto value =
@@ -939,7 +925,6 @@ namespace mpt {
     struct have_different_fields<mpt::types<U...>, mpt::types<V...>> {
       static constexpr auto value = !(has_type_v<U, V...> || ...);
     };
-#endif
 
     /// Whether the given packs of fields have intersecting fields or not
     template <class... FieldPacks>
