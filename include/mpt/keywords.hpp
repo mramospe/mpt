@@ -59,8 +59,8 @@ namespace mpt {
     to provide the input arguments in any order.
 
     The keyword arguments are stored within the class, which inherits from
-    \ref std::tuple. You can use the \ref mpt::keyword_arguments_parser::get and
-    \ref mpt::keyword_arguments_parser::set member functions to manipulate the
+    \ref std::tuple. You can use the \ref mpt::keyword_arguments_parser::get() and
+    \ref mpt::keyword_arguments_parser::set() member functions to manipulate the
     values.
 
     An example of this class would be:
@@ -128,8 +128,8 @@ namespace mpt {
     }
 
     /// Set a keyword argument
-    template <class K> constexpr auto set(typename K::value_type v) const {
-      std::get<mpt::type_index_v<K, R..., D...>>(*this) = v;
+    template <class K, class Arg> constexpr void set(Arg &&v) {
+      std::get<mpt::type_index_v<K, R..., D...>>(*this) = std::forward<Arg>(v);
     }
 
   private:

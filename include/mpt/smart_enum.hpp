@@ -325,8 +325,8 @@ namespace mpt {
     creates a \ref std::variant object with the specializations of the given
     functor \a Functor for each enumeration value. To access the correct
     functor, it profits from the fact that the enumeration values are
-    consecutive and can be safely casted to an \ref int, which is used as an
-    index.
+    consecutive and can be safely casted to an integral value, which is used
+    as an index.
   */
   template <class EnumType, template <EnumType> class Functor, class... Args>
   constexpr auto apply_with_switch(EnumType e, Args &&... args) {
@@ -367,7 +367,7 @@ namespace mpt {
 
   The exposed \a enum_properties_name type will contain the following members
 
-  - \a underlying_type: type provided in \type
+  - \a underlying_type: type provided in \a type
   - \a va_args_with_unknown: (for internal use only) representation of the
     input arguments as a string, enclosed in a dedicated type
   - \a va_args: (for internal use only) similar to \a va_args_with_unknown, but
@@ -378,10 +378,10 @@ namespace mpt {
   - \a size_with_unknown: total number of names in the enumeration type
   - \a names: names of the enumeration values, saved as \ref std::string_view
     objects
-  - \a names_with_unknown: similar to \ref names but with the unknown value
+  - \a names_with_unknown: similar to \a names but with the unknown value
     included
   - \a values: values of the enumeration type saved in an array
-  - \a values_with_unknown: similar to \ref values but with the unknown value
+  - \a values_with_unknown: similar to \a values but with the unknown value
     included
 
   Invoking this macro also creates a function called \a properties that is used
