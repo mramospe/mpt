@@ -156,6 +156,5 @@ int main() {
   MPT_TEST_UTILS_ADD_TEST(soa_zip, test_zip);
   MPT_TEST_UTILS_ADD_TEST(soa_zip, test_concatenated_zip);
 
-  return mpt::test::to_return_code(soa_vector.run()) ||
-         mpt::test::to_return_code(soa_zip.run());
+  return mpt::test::to_return_code(soa_vector.run(), soa_zip.run());
 }

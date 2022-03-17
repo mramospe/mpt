@@ -1,4 +1,5 @@
 #include "mpt/members.hpp"
+#include "test_utils.hpp"
 
 int function(double) { return 0; }
 
@@ -49,6 +50,8 @@ struct value_checker {
 
 int main() {
 
+  mpt::test::collector members("members");
+
   // check function wrappers
   mpt::make_function_wrapper(&function);
   mpt::make_function_wrapper(&object::nonconst_call);
@@ -82,5 +85,5 @@ int main() {
                 "Object does not have a member function called \"size\" but "
                 "\"has_member_v\" evaluates to true");
 
-  return 0;
+  return mpt::test::to_return_code(members.run());
 }
