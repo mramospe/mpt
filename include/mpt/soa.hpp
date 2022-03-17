@@ -300,7 +300,7 @@ namespace mpt {
     }
   } // namespace
 
-  /// Base of any proxy
+  /// Base of any proxy to SOA container values
   template <class DerivedProxy, class ContainerType> class base_soa_proxy {
 
     using derived_proxy_type = DerivedProxy;
@@ -454,9 +454,12 @@ namespace mpt {
     return soa_proxy_to_value_t<Container, TypesSet>{}(proxy);
   }
 
-  /*!\brief Base class for container proxies
+  /*!\brief Constant proxy for SOA container values.
 
-    Constant and non-constant proxies inherit from this object.
+    This type of proxy acts as a \ref mpt::soa_value object, but referring to
+    values in a SOA container. The construction of this object is limited
+    to copy and move constructors (where the assignment of values is
+    not done).
    */
   template <class Container, class... Fields>
   requires(IsField<Fields>
@@ -489,6 +492,12 @@ namespace mpt {
   };
 
   /*!\brief Proxy for an element of a container
+
+    A proxy acts as a \ref mpt::soa_value object, but any modification
+    (including assignment) will modify the associated contents in
+    the referenced container. The construction of this object is limited
+    to copy and move constructors (where the assignment of values is
+    not done).
    */
   template <class Container, class... Fields>
   class soa_proxy<Container, mpt::types<Fields...>>
