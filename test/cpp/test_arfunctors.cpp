@@ -25,7 +25,7 @@ struct sqrt_operator {
 };
 
 template <class Operand> constexpr auto sqrt(Operand &&fctr) {
-  return mpt::make_unary_arfunctor<sqrt_operator>(fctr);
+  return mpt::make_composed_arfunctor<sqrt_operator>(fctr);
 }
 
 mpt::test::errors test_simple() {
