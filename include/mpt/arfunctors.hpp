@@ -423,8 +423,4 @@ namespace mpt {
     return make_composed_arfunctor<bitwise_shift_right>(
         std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
   }
-
 } // namespace mpt
-
-// TODO: allow to convert a (composed) functor into an object with a cache
-// that avoids multiple evaluations of the same functor

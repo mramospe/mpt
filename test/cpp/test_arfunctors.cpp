@@ -24,8 +24,21 @@ struct sqrt_operator {
   }
 };
 
-template <class Operand> constexpr auto sqrt(Operand &&fctr) {
-  return mpt::make_composed_arfunctor<sqrt_operator>(fctr);
+struct in_range_operator {
+  template <class Operand, class FloatType>
+  constexpr auto operator()(FloatType lb, Operand &&op, FloatType rb) const {
+    return op > lb && op < rb;
+  }
+};
+
+template <class Operand> constexpr auto sqrt(Operand &&op) {
+  return mpt::make_composed_arfunctor<sqrt_operator>(std::forward<Operand>(op));
+}
+
+template <class Operand, class FloatType>
+constexpr auto in_range(FloatType lb, Operand &&op, FloatType rb) {
+  return mpt::make_composed_arfunctor<in_range_operator>(
+      lb, std::forward<Operand>(op), rb);
 }
 
 mpt::test::errors test_simple() {
@@ -96,6 +109,9 @@ mpt::test::errors test_math() {
 
   if (!mpt::test::is_close(sqrt(functor_x + functor_z)(pos), 2.f))
     errors.push_back("Unable to calculate the square root");
+
+  if (!in_range(-2.f, functor_x, +2.f)(pos))
+    errors.push_back("Unable to determine if a quantity is in the given range");
 
   return errors;
 }
