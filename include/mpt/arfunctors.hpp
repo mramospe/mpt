@@ -167,7 +167,9 @@ namespace mpt {
 
   /// Check if the provided type is an arithmetic and relational functor
   template <class T> struct is_arfunctor {
-    static constexpr auto value = std::is_base_of_v<arfunctor<T>, T>;
+    static constexpr auto value =
+        std::is_base_of_v<arfunctor<std::remove_cvref_t<T>>,
+                          std::remove_cvref_t<T>>;
   };
 
   /// Whether the provided type is an arithmetic and relational functor
@@ -193,7 +195,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator+(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<add>(std::forward<T>(other), fctr);
     }
@@ -206,7 +208,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator-(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<sub>(std::forward<T>(other), fctr);
     }
@@ -219,7 +221,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator*(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<mul>(std::forward<T>(other), fctr);
     }
@@ -232,7 +234,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator/(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<div>(std::forward<T>(other), fctr);
     }
@@ -245,7 +247,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator%(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<modulo>(std::forward<T>(other), fctr);
     }
@@ -260,7 +262,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator==(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<eq>(std::forward<T>(other), fctr);
     }
@@ -273,7 +275,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator!=(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<neq>(std::forward<T>(other), fctr);
     }
@@ -286,7 +288,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator<(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<lt>(std::forward<T>(other), fctr);
     }
@@ -299,7 +301,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator<=(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<leq>(std::forward<T>(other), fctr);
     }
@@ -312,7 +314,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator>(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<gt>(std::forward<T>(other), fctr);
     }
@@ -325,7 +327,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator>=(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<geq>(std::forward<T>(other), fctr);
     }
@@ -340,7 +342,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator&&(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<logical_and>(std::forward<T>(other), fctr);
     }
@@ -353,7 +355,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator||(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<logical_or>(std::forward<T>(other), fctr);
     }
@@ -372,7 +374,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator&(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<bitwise_and>(std::forward<T>(other), fctr);
     }
@@ -385,7 +387,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator|(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<bitwise_or>(std::forward<T>(other), fctr);
     }
@@ -398,7 +400,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator^(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<bitwise_xor>(std::forward<T>(other), fctr);
     }
@@ -415,7 +417,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator<<(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<bitwise_shift_left>(std::forward<T>(other),
                                                        fctr);
@@ -429,7 +431,7 @@ namespace mpt {
     }
 
     template <class T>
-    requires(!is_arfunctor_v<std::remove_cvref_t<T>>) constexpr friend auto
+    requires(!is_arfunctor_v<T>) constexpr friend auto
     operator>>(T &&other, functor_type const &fctr) {
       return make_binary_arfunctor<bitwise_shift_right>(std::forward<T>(other),
                                                         fctr);
@@ -440,7 +442,7 @@ namespace mpt {
     /// Depending on the input argument type, evaluate the functor or return the value
     template <class T, class... Args>
     auto evaluate_arfunctor_or_value(T &&fv, [[maybe_unused]] Args &&... args) {
-      if constexpr (is_arfunctor_v<std::remove_cvref_t<T>>)
+      if constexpr (is_arfunctor_v<T>)
         return fv(args...);
       else
         return fv;
