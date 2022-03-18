@@ -1,21 +1,32 @@
 #include "mpt/arfunctors.hpp"
 #include "test_utils.hpp"
+#include <cmath>
 
 struct position {
   float x, y, z;
 };
 
-struct functor_x_t : public mpt::arfunctor<functor_x_t> {
+struct functor_x_t : public mpt::arfunctor {
   template <class Operand> auto operator()(Operand &&op) const { return op.x; }
 } constexpr functor_x;
 
-struct functor_y_t : public mpt::arfunctor<functor_y_t> {
+struct functor_y_t : public mpt::arfunctor {
   template <class Operand> auto operator()(Operand &&op) const { return op.y; }
 } constexpr functor_y;
 
-struct functor_z_t : public mpt::arfunctor<functor_z_t> {
+struct functor_z_t : public mpt::arfunctor {
   template <class Operand> auto operator()(Operand &&op) const { return op.z; }
 } constexpr functor_z;
+
+struct sqrt_operator {
+  template <class Operand> constexpr auto operator()(Operand &&op) const {
+    return std::sqrt(op);
+  }
+};
+
+template <class Operand> constexpr auto sqrt(Operand &&fctr) {
+  return mpt::make_unary_arfunctor<sqrt_operator>(fctr);
+}
 
 mpt::test::errors test_simple() {
 
@@ -35,7 +46,7 @@ mpt::test::errors test_simple() {
     errors.push_back("Invalid addition by a constant");
 
   auto requirements = 10 * shift_x < 1000.f && mod2 > 10.f &&
-                      !(shift_x < 900.f || shift_x < 1.f);
+                      (shift_x < 900.f || !(shift_x < 1.f));
 
   if (!requirements(pos))
     errors.push_back("Relational operators failed");
@@ -43,7 +54,7 @@ mpt::test::errors test_simple() {
   return errors;
 }
 
-class configurable_functor : public mpt::arfunctor<configurable_functor> {
+class configurable_functor : public mpt::arfunctor {
 
 public:
   configurable_functor(float param_x, float param_y)
@@ -77,11 +88,24 @@ mpt::test::errors test_configurable() {
   return errors;
 }
 
+mpt::test::errors test_math() {
+
+  mpt::test::errors errors;
+
+  position pos = {1.f, 2.f, 3.f};
+
+  if (!mpt::test::is_close(sqrt(functor_x + functor_z)(pos), 2.f))
+    errors.push_back("Unable to calculate the square root");
+
+  return errors;
+}
+
 int main() {
 
   mpt::test::collector arfunctors("arfunctors");
   MPT_TEST_UTILS_ADD_TEST(arfunctors, test_simple);
   MPT_TEST_UTILS_ADD_TEST(arfunctors, test_configurable);
+  MPT_TEST_UTILS_ADD_TEST(arfunctors, test_math);
 
   return mpt::test::to_return_code(arfunctors.run());
 }
