@@ -193,10 +193,11 @@ namespace mpt {
 
   namespace {
     /// Check if the provided type is an arithmetic and relational functor
-    template <class T> struct is_arfunctor {
-      static constexpr auto value =
-          std::is_base_of_v<arfunctor, std::remove_cvref_t<T>>;
-    };
+    template <class T>
+    struct is_arfunctor
+        : std::conditional_t<
+              std::is_base_of_v<arfunctor, std::remove_cvref_t<T>>,
+              std::true_type, std::false_type> {};
 
     /// Whether the provided type is an arithmetic and relational functor
     template <class T>
@@ -268,10 +269,10 @@ namespace mpt {
   namespace {
     /// Check that at least one of the operands is a functor
     template <class LeftOperand, class RightOperand>
-    struct at_least_one_arfunctor {
-      static constexpr auto value =
-          (is_arfunctor_v<LeftOperand> || is_arfunctor_v<RightOperand>);
-    };
+    struct at_least_one_arfunctor
+        : std::conditional_t<(is_arfunctor_v<LeftOperand> ||
+                              is_arfunctor_v<RightOperand>),
+                             std::true_type, std::false_type> {};
 
     /// Whether one of the operands is a functor
     template <class LeftOperand, class RightOperand>
