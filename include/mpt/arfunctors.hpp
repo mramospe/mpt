@@ -258,14 +258,14 @@ namespace mpt {
     }
   };
 
-  namespace {
-    /// Function to build a composed functor from the operator and the operand types
-    template <class Operator, class... Operand>
-    constexpr composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>
-    make_composed_arfunctor(Operand &&... op) {
-      return {std::forward<Operand>(op)...};
-    }
+  /// Build a composed functor from the operator and the operand types
+  template <class Operator, class... Operand>
+  constexpr composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>
+  make_composed_arfunctor(Operand &&... op) {
+    return {std::forward<Operand>(op)...};
+  }
 
+  namespace {
     /// Check that at least one of the operands is a functor
     template <class LeftOperand, class RightOperand>
     struct at_least_one_arfunctor {
@@ -316,7 +316,7 @@ namespace mpt {
                                            std::forward<RightOperand>(rop));
   }
 
-  // RightOperandelational operators
+  // Relational operators
 
   template <class LeftOperand, class RightOperand>
   requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
@@ -360,7 +360,7 @@ namespace mpt {
                                         std::forward<RightOperand>(rop));
   }
 
-  // LeftOperandogical operators
+  // Logical operators
 
   template <class LeftOperand, class RightOperand>
   requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
