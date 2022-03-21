@@ -21,7 +21,7 @@ namespace mpt::test {
   template <class... StatusCode> int to_return_code(StatusCode... sc) {
     static_assert((std::is_same_v<decltype(sc), status_code> && ...),
                   "Input arguments must be of \"status_code\" type");
-    return ((sc != status_code::failure) && ...);
+    return !((sc == status_code::success) && ...);
   }
 
   /// Container of errors
