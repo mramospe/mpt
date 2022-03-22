@@ -147,7 +147,7 @@ jobs:
             git rm -r ./
             cp -r /tmp/doc/html/* ./
             git add ./
-            if [ ! -z "$(git status)" ]; then
+            if [ ! -z "$(git status -s)" ]; then
                git commit -m "Update from the CI"
                git push https://git:${GITHUB_TOKEN}@github.com/mramospe/mpt.git
             fi
