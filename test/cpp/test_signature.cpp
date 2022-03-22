@@ -1,4 +1,5 @@
 #include "mpt/signature.hpp"
+#include "test_utils.hpp"
 #include <tuple>
 
 // definitions for checks on functions
@@ -26,6 +27,8 @@ struct functor_example {
 };
 
 int main() {
+
+  mpt::test::collector signature("signature");
 
   // check function signatures
   using function_signature =
@@ -63,5 +66,5 @@ int main() {
                          functor_example_input_1>,
       "Input types have been wrongly determined");
 
-  return 0;
+  return mpt::test::to_return_code(signature.run());
 }

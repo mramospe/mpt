@@ -1,3 +1,26 @@
+/*!\file
+  Utilities to handle classes with more friendly default-value settings.
+  The different classes and functions in this file allow to define classes built
+  from arguments that might (or not) be required or have default values. The
+  most straightforward use-case appears when defining classes that are
+  configured from several numerical values (with defaults) in which we might
+  need to modify some arguments without specifying others for which we want to
+  use the default values:
+
+  \code{.cpp}
+  class algorithm {
+    public:
+      algorithm(double a, int b=1, float d=2.) : m_a{a},
+  m_b{b}, m_d{d} { } private: double m_a; int m_b; float
+  m_d;
+  };
+
+  void some_function() {
+    algorithm op(1., 1, 4.); // here we must specify "b" if we want to change
+  "d"
+  }
+  \endcode
+*/
 #pragma once
 #include "mpt/types.hpp"
 #include "mpt/values.hpp"
@@ -28,18 +51,51 @@ namespace mpt {
   template <class Required, class Defaulted> class keyword_arguments_parser;
 #endif
 
+  // clang-format off
   /*!\brief Class that accepts keyword arguments in the constructor
 
-  Keyword arguments are wrappers around floating point and integral values
-  that are used in order to avoid having several inputs values with no visible
-  correspondence to parameters in the class. The use of keywords also allows
-  to provide the input arguments in any order.
+    Keyword arguments are wrappers around floating point and integral values
+    that are used in order to avoid having several inputs values with no visible
+    correspondence to parameters in the class. The use of keywords also allows
+    to provide the input arguments in any order.
 
-  The keyword arguments are stored within the class, which inherits from
-  \ref std::tuple. You can use the \ref keyword_arguments_parser::get and
-  \ref keyword_arguments_parser::set member functions to manipulate the
-  values.
- */
+    The keyword arguments are stored within the class, which inherits from
+    \ref std::tuple. You can use the \ref mpt::keyword_arguments_parser::get() and
+    \ref mpt::keyword_arguments_parser::set() member functions to manipulate the
+    values.
+
+    An example of this class would be:
+    \code{.cpp}
+    struct a : mpt::keyword_argument<float> {};
+    struct b : mpt::keyword_argument<int> {};
+    struct d : mpt::keyword_argument<float> {};
+
+    class algorithm : public
+      mpt::keyword_arguments_parser<mpt::required_keyword_arguments<a>,
+                                    mpt::keyword_arguments_with_default<b, d>> {
+
+      using base_class =
+         mpt::keyword_arguments_parser<mpt::required_keyword_arguments<a>,
+                                       mpt::keyword_arguments_with_default<b, d>>;
+      using base_class::base_class;
+    };
+
+    void some_function(double av) {
+
+      algorithm algo(std::make_tuple(b{1}, d{2.}), d{4.f}, a{av});
+
+      ...
+
+      auto stored_a = algo.get<a>();
+
+      ...
+    }
+    \endcode
+
+    In this case, the value of \a a will be overwritten by the value passed
+    to \a some_function. Note that the order of the arguments can be arbitrary.
+  */
+  // clang-format on
   template <class... R, class... D>
   class keyword_arguments_parser<required_keyword_arguments<R...>,
                                  keyword_arguments_with_default<D...>>
@@ -67,14 +123,20 @@ namespace mpt {
         : base_type{parse_keywords_with_defaults_and_required(
               std::forward<Tuple>(defaults), std::forward<K>(v)...)} {}
 
-    /// Get a keyword argument
+    /*!\brief Get a keyword argument
+
+      \see set
+     */
     template <class K> constexpr auto get() const {
       return std::get<mpt::type_index_v<K, R..., D...>>(*this);
     }
 
-    /// Set a keyword argument
-    template <class K> constexpr auto set(typename K::value_type v) const {
-      std::get<mpt::type_index_v<K, R..., D...>>(*this) = v;
+    /*!\brief Set a keyword argument
+
+      \see get
+     */
+    template <class K, class Arg> constexpr void set(Arg &&v) {
+      std::get<mpt::type_index_v<K, R..., D...>>(*this) = std::forward<Arg>(v);
     }
 
   private:

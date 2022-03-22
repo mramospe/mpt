@@ -1,3 +1,9 @@
+/*!\file
+
+  Define operations on object members. This includes checking for the existance
+  of members with a specific type or member functions with an specific signature
+  within an object.
+ */
 #pragma once
 #include "mpt/signature.hpp"
 
