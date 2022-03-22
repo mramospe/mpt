@@ -10,14 +10,14 @@
   \code{.cpp}
   class algorithm {
     public:
-      algorithm(double alpha, int beta=1, float delta=2.) : m_alpha{alpha},
-  m_beta{beta}, m_delta{delta} { } private: double m_alpha; int m_beta; float
-  m_delta;
+      algorithm(double a, int b=1, float d=2.) : m_a{a},
+  m_b{b}, m_d{d} { } private: double m_a; int m_b; float
+  m_d;
   };
 
   void some_function() {
-    algorithm op(1., 1, 4.); // here we must specify "beta" if we want to change
-  "delta"
+    algorithm op(1., 1, 4.); // here we must specify "b" if we want to change
+  "d"
   }
   \endcode
 */
@@ -51,6 +51,7 @@ namespace mpt {
   template <class Required, class Defaulted> class keyword_arguments_parser;
 #endif
 
+  // clang-format off
   /*!\brief Class that accepts keyword arguments in the constructor
 
     Keyword arguments are wrappers around floating point and integral values
@@ -65,36 +66,36 @@ namespace mpt {
 
     An example of this class would be:
     \code{.cpp}
-    struct alpha : mpt::keyword_argument<float> {};
-    struct beta : mpt::keyword_argument<int> {};
-    struct delta : mpt::keyword_argument<float> {};
+    struct a : mpt::keyword_argument<float> {};
+    struct b : mpt::keyword_argument<int> {};
+    struct d : mpt::keyword_argument<float> {};
 
     class algorithm : public
-    mpt::keyword_arguments_parser<mpt::required_keyword_arguments<alpha>,
-                                                           mpt::keyword_arguments_with_default<beta,
-    delta>> {
+      mpt::keyword_arguments_parser<mpt::required_keyword_arguments<a>,
+                                    mpt::keyword_arguments_with_default<b, d>> {
 
       using base_class =
-    mpt::keyword_arguments_parser<mpt::required_keyword_arguments<alpha>,
-                                                       mpt::keyword_arguments_with_default<beta,
-    delta>>; using base_class::base_class;
+         mpt::keyword_arguments_parser<mpt::required_keyword_arguments<a>,
+                                       mpt::keyword_arguments_with_default<b, d>>;
+      using base_class::base_class;
     };
 
-    void some_function(double a) {
+    void some_function(double av) {
 
-      algorithm algo(std::make_tuple(beta{1}, delta{2.}), delta{4.f}, alpha{a});
+      algorithm algo(std::make_tuple(b{1}, d{2.}), d{4.f}, a{av});
 
       ...
 
-      auto stored_alpha = algo.get<alpha>();
+      auto stored_a = algo.get<a>();
 
       ...
     }
     \endcode
 
-    In this case, the value of \a alpha will be overwritten by the value passed
+    In this case, the value of \a a will be overwritten by the value passed
     to \a some_function. Note that the order of the arguments can be arbitrary.
   */
+  // clang-format on
   template <class... R, class... D>
   class keyword_arguments_parser<required_keyword_arguments<R...>,
                                  keyword_arguments_with_default<D...>>
@@ -122,12 +123,18 @@ namespace mpt {
         : base_type{parse_keywords_with_defaults_and_required(
               std::forward<Tuple>(defaults), std::forward<K>(v)...)} {}
 
-    /// Get a keyword argument
+    /*!\brief Get a keyword argument
+
+      \see set
+     */
     template <class K> constexpr auto get() const {
       return std::get<mpt::type_index_v<K, R..., D...>>(*this);
     }
 
-    /// Set a keyword argument
+    /*!\brief Set a keyword argument
+
+      \see get
+     */
     template <class K, class Arg> constexpr void set(Arg &&v) {
       std::get<mpt::type_index_v<K, R..., D...>>(*this) = std::forward<Arg>(v);
     }
