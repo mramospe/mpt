@@ -1,9 +1,12 @@
 #include "mpt/types.hpp"
+#include "test_utils.hpp"
 #include <tuple>
 #include <variant>
 
 // This is all evaluated at compile-time
 int main() {
+
+  mpt::test::collector types("types");
 
   static_assert(mpt::has_type_v<float, double, float, int>);
   static_assert(!mpt::has_type_v<long double, double, float, int>);
@@ -36,5 +39,5 @@ int main() {
       std::tuple, float, double, int, float, long double, int>;
   static_assert(std::tuple_size_v<tuple_type> == 4);
 
-  return 0;
+  return mpt::test::to_return_code(types.run());
 }
