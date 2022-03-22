@@ -93,12 +93,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="types_8hpp__dep__incl.png" border="0" usemap="#include_2mpt_2types_8hppdep" alt=""/></div>
 <map name="include_2mpt_2types_8hppdep" id="include_2mpt_2types_8hppdep">
-<area shape="rect" title=" " alt="" coords="110,5,277,32"/>
-<area shape="rect" href="all_8hpp.html" title=" " alt="" coords="188,229,335,256"/>
-<area shape="rect" href="keywords_8hpp.html" title=" " alt="" coords="30,155,223,181"/>
-<area shape="rect" href="signature_8hpp.html" title=" " alt="" coords="165,80,357,107"/>
-<area shape="rect" href="typed__any_8hpp.html" title=" " alt="" coords="407,80,604,107"/>
-<area shape="rect" href="members_8hpp.html" title=" " alt="" coords="299,155,493,181"/>
+<area shape="rect" title=" " alt="" coords="203,5,370,32"/>
+<area shape="rect" href="all_8hpp.html" title=" " alt="" coords="257,229,404,256"/>
+<area shape="rect" href="keywords_8hpp.html" title=" " alt="" coords="32,155,226,181"/>
+<area shape="rect" href="signature_8hpp.html" title=" " alt="" coords="190,80,382,107"/>
+<area shape="rect" href="soa_8hpp.html" title=" " alt="" coords="520,155,674,181"/>
+<area shape="rect" href="typed__any_8hpp.html" title=" " alt="" coords="590,80,788,107"/>
+<area shape="rect" href="members_8hpp.html" title=" " alt="" coords="302,155,495,181"/>
 </map>
 </div>
 </div>
@@ -135,9 +136,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1templated__object__type__at.html">mpt::templated_object_type_at&lt; I, Object &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the type is in the given template type.  <a href="structmpt_1_1templated__object__type__at.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1template__object__elements.html">mpt::template_object_elements&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of template arguments.  <a href="structmpt_1_1template__object__elements.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1types__set.html">mpt::types_set&lt; TypesSet, T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define a set of types with several types, avoiding repetitions.  <a href="structmpt_1_1types__set.html#details">More...</a><br /></td></tr>
@@ -199,6 +197,7 @@ Variables</h2></td></tr>
 <tr class="separator:ac6351f0541af2d2338c15d898eccaf68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2199bc08edd0b3f96115a53f15e33a36"><td class="memTemplParams" colspan="2">template&lt;class R , class... T&gt; </td></tr>
 <tr class="memitem:a2199bc08edd0b3f96115a53f15e33a36"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a2199bc08edd0b3f96115a53f15e33a36">mpt::HasType</a> = has_type_v&lt;R, T...&gt;</td></tr>
+<tr class="memdesc:a2199bc08edd0b3f96115a53f15e33a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restriction where the given type is in the template parameter list.  <a href="namespacempt.html#a2199bc08edd0b3f96115a53f15e33a36">More...</a><br /></td></tr>
 <tr class="separator:a2199bc08edd0b3f96115a53f15e33a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a115c0d10ceefd4453824d4236774f1c7"><td class="memTemplParams" colspan="2">template&lt;class Reference , class Object &gt; </td></tr>
 <tr class="memitem:a115c0d10ceefd4453824d4236774f1c7"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a115c0d10ceefd4453824d4236774f1c7">mpt::templated_object_has_type_v</a></td></tr>
@@ -210,6 +209,7 @@ Variables</h2></td></tr>
 <tr class="separator:a73bfa42f29ef9f7c2c6c173c7e4e7390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c728fb08c232c9e1f8af48417a70da1"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
 <tr class="memitem:a2c728fb08c232c9e1f8af48417a70da1"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a2c728fb08c232c9e1f8af48417a70da1">mpt::UniqueTemplateArguments</a> = !has_repeated_template_arguments_v&lt;T...&gt;</td></tr>
+<tr class="memdesc:a2c728fb08c232c9e1f8af48417a70da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restriction where the given type is in the template parameter list.  <a href="namespacempt.html#a2c728fb08c232c9e1f8af48417a70da1">More...</a><br /></td></tr>
 <tr class="separator:a2c728fb08c232c9e1f8af48417a70da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83c627f891a6dbc4e09fbc383cc5412d"><td class="memTemplParams" colspan="2">template&lt;class Reference , class Object &gt; </td></tr>
 <tr class="memitem:a83c627f891a6dbc4e09fbc383cc5412d"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a83c627f891a6dbc4e09fbc383cc5412d">mpt::templated_object_has_repeated_template_arguments_v</a></td></tr>
@@ -223,10 +223,6 @@ Variables</h2></td></tr>
 <tr class="memitem:a46748f858f047d9ce76f7fd4dffcd637"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a46748f858f047d9ce76f7fd4dffcd637">mpt::templated_object_type_index_v</a></td></tr>
 <tr class="memdesc:a46748f858f047d9ce76f7fd4dffcd637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the type is in the given template type.  <a href="namespacempt.html#a46748f858f047d9ce76f7fd4dffcd637">More...</a><br /></td></tr>
 <tr class="separator:a46748f858f047d9ce76f7fd4dffcd637"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac903f510b68817ebbbc2affdff1da4e8"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
-<tr class="memitem:ac903f510b68817ebbbc2affdff1da4e8"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ac903f510b68817ebbbc2affdff1da4e8">mpt::template_object_elements_v</a></td></tr>
-<tr class="memdesc:ac903f510b68817ebbbc2affdff1da4e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of template arguments.  <a href="namespacempt.html#ac903f510b68817ebbbc2affdff1da4e8">More...</a><br /></td></tr>
-<tr class="separator:ac903f510b68817ebbbc2affdff1da4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac948f3bbdd011b022694f56f5a5f6d98"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
 <tr class="memitem:ac948f3bbdd011b022694f56f5a5f6d98"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ac948f3bbdd011b022694f56f5a5f6d98">mpt::NonEmptyTemplateArguments</a> = (sizeof...(T) &gt; 0)</td></tr>
 <tr class="memdesc:ac948f3bbdd011b022694f56f5a5f6d98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restriction for templates that must have at least one argument.  <a href="namespacempt.html#ac948f3bbdd011b022694f56f5a5f6d98">More...</a><br /></td></tr>
@@ -240,7 +236,9 @@ Variables</h2></td></tr>
 <tr class="memdesc:a297407875a94f9be5c007c7c0446d0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if all the template arguments are the same.  <a href="namespacempt.html#a297407875a94f9be5c007c7c0446d0cd">More...</a><br /></td></tr>
 <tr class="separator:a297407875a94f9be5c007c7c0446d0cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>General utilities to work with types and templates. This includes accessing certain types for templated classes, checking the presence of some types in template specializations , repetition of types, ... </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

@@ -63,7 +63,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -76,20 +75,31 @@ $(function() {
 <p>Main namespace of the MPT package.  
 <a href="namespacempt.html#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespacempt_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt_1_1detail.html">detail</a></td></tr>
-<tr class="memdesc:namespacempt_1_1detail"><td class="mdescLeft">&#160;</td><td class="mdescRight">Auxiliar functionalities for the package (developers only) <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1are__same.html">are_same</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if all the template arguments are the same.  <a href="structmpt_1_1are__same.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1arfunctor.html">arfunctor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base arithmetic and relational functor class.  <a href="structmpt_1_1arfunctor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1base__soa__iterator.html">base_soa_iterator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class of any SOA iterator.  <a href="classmpt_1_1base__soa__iterator.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1base__soa__proxy.html">base_soa_proxy</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base of any proxy to SOA container values.  <a href="classmpt_1_1base__soa__proxy.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1basic__typed__any.html">basic_typed_any</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represent an object that can hold any of a set of types, saving the index of the type.  <a href="classmpt_1_1basic__typed__any.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1callable__signature.html">callable_signature</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the signature of a callable.  <a href="structmpt_1_1callable__signature.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1composed__arfunctor.html">composed_arfunctor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Composed operation between two objects.  <a href="classmpt_1_1composed__arfunctor.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1field.html">field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A field refering to a container of single value-types.  <a href="structmpt_1_1field.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1function__pointer__type.html">function_pointer_type</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the function pointer for a given signature.  <a href="structmpt_1_1function__pointer__type.html#details">More...</a><br /></td></tr>
@@ -118,18 +128,35 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1has__type_3_01Reference_00_01Reference_00_01T_8_8_8_01_4.html">has_type&lt; Reference, Reference, T... &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the type is in the given list.  <a href="structmpt_1_1has__type_3_01Reference_00_01Reference_00_01T_8_8_8_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__basic__field.html">is_basic_field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field is a basic field.  <a href="structmpt_1_1is__basic__field.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__basic__field__type.html">is_basic_field_type</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field type is basic.  <a href="structmpt_1_1is__basic__field__type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__composite__field.html">is_composite_field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field is a composite field type.  <a href="structmpt_1_1is__composite__field.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__composite__field__type.html">is_composite_field_type</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field type is a composite field type.  <a href="structmpt_1_1is__composite__field__type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__const__member__function.html">is_const_member_function</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type wrapper that checks if the given callable is a const member function.  <a href="structmpt_1_1is__const__member__function.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__const__member__function__signature.html">is_const_member_function_signature</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given signature is that of a const member function.  <a href="structmpt_1_1is__const__member__function__signature.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__field.html">is_field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given type is a valid field type.  <a href="structmpt_1_1is__field.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__function.html">is_function</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type wrapper that checks if the given callable is a function.  <a href="structmpt_1_1is__function.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__function__signature.html">is_function_signature</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type wrapper that checks if the given signature is that of a function.  <a href="structmpt_1_1is__function__signature.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given signature is that of a function.  <a href="structmpt_1_1is__function__signature.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__nonconst__member__function.html">is_nonconst_member_function</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given callable is a non-const member function.  <a href="structmpt_1_1is__nonconst__member__function.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1is__nonconst__member__function__signature.html">is_nonconst_member_function_signature</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the given signature is that of a non-const member function.  <a href="structmpt_1_1is__nonconst__member__function__signature.html#details">More...</a><br /></td></tr>
@@ -164,6 +191,30 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1smart__enum__properties.html">smart_enum_properties</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the properties of an enumeration type via ADL.  <a href="structmpt_1_1smart__enum__properties.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__const__iterator_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html">soa_const_iterator&lt; Container, mpt::types&lt; Fields... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant iterator over a container with a SOA memory layout.  <a href="classmpt_1_1soa__const__iterator_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__const__zip.html">soa_const_zip</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A zip of constant containers.  <a href="classmpt_1_1soa__const__zip.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__iterator_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html">soa_iterator&lt; Container, mpt::types&lt; Fields... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterator over a container with a struct-of-arrays memory layout.  <a href="classmpt_1_1soa__iterator_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__proxy_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html">soa_proxy&lt; Container, mpt::types&lt; Fields... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy for an element of a container.  <a href="classmpt_1_1soa__proxy_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__value.html">soa_value</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Associated value of a struct-of-arrays layout element.  <a href="classmpt_1_1soa__value.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__vector_3_01Field_01_4.html">soa_vector&lt; Field &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container with a struct-of-arrays memory layout.  <a href="classmpt_1_1soa__vector_3_01Field_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__vector_3_01Fields_8_8_8_01_4.html">soa_vector&lt; Fields... &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A container with a struct-of-arrays memory layout.  <a href="classmpt_1_1soa__vector_3_01Fields_8_8_8_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmpt_1_1soa__zip.html">soa_zip</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A zip of containers.  <a href="classmpt_1_1soa__zip.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1specialize__template.html">specialize_template</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialize the given template.  <a href="structmpt_1_1specialize__template.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,9 +223,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1stl__function__wrapper.html">stl_function_wrapper</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/functional/function.html">std::function</a> wrapper associated to the given callable.  <a href="structmpt_1_1stl__function__wrapper.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1template__object__elements.html">template_object_elements</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of template arguments.  <a href="structmpt_1_1template__object__elements.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1templated__object__has__repeated__template__arguments.html">templated_object_has_repeated_template_arguments</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the type is in the given template type.  <a href="structmpt_1_1templated__object__has__repeated__template__arguments.html#details">More...</a><br /></td></tr>
@@ -246,6 +294,12 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a9848281fe9419f251d30eb52b3bf6cbc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a9848281fe9419f251d30eb52b3bf6cbc">smart_enum_properties_t</a> = typename <a class="el" href="structmpt_1_1smart__enum__properties.html">smart_enum_properties</a>&lt; EnumType &gt;::type</td></tr>
 <tr class="memdesc:a9848281fe9419f251d30eb52b3bf6cbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the properties of an enumeration type via ADL.  <a href="namespacempt.html#a9848281fe9419f251d30eb52b3bf6cbc">More...</a><br /></td></tr>
 <tr class="separator:a9848281fe9419f251d30eb52b3bf6cbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8521204e519708ce2900df496216e264"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt.html#a8521204e519708ce2900df496216e264">fields_type</a> = <a class="el" href="structmpt_1_1types.html">mpt::types</a>&lt; Fields... &gt;</td></tr>
+<tr class="memdesc:a8521204e519708ce2900df496216e264"><td class="mdescLeft">&#160;</td><td class="mdescRight">The set of fields used.  <a href="namespacempt.html#a8521204e519708ce2900df496216e264">More...</a><br /></td></tr>
+<tr class="separator:a8521204e519708ce2900df496216e264"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b76e4f6b9d3e6214e6abc5c7a464a12"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt.html#a9b76e4f6b9d3e6214e6abc5c7a464a12">base_class_type</a> = <a class="el" href="classmpt_1_1base__soa__proxy.html">base_soa_proxy</a>&lt; <a class="el" href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">soa_const_proxy</a>&lt; container_type, <a class="el" href="namespacempt.html#a8521204e519708ce2900df496216e264">fields_type</a> &gt;, container_type <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a>  &gt;</td></tr>
+<tr class="memdesc:a9b76e4f6b9d3e6214e6abc5c7a464a12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class.  <a href="namespacempt.html#a9b76e4f6b9d3e6214e6abc5c7a464a12">More...</a><br /></td></tr>
+<tr class="separator:a9b76e4f6b9d3e6214e6abc5c7a464a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa00c3f063eb5559e571365fbeac2df1e"><td class="memTemplParams" colspan="2">template&lt;class... Type&gt; </td></tr>
 <tr class="memitem:aa00c3f063eb5559e571365fbeac2df1e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#aa00c3f063eb5559e571365fbeac2df1e">typed_any</a> = <a class="el" href="classmpt_1_1basic__typed__any.html">basic_typed_any</a>&lt; unsigned short int, Type... &gt;</td></tr>
 <tr class="memdesc:aa00c3f063eb5559e571365fbeac2df1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main definition a typed "any" object.  <a href="namespacempt.html#aa00c3f063eb5559e571365fbeac2df1e">More...</a><br /></td></tr>
@@ -273,6 +327,70 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a88390ef47a1aedfc941beaa193b4e05e"><td class="memTemplParams" colspan="2">template&lt;class Operator , class... Operand&gt; </td></tr>
+<tr class="memitem:a88390ef47a1aedfc941beaa193b4e05e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="classmpt_1_1composed__arfunctor.html">composed_arfunctor</a>&lt; Operator, <a class="elRef" href="http://en.cppreference.com/w/cpp/types/remove_cvref.html">std::remove_cvref_t</a>&lt; Operand &gt;... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a88390ef47a1aedfc941beaa193b4e05e">make_composed_arfunctor</a> (Operand &amp;&amp;... op)</td></tr>
+<tr class="memdesc:a88390ef47a1aedfc941beaa193b4e05e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Build a composed functor from the operator and the operand types.  <a href="namespacempt.html#a88390ef47a1aedfc941beaa193b4e05e">More...</a><br /></td></tr>
+<tr class="separator:a88390ef47a1aedfc941beaa193b4e05e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2acb55ce9276bb47f8bf6b0582e28b8"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:af2acb55ce9276bb47f8bf6b0582e28b8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#af2acb55ce9276bb47f8bf6b0582e28b8">operator+</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:af2acb55ce9276bb47f8bf6b0582e28b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fd44ae659d49b5d8aa6ea2bb28a55eb"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a7fd44ae659d49b5d8aa6ea2bb28a55eb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a7fd44ae659d49b5d8aa6ea2bb28a55eb">operator-</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a7fd44ae659d49b5d8aa6ea2bb28a55eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25494ea2d2f74e159a1b9f38460a87a0"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a25494ea2d2f74e159a1b9f38460a87a0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a25494ea2d2f74e159a1b9f38460a87a0">operator*</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a25494ea2d2f74e159a1b9f38460a87a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a381190e4a405aa723bd7b093462bb36f"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a381190e4a405aa723bd7b093462bb36f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a381190e4a405aa723bd7b093462bb36f">operator/</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a381190e4a405aa723bd7b093462bb36f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31771bfb567a3a2df5c469c4e1850a87"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a31771bfb567a3a2df5c469c4e1850a87"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a31771bfb567a3a2df5c469c4e1850a87">operator%</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a31771bfb567a3a2df5c469c4e1850a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a43687d4fd44d8b20b71859eb70fbf1"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a9a43687d4fd44d8b20b71859eb70fbf1"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a9a43687d4fd44d8b20b71859eb70fbf1">operator==</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a9a43687d4fd44d8b20b71859eb70fbf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4a60872e14989db6da54eb627a8e7f0"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:ae4a60872e14989db6da54eb627a8e7f0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ae4a60872e14989db6da54eb627a8e7f0">operator!=</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:ae4a60872e14989db6da54eb627a8e7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a342024e19285a507fa321f37e335e4db"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a342024e19285a507fa321f37e335e4db"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a342024e19285a507fa321f37e335e4db">operator&lt;</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a342024e19285a507fa321f37e335e4db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba985f6d6f90af78d585d924d14b9859"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:aba985f6d6f90af78d585d924d14b9859"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#aba985f6d6f90af78d585d924d14b9859">operator&lt;=</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:aba985f6d6f90af78d585d924d14b9859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc9fc6585e489a22173a151bf97e41a4"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:adc9fc6585e489a22173a151bf97e41a4"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#adc9fc6585e489a22173a151bf97e41a4">operator&gt;</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:adc9fc6585e489a22173a151bf97e41a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abab8e870d8cad667784cb865787df531"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:abab8e870d8cad667784cb865787df531"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#abab8e870d8cad667784cb865787df531">operator&gt;=</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:abab8e870d8cad667784cb865787df531"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8db21a94be22248d6802652bf1bccab"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:aa8db21a94be22248d6802652bf1bccab"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#aa8db21a94be22248d6802652bf1bccab">operator&amp;&amp;</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:aa8db21a94be22248d6802652bf1bccab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64e138f9e6d470e7e2210f6e3edc7ac7"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a64e138f9e6d470e7e2210f6e3edc7ac7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a64e138f9e6d470e7e2210f6e3edc7ac7">operator||</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a64e138f9e6d470e7e2210f6e3edc7ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97fd2dd30249c9bed17d8cf38473e7e6"><td class="memTemplParams" colspan="2">template&lt;class Operand &gt; </td></tr>
+<tr class="memitem:a97fd2dd30249c9bed17d8cf38473e7e6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr is_arfunctor_v&lt; Operand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a97fd2dd30249c9bed17d8cf38473e7e6">operator!</a> (Operand &amp;&amp;op)</td></tr>
+<tr class="separator:a97fd2dd30249c9bed17d8cf38473e7e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1783311c6a59c574d2a67fdb531fcb17"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a1783311c6a59c574d2a67fdb531fcb17"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a1783311c6a59c574d2a67fdb531fcb17">operator&amp;</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a1783311c6a59c574d2a67fdb531fcb17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ba6b1a818a65828f5c2f9df15faaec5"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a5ba6b1a818a65828f5c2f9df15faaec5"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a5ba6b1a818a65828f5c2f9df15faaec5">operator|</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a5ba6b1a818a65828f5c2f9df15faaec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cc077442e55fd236f3b4b47ffedff31"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:a7cc077442e55fd236f3b4b47ffedff31"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a7cc077442e55fd236f3b4b47ffedff31">operator^</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:a7cc077442e55fd236f3b4b47ffedff31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3b9d8170539a627b1fd47ccf525b128"><td class="memTemplParams" colspan="2">template&lt;class Operand &gt; </td></tr>
+<tr class="memitem:aa3b9d8170539a627b1fd47ccf525b128"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr is_arfunctor_v&lt; Operand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#aa3b9d8170539a627b1fd47ccf525b128">operator~</a> (Operand &amp;&amp;op)</td></tr>
+<tr class="separator:aa3b9d8170539a627b1fd47ccf525b128"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6fb5d7fe00fbe6908398e73a97f08c2"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:ad6fb5d7fe00fbe6908398e73a97f08c2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ad6fb5d7fe00fbe6908398e73a97f08c2">operator&lt;&lt;</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:ad6fb5d7fe00fbe6908398e73a97f08c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade0ed9aa90ebe869f964354a9aa87399"><td class="memTemplParams" colspan="2">template&lt;class LeftOperand , class RightOperand &gt; </td></tr>
+<tr class="memitem:ade0ed9aa90ebe869f964354a9aa87399"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt; LeftOperand, RightOperand &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ade0ed9aa90ebe869f964354a9aa87399">operator&gt;&gt;</a> (LeftOperand &amp;&amp;lop, RightOperand &amp;&amp;rop)</td></tr>
+<tr class="separator:ade0ed9aa90ebe869f964354a9aa87399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d4fe512dc25fa74659668facacaae9d"><td class="memTemplParams" colspan="2">template&lt;class Output , class... Input&gt; </td></tr>
 <tr class="memitem:a1d4fe512dc25fa74659668facacaae9d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a1d4fe512dc25fa74659668facacaae9d">make_function_wrapper</a> (Output(*f)(Input...))</td></tr>
 <tr class="memdesc:a1d4fe512dc25fa74659668facacaae9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a wrapper around a function.  <a href="namespacempt.html#a1d4fe512dc25fa74659668facacaae9d">More...</a><br /></td></tr>
@@ -286,18 +404,20 @@ Functions</h2></td></tr>
 <tr class="memdesc:a981cfb9d8d13b5f2cdcc9d260a317f63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given value corresponds to an unknown value.  <a href="namespacempt.html#a981cfb9d8d13b5f2cdcc9d260a317f63">More...</a><br /></td></tr>
 <tr class="separator:a981cfb9d8d13b5f2cdcc9d260a317f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
-<tr class="memitem:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">from_string_view</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> const &amp;str)</td></tr>
-<tr class="memdesc:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string.  <a href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">More...</a><br /></td></tr>
+<tr class="memitem:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">from_string_view</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;str)</td></tr>
+<tr class="memdesc:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string view.  <a href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">More...</a><br /></td></tr>
 <tr class="separator:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7af99620aec3db8367af63f924e978d4"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
-<tr class="memitem:a7af99620aec3db8367af63f924e978d4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a7af99620aec3db8367af63f924e978d4">from_string_view_throw_if_unknown</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> const &amp;str)</td></tr>
+<tr class="memitem:a7af99620aec3db8367af63f924e978d4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a7af99620aec3db8367af63f924e978d4">from_string_view_throw_if_unknown</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;str)</td></tr>
+<tr class="memdesc:a7af99620aec3db8367af63f924e978d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string view.  <a href="namespacempt.html#a7af99620aec3db8367af63f924e978d4">More...</a><br /></td></tr>
 <tr class="separator:a7af99620aec3db8367af63f924e978d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68a89abe47b6832df6e968d51e5c676f"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
-<tr class="memitem:a68a89abe47b6832df6e968d51e5c676f"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f">from_string</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;str)</td></tr>
+<tr class="memitem:a68a89abe47b6832df6e968d51e5c676f"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f">from_string</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;str)</td></tr>
 <tr class="memdesc:a68a89abe47b6832df6e968d51e5c676f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string.  <a href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f">More...</a><br /></td></tr>
 <tr class="separator:a68a89abe47b6832df6e968d51e5c676f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc6050590debe82751b8cb4e61edc3bd"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
-<tr class="memitem:afc6050590debe82751b8cb4e61edc3bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd">from_string_throw_if_unknown</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;str)</td></tr>
+<tr class="memitem:afc6050590debe82751b8cb4e61edc3bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd">from_string_throw_if_unknown</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;str)</td></tr>
+<tr class="memdesc:afc6050590debe82751b8cb4e61edc3bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string.  <a href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd">More...</a><br /></td></tr>
 <tr class="separator:afc6050590debe82751b8cb4e61edc3bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af83bf5d7802ddce1d2883720fe852e60"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:af83bf5d7802ddce1d2883720fe852e60"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60">to_string_view</a> (EnumType e)</td></tr>
@@ -311,6 +431,45 @@ Functions</h2></td></tr>
 <tr class="memitem:a73092a5341c7f594cfd9bbe7225d2613"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a73092a5341c7f594cfd9bbe7225d2613">apply_with_switch</a> (EnumType e, Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:a73092a5341c7f594cfd9bbe7225d2613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a functor depending on the value of an enumeration type.  <a href="namespacempt.html#a73092a5341c7f594cfd9bbe7225d2613">More...</a><br /></td></tr>
 <tr class="separator:a73092a5341c7f594cfd9bbe7225d2613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a091cf00459dc78a70d50818357d5944c"><td class="memTemplParams" colspan="2">template&lt;class... Fields&gt; </td></tr>
+<tr class="memitem:a091cf00459dc78a70d50818357d5944c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> (<a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a>&lt; Fields &gt; &amp;&amp;...) struct composite_field&lt; Fields... &gt;</td></tr>
+<tr class="memdesc:a091cf00459dc78a70d50818357d5944c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A field that is composed by other fields.  <a href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">More...</a><br /></td></tr>
+<tr class="separator:a091cf00459dc78a70d50818357d5944c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc606c17e517ffd39388e9a8999860ce"><td class="memTemplParams" colspan="2">template&lt;class Field , class... T&gt; </td></tr>
+<tr class="memitem:adc606c17e517ffd39388e9a8999860ce"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> <a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a>&lt; Field &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#adc606c17e517ffd39388e9a8999860ce">make_soa_value</a> (T &amp;&amp;... v)</td></tr>
+<tr class="memdesc:adc606c17e517ffd39388e9a8999860ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an SOA value for the given field.  <a href="namespacempt.html#adc606c17e517ffd39388e9a8999860ce">More...</a><br /></td></tr>
+<tr class="separator:adc606c17e517ffd39388e9a8999860ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbeb208392cc87fd225e6a0356f936ad"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:afbeb208392cc87fd225e6a0356f936ad"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#afbeb208392cc87fd225e6a0356f936ad">soa_proxy_to_value</a> (T <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;value)</td></tr>
+<tr class="memdesc:afbeb208392cc87fd225e6a0356f936ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform the given proxy to a value type.  <a href="namespacempt.html#afbeb208392cc87fd225e6a0356f936ad">More...</a><br /></td></tr>
+<tr class="separator:afbeb208392cc87fd225e6a0356f936ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23c3c4da9550fdf0430e5e6068fdb997"><td class="memTemplParams" colspan="2">template&lt;class Container , class TypesSet &gt; </td></tr>
+<tr class="memitem:a23c3c4da9550fdf0430e5e6068fdb997"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a23c3c4da9550fdf0430e5e6068fdb997">soa_proxy_to_value</a> (soa_proxy&lt; Container, TypesSet &gt; <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;proxy)</td></tr>
+<tr class="memdesc:a23c3c4da9550fdf0430e5e6068fdb997"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform the given proxy to a value type.  <a href="namespacempt.html#a23c3c4da9550fdf0430e5e6068fdb997">More...</a><br /></td></tr>
+<tr class="separator:a23c3c4da9550fdf0430e5e6068fdb997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa65ac0663ce949f2d4cba3f47f33df2c"><td class="memTemplParams" colspan="2">template&lt;class Container , class TypesSet &gt; </td></tr>
+<tr class="memitem:aa65ac0663ce949f2d4cba3f47f33df2c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#aa65ac0663ce949f2d4cba3f47f33df2c">soa_proxy_to_value</a> (<a class="el" href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">soa_const_proxy</a>&lt; Container, TypesSet &gt; <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;proxy)</td></tr>
+<tr class="memdesc:aa65ac0663ce949f2d4cba3f47f33df2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform the given proxy to a value type.  <a href="namespacempt.html#aa65ac0663ce949f2d4cba3f47f33df2c">More...</a><br /></td></tr>
+<tr class="separator:aa65ac0663ce949f2d4cba3f47f33df2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07762cae4ecc5f78ee41e4ba2408321f"><td class="memTemplParams" colspan="2">template&lt;class Container , class... Fields&gt; </td></tr>
+<tr class="memitem:a07762cae4ecc5f78ee41e4ba2408321f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a07762cae4ecc5f78ee41e4ba2408321f">requires</a> (<a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a>&lt; Fields &gt; &amp;&amp;...) class <a class="el" href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">soa_const_proxy</a>&lt; Container</td></tr>
+<tr class="memdesc:a07762cae4ecc5f78ee41e4ba2408321f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant proxy for SOA container values.  <a href="namespacempt.html#a07762cae4ecc5f78ee41e4ba2408321f">More...</a><br /></td></tr>
+<tr class="separator:a07762cae4ecc5f78ee41e4ba2408321f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02a790a190ed763dc000939af3a2d5da"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">soa_const_proxy</a> (soa_proxy&lt; container_type, <a class="el" href="namespacempt.html#a8521204e519708ce2900df496216e264">fields_type</a> &gt; <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;other)</td></tr>
+<tr class="memdesc:a02a790a190ed763dc000939af3a2d5da"><td class="mdescLeft">&#160;</td><td class="mdescRight">A constant proxy can be built from a proxy when this is constant.  <a href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">More...</a><br /></td></tr>
+<tr class="separator:a02a790a190ed763dc000939af3a2d5da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a076ef28b53c83d8f160264852fbe93d0"><td class="memTemplParams" colspan="2">template&lt;class F &gt; </td></tr>
+<tr class="memitem:a076ef28b53c83d8f160264852fbe93d0"><td class="memTemplItemLeft" align="right" valign="top">resolve_const_reference_type_t&lt; container_type, F &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a076ef28b53c83d8f160264852fbe93d0">get</a> () <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a></td></tr>
+<tr class="memdesc:a076ef28b53c83d8f160264852fbe93d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of a field.  <a href="namespacempt.html#a076ef28b53c83d8f160264852fbe93d0">More...</a><br /></td></tr>
+<tr class="separator:a076ef28b53c83d8f160264852fbe93d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af60c037a99a6383fe52357130099f2fa"><td class="memTemplParams" colspan="2">template&lt;class... Containers&gt; </td></tr>
+<tr class="memitem:af60c037a99a6383fe52357130099f2fa"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classmpt_1_1soa__zip.html">soa_zip</a>&lt; Containers... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#af60c037a99a6383fe52357130099f2fa">make_soa_zip</a> (Containers &amp;... v)</td></tr>
+<tr class="memdesc:af60c037a99a6383fe52357130099f2fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a zip of the given containers.  <a href="namespacempt.html#af60c037a99a6383fe52357130099f2fa">More...</a><br /></td></tr>
+<tr class="separator:af60c037a99a6383fe52357130099f2fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3a57310a37f77b0d9a1341a83bf104c"><td class="memTemplParams" colspan="2">template&lt;class... Containers&gt; </td></tr>
+<tr class="memitem:ae3a57310a37f77b0d9a1341a83bf104c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classmpt_1_1soa__const__zip.html">soa_const_zip</a>&lt; Containers... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ae3a57310a37f77b0d9a1341a83bf104c">make_soa_zip</a> (Containers <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;... v)</td></tr>
+<tr class="memdesc:ae3a57310a37f77b0d9a1341a83bf104c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a constant zip of the given containers.  <a href="namespacempt.html#ae3a57310a37f77b0d9a1341a83bf104c">More...</a><br /></td></tr>
+<tr class="separator:ae3a57310a37f77b0d9a1341a83bf104c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8374dffd11cc5a788e0545eb7c602c3b"><td class="memTemplParams" colspan="2">template&lt;class Function , class TypedAny &gt; </td></tr>
 <tr class="memitem:a8374dffd11cc5a788e0545eb7c602c3b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a8374dffd11cc5a788e0545eb7c602c3b">visit_typed_any</a> (Function &amp;&amp;function, TypedAny &amp;&amp;any)</td></tr>
 <tr class="memdesc:a8374dffd11cc5a788e0545eb7c602c3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a function on the given typed "any" object.  <a href="namespacempt.html#a8374dffd11cc5a788e0545eb7c602c3b">More...</a><br /></td></tr>
@@ -320,7 +479,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:abb7c673fdcee734e82ebb475b01a677f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a set of types.  <a href="namespacempt.html#abb7c673fdcee734e82ebb475b01a677f">More...</a><br /></td></tr>
 <tr class="separator:abb7c673fdcee734e82ebb475b01a677f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9725ef1073fc29b189dcb68ed89e7591"><td class="memTemplParams" colspan="2">template&lt;std::size_t I, class T0 , class... T&gt; </td></tr>
-<tr class="memitem:a9725ef1073fc29b189dcb68ed89e7591"><td class="memTemplItemLeft" align="right" valign="top">constexpr const auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a9725ef1073fc29b189dcb68ed89e7591">value_at</a> (T0 const &amp;v0, const T &amp;... v)</td></tr>
+<tr class="memitem:a9725ef1073fc29b189dcb68ed89e7591"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> auto &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a9725ef1073fc29b189dcb68ed89e7591">value_at</a> (T0 <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;v0, <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> T &amp;... v)</td></tr>
 <tr class="memdesc:a9725ef1073fc29b189dcb68ed89e7591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value at the given position.  <a href="namespacempt.html#a9725ef1073fc29b189dcb68ed89e7591">More...</a><br /></td></tr>
 <tr class="separator:a9725ef1073fc29b189dcb68ed89e7591"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ec7b2a9859a5ad68a6487e94fd4381e"><td class="memTemplParams" colspan="2">template&lt;std::size_t I, class T0 , class... T&gt; </td></tr>
@@ -358,12 +517,41 @@ Variables</h2></td></tr>
 <tr class="memitem:a06a27fe13e8bd1c3fda01d05a54335aa"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a06a27fe13e8bd1c3fda01d05a54335aa">is_nonconst_member_function_v</a></td></tr>
 <tr class="memdesc:a06a27fe13e8bd1c3fda01d05a54335aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given callable is a non-const member function.  <a href="namespacempt.html#a06a27fe13e8bd1c3fda01d05a54335aa">More...</a><br /></td></tr>
 <tr class="separator:a06a27fe13e8bd1c3fda01d05a54335aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6770ad31ec53596fe5dfaef6dab7161"><td class="memTemplParams" colspan="2">template&lt;class Field &gt; </td></tr>
+<tr class="memitem:ae6770ad31ec53596fe5dfaef6dab7161"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ae6770ad31ec53596fe5dfaef6dab7161">is_basic_field_v</a> = <a class="el" href="structmpt_1_1is__basic__field.html">is_basic_field</a>&lt;Field&gt;::value</td></tr>
+<tr class="memdesc:ae6770ad31ec53596fe5dfaef6dab7161"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field is a basic field.  <a href="namespacempt.html#ae6770ad31ec53596fe5dfaef6dab7161">More...</a><br /></td></tr>
+<tr class="separator:ae6770ad31ec53596fe5dfaef6dab7161"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3953ef5937dbecb4cbbee490c4a45ca7"><td class="memTemplParams" colspan="2">template&lt;class Field &gt; </td></tr>
+<tr class="memitem:a3953ef5937dbecb4cbbee490c4a45ca7"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a3953ef5937dbecb4cbbee490c4a45ca7">IsBasicField</a> = <a class="el" href="namespacempt.html#ae6770ad31ec53596fe5dfaef6dab7161">is_basic_field_v</a>&lt;Field&gt;</td></tr>
+<tr class="memdesc:a3953ef5937dbecb4cbbee490c4a45ca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field is a basic field.  <a href="namespacempt.html#a3953ef5937dbecb4cbbee490c4a45ca7">More...</a><br /></td></tr>
+<tr class="separator:a3953ef5937dbecb4cbbee490c4a45ca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a125f450a944786e2ad86ec0d36c05b79"><td class="memTemplParams" colspan="2">template&lt;class Field &gt; </td></tr>
+<tr class="memitem:a125f450a944786e2ad86ec0d36c05b79"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a125f450a944786e2ad86ec0d36c05b79">is_composite_field_v</a> = <a class="el" href="structmpt_1_1is__composite__field.html">is_composite_field</a>&lt;Field&gt;::value</td></tr>
+<tr class="memdesc:a125f450a944786e2ad86ec0d36c05b79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field is a composite field type.  <a href="namespacempt.html#a125f450a944786e2ad86ec0d36c05b79">More...</a><br /></td></tr>
+<tr class="separator:a125f450a944786e2ad86ec0d36c05b79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c8f0e820bff5380d9bf6dd6da779e16"><td class="memTemplParams" colspan="2">template&lt;class Field &gt; </td></tr>
+<tr class="memitem:a2c8f0e820bff5380d9bf6dd6da779e16"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a2c8f0e820bff5380d9bf6dd6da779e16">IsCompositeField</a> = <a class="el" href="namespacempt.html#a125f450a944786e2ad86ec0d36c05b79">is_composite_field_v</a>&lt;Field&gt;</td></tr>
+<tr class="memdesc:a2c8f0e820bff5380d9bf6dd6da779e16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given field is a composite field type.  <a href="namespacempt.html#a2c8f0e820bff5380d9bf6dd6da779e16">More...</a><br /></td></tr>
+<tr class="separator:a2c8f0e820bff5380d9bf6dd6da779e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c702308b552ff4ec216f94c0d2c1765"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a5c702308b552ff4ec216f94c0d2c1765"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a5c702308b552ff4ec216f94c0d2c1765">is_field_v</a> = <a class="el" href="structmpt_1_1is__field.html">is_field</a>&lt;T&gt;::value</td></tr>
+<tr class="memdesc:a5c702308b552ff4ec216f94c0d2c1765"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given type is a valid field type.  <a href="namespacempt.html#a5c702308b552ff4ec216f94c0d2c1765">More...</a><br /></td></tr>
+<tr class="separator:a5c702308b552ff4ec216f94c0d2c1765"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ed706cbbc22da9d1fbae158fa3cff0e"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a6ed706cbbc22da9d1fbae158fa3cff0e"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a> = <a class="el" href="namespacempt.html#a5c702308b552ff4ec216f94c0d2c1765">is_field_v</a>&lt;T&gt;</td></tr>
+<tr class="memdesc:a6ed706cbbc22da9d1fbae158fa3cff0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given type is a valid field type.  <a href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">More...</a><br /></td></tr>
+<tr class="separator:a6ed706cbbc22da9d1fbae158fa3cff0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1023c891a7deda82dff3060a0cd00dc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmpt_1_1types.html">mpt::types</a>&lt; Fields... &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt.html#af1023c891a7deda82dff3060a0cd00dc">__pad0__</a></td></tr>
+<tr class="separator:af1023c891a7deda82dff3060a0cd00dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f0a9cdb98655ecbf2d5fd75898fa913"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structmpt_1_1types.html">mpt::types</a>&lt; Fields... &gt; Container&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a></td></tr>
+<tr class="separator:a1f0a9cdb98655ecbf2d5fd75898fa913"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6351f0541af2d2338c15d898eccaf68"><td class="memTemplParams" colspan="2">template&lt;class Reference , class... T&gt; </td></tr>
 <tr class="memitem:ac6351f0541af2d2338c15d898eccaf68"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ac6351f0541af2d2338c15d898eccaf68">has_type_v</a> = <a class="el" href="structmpt_1_1has__type.html">has_type</a>&lt;Reference, T...&gt;::value</td></tr>
 <tr class="memdesc:ac6351f0541af2d2338c15d898eccaf68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the type is in the given list.  <a href="namespacempt.html#ac6351f0541af2d2338c15d898eccaf68">More...</a><br /></td></tr>
 <tr class="separator:ac6351f0541af2d2338c15d898eccaf68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2199bc08edd0b3f96115a53f15e33a36"><td class="memTemplParams" colspan="2">template&lt;class R , class... T&gt; </td></tr>
 <tr class="memitem:a2199bc08edd0b3f96115a53f15e33a36"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a2199bc08edd0b3f96115a53f15e33a36">HasType</a> = <a class="el" href="namespacempt.html#ac6351f0541af2d2338c15d898eccaf68">has_type_v</a>&lt;R, T...&gt;</td></tr>
+<tr class="memdesc:a2199bc08edd0b3f96115a53f15e33a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restriction where the given type is in the template parameter list.  <a href="namespacempt.html#a2199bc08edd0b3f96115a53f15e33a36">More...</a><br /></td></tr>
 <tr class="separator:a2199bc08edd0b3f96115a53f15e33a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a115c0d10ceefd4453824d4236774f1c7"><td class="memTemplParams" colspan="2">template&lt;class Reference , class Object &gt; </td></tr>
 <tr class="memitem:a115c0d10ceefd4453824d4236774f1c7"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a115c0d10ceefd4453824d4236774f1c7">templated_object_has_type_v</a></td></tr>
@@ -375,6 +563,7 @@ Variables</h2></td></tr>
 <tr class="separator:a73bfa42f29ef9f7c2c6c173c7e4e7390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c728fb08c232c9e1f8af48417a70da1"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
 <tr class="memitem:a2c728fb08c232c9e1f8af48417a70da1"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a2c728fb08c232c9e1f8af48417a70da1">UniqueTemplateArguments</a> = !<a class="el" href="namespacempt.html#a73bfa42f29ef9f7c2c6c173c7e4e7390">has_repeated_template_arguments_v</a>&lt;T...&gt;</td></tr>
+<tr class="memdesc:a2c728fb08c232c9e1f8af48417a70da1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restriction where the given type is in the template parameter list.  <a href="namespacempt.html#a2c728fb08c232c9e1f8af48417a70da1">More...</a><br /></td></tr>
 <tr class="separator:a2c728fb08c232c9e1f8af48417a70da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83c627f891a6dbc4e09fbc383cc5412d"><td class="memTemplParams" colspan="2">template&lt;class Reference , class Object &gt; </td></tr>
 <tr class="memitem:a83c627f891a6dbc4e09fbc383cc5412d"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a83c627f891a6dbc4e09fbc383cc5412d">templated_object_has_repeated_template_arguments_v</a></td></tr>
@@ -388,10 +577,6 @@ Variables</h2></td></tr>
 <tr class="memitem:a46748f858f047d9ce76f7fd4dffcd637"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a46748f858f047d9ce76f7fd4dffcd637">templated_object_type_index_v</a></td></tr>
 <tr class="memdesc:a46748f858f047d9ce76f7fd4dffcd637"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the type is in the given template type.  <a href="namespacempt.html#a46748f858f047d9ce76f7fd4dffcd637">More...</a><br /></td></tr>
 <tr class="separator:a46748f858f047d9ce76f7fd4dffcd637"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac903f510b68817ebbbc2affdff1da4e8"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
-<tr class="memitem:ac903f510b68817ebbbc2affdff1da4e8"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ac903f510b68817ebbbc2affdff1da4e8">template_object_elements_v</a></td></tr>
-<tr class="memdesc:ac903f510b68817ebbbc2affdff1da4e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of template arguments.  <a href="namespacempt.html#ac903f510b68817ebbbc2affdff1da4e8">More...</a><br /></td></tr>
-<tr class="separator:ac903f510b68817ebbbc2affdff1da4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac948f3bbdd011b022694f56f5a5f6d98"><td class="memTemplParams" colspan="2">template&lt;class... T&gt; </td></tr>
 <tr class="memitem:ac948f3bbdd011b022694f56f5a5f6d98"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#ac948f3bbdd011b022694f56f5a5f6d98">NonEmptyTemplateArguments</a> = (sizeof...(T) &gt; 0)</td></tr>
 <tr class="memdesc:ac948f3bbdd011b022694f56f5a5f6d98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restriction for templates that must have at least one argument.  <a href="namespacempt.html#ac948f3bbdd011b022694f56f5a5f6d98">More...</a><br /></td></tr>
@@ -407,7 +592,6 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main namespace of the MPT package. </p>
-<p>Determine signature of functions and functors. </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
 <a id="ab50541a58756be5ca9532040b6fc366e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab50541a58756be5ca9532040b6fc366e">&#9670;&nbsp;</a></span>array_buffer_type</h2>
@@ -463,6 +647,22 @@ template&lt;std::size_t N&gt; </div>
 
 </div>
 </div>
+<a id="a9b76e4f6b9d3e6214e6abc5c7a464a12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b76e4f6b9d3e6214e6abc5c7a464a12">&#9670;&nbsp;</a></span>base_class_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacempt.html#a9b76e4f6b9d3e6214e6abc5c7a464a12">mpt::base_class_type</a> = typedef <a class="el" href="classmpt_1_1base__soa__proxy.html">base_soa_proxy</a>&lt;<a class="el" href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">soa_const_proxy</a>&lt;container_type, <a class="el" href="namespacempt.html#a8521204e519708ce2900df496216e264">fields_type</a>&gt;, container_type <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Base class. </p>
+
+</div>
+</div>
 <a id="aabdcd7fe65eb9a74280826cb73da7ca2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aabdcd7fe65eb9a74280826cb73da7ca2">&#9670;&nbsp;</a></span>callable_signature_t</h2>
 
@@ -478,6 +678,22 @@ template&lt;class Callable &gt; </div>
 </div><div class="memdoc">
 
 <p>Determine the signature of a callable. </p>
+
+</div>
+</div>
+<a id="a8521204e519708ce2900df496216e264"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8521204e519708ce2900df496216e264">&#9670;&nbsp;</a></span>fields_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="namespacempt.html#a8521204e519708ce2900df496216e264">mpt::fields_type</a> = typedef <a class="el" href="structmpt_1_1types.html">mpt::types</a>&lt;Fields...&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The set of fields used. </p>
 
 </div>
 </div>
@@ -568,6 +784,10 @@ template&lt;class EnumType &gt; </div>
 </div><div class="memdoc">
 
 <p>Access the properties of an enumeration type via ADL. </p>
+<div class="fragment"><div class="line"><a class="code" href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a>(position, position_properties, <span class="keywordtype">int</span>, unknown_position, bottom, middle, top);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> constexpr <span class="keyword">auto</span> position_values = smart_enum_properties_t&lt;position&gt;::values_with_unknown;</div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structmpt_1_1smart__enum__properties.html" title="Access the properties of an enumeration type via ADL.">mpt::smart_enum_properties</a> </dd></dl>
 
 </div>
 </div>
@@ -676,7 +896,7 @@ template&lt;class... Type&gt; </div>
 </div><div class="memdoc">
 
 <p>Main definition a typed "any" object. </p>
-<p>To use other index types see <a class="el" href="classmpt_1_1basic__typed__any.html">mpt::basic_typed_any</a>. </p>
+<p>To use other index types see <a class="el" href="classmpt_1_1basic__typed__any.html" title="Represent an object that can hold any of a set of types, saving the index of the type.">mpt::basic_typed_any</a>. </p>
 
 </div>
 </div>
@@ -736,6 +956,55 @@ template&lt;class EnumType , template&lt; EnumType &gt; class Functor, class... 
 </div><div class="memdoc">
 
 <p>Apply a functor depending on the value of an enumeration type. </p>
+<p>This function avoids having to write long <em>switch-case</em> expressions with all the enumeration values. The provided functor in <em>Functor</em> must be default-constructible.</p>
+<div class="fragment"><div class="line"><a class="code" href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a>(position, position_properties, <span class="keywordtype">int</span>, unknown_position, bottom, middle, top);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> some_function(position p) {</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">switch</span> (p) {</div>
+<div class="line">    <span class="keywordflow">case</span> (unknown_position):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">    <span class="keywordflow">case</span> (bottom):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">    <span class="keywordflow">case</span> (middle):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">    <span class="keywordflow">case</span> (top):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">  }</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;position P&gt;</div>
+<div class="line"><span class="keyword">struct </span>functor;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span>functor&lt;unknown_position&gt; {</div>
+<div class="line">  <span class="keywordtype">double</span> operator(<span class="keywordtype">double</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> i * 0.; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span>functor&lt;unknown_position&gt; {</div>
+<div class="line">  <span class="keywordtype">double</span> operator(<span class="keywordtype">double</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> i * 1.; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span>functor&lt;bottom&gt; {</div>
+<div class="line">  <span class="keywordtype">double</span> operator(<span class="keywordtype">double</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> i * 2.; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span>functor&lt;middle&gt; {</div>
+<div class="line">  <span class="keywordtype">double</span> operator(<span class="keywordtype">double</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> i * 3.; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span>functor&lt;top&gt; {</div>
+<div class="line">  <span class="keywordtype">double</span> operator(<span class="keywordtype">double</span> i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> i * 4.; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> optimal_function(position p) {</div>
+<div class="line">  <span class="keywordflow">return</span> mpt::apply_with_switch&lt;position, functor&gt;(p, 2.);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Effectively it creates a compile-time array of functors, for which it creates a <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/variant.html">std::variant</a> object with the specializations of the given functor <em>Functor</em> for each enumeration value. To access the correct functor, it profits from the fact that the enumeration values are consecutive and can be safely casted to an integral value, which is used as an index. </p>
 
 </div>
 </div>
@@ -753,7 +1022,7 @@ template&lt;class EnumType &gt; </div>
         <tr>
           <td class="memname">constexpr auto mpt::from_string </td>
           <td>(</td>
-          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;&#160;</td>
+          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
@@ -766,6 +1035,7 @@ template&lt;class EnumType &gt; </div>
 </div><div class="memdoc">
 
 <p>Determine the enumeration value from the given string. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f" title="Determine the enumeration value from the given string.">mpt::from_string</a> <a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25" title="Determine the enumeration value from the given string view.">mpt::from_string_view</a> <a class="el" href="namespacempt.html#a7af99620aec3db8367af63f924e978d4" title="Determine the enumeration value from the given string view.">mpt::from_string_view_throw_if_unknown</a> </dd></dl>
 
 </div>
 </div>
@@ -780,13 +1050,16 @@ template&lt;class EnumType &gt; </div>
         <tr>
           <td class="memname">auto mpt::from_string_throw_if_unknown </td>
           <td>(</td>
-          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;&#160;</td>
+          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Determine the enumeration value from the given string, throwing an error if unknown </p>
+
+<p>Determine the enumeration value from the given string. </p>
+<p>An error is thrown if it evaluates to an unknown enumeration value.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f" title="Determine the enumeration value from the given string.">mpt::from_string</a> <a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25" title="Determine the enumeration value from the given string view.">mpt::from_string_view</a> <a class="el" href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd" title="Determine the enumeration value from the given string.">mpt::from_string_throw_if_unknown</a> </dd></dl>
 
 </div>
 </div>
@@ -804,7 +1077,7 @@ template&lt;class EnumType &gt; </div>
         <tr>
           <td class="memname">constexpr auto mpt::from_string_view </td>
           <td>(</td>
-          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> const &amp;&#160;</td>
+          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
@@ -816,7 +1089,8 @@ template&lt;class EnumType &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Determine the enumeration value from the given string. </p>
+<p>Determine the enumeration value from the given string view. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f" title="Determine the enumeration value from the given string.">mpt::from_string</a> <a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25" title="Determine the enumeration value from the given string view.">mpt::from_string_view</a> <a class="el" href="namespacempt.html#a7af99620aec3db8367af63f924e978d4" title="Determine the enumeration value from the given string view.">mpt::from_string_view_throw_if_unknown</a> </dd></dl>
 
 </div>
 </div>
@@ -831,13 +1105,37 @@ template&lt;class EnumType &gt; </div>
         <tr>
           <td class="memname">auto mpt::from_string_view_throw_if_unknown </td>
           <td>(</td>
-          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> const &amp;&#160;</td>
+          <td class="paramtype"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
           <td class="paramname"><em>str</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Determine the enumeration value from the given string view, throwing an error if unknown </p>
+
+<p>Determine the enumeration value from the given string view. </p>
+<p>An error is thrown if it evaluates to an unknown enumeration value.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25" title="Determine the enumeration value from the given string view.">mpt::from_string_view</a> <a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f" title="Determine the enumeration value from the given string.">mpt::from_string</a> <a class="el" href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd" title="Determine the enumeration value from the given string.">mpt::from_string_throw_if_unknown</a> </dd></dl>
+
+</div>
+</div>
+<a id="a076ef28b53c83d8f160264852fbe93d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a076ef28b53c83d8f160264852fbe93d0">&#9670;&nbsp;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">resolve_const_reference_type_t&lt;container_type, F&gt; mpt::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the value of a field. </p>
 
 </div>
 </div>
@@ -868,6 +1166,36 @@ template&lt;class EnumType &gt; </div>
 </div><div class="memdoc">
 
 <p>Whether the given value corresponds to an unknown value. </p>
+
+</div>
+</div>
+<a id="a88390ef47a1aedfc941beaa193b4e05e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88390ef47a1aedfc941beaa193b4e05e">&#9670;&nbsp;</a></span>make_composed_arfunctor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Operator , class... Operand&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="classmpt_1_1composed__arfunctor.html">composed_arfunctor</a>&lt;Operator, <a class="elRef" href="http://en.cppreference.com/w/cpp/types/remove_cvref.html">std::remove_cvref_t</a>&lt;Operand&gt;...&gt; mpt::make_composed_arfunctor </td>
+          <td>(</td>
+          <td class="paramtype">Operand &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Build a composed functor from the operator and the operand types. </p>
 
 </div>
 </div>
@@ -932,6 +1260,72 @@ template&lt;class Object , class Output , class... Input&gt; </div>
 
 </div>
 </div>
+<a id="adc606c17e517ffd39388e9a8999860ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc606c17e517ffd39388e9a8999860ce">&#9670;&nbsp;</a></span>make_soa_value()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Field , class... T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> <a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a>&lt;Field&gt; auto mpt::make_soa_value </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Make an SOA value for the given field. </p>
+
+</div>
+</div>
+<a id="af60c037a99a6383fe52357130099f2fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af60c037a99a6383fe52357130099f2fa">&#9670;&nbsp;</a></span>make_soa_zip() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... Containers&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmpt_1_1soa__zip.html">soa_zip</a>&lt;Containers...&gt; mpt::make_soa_zip </td>
+          <td>(</td>
+          <td class="paramtype">Containers &amp;...&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a zip of the given containers. </p>
+
+</div>
+</div>
+<a id="ae3a57310a37f77b0d9a1341a83bf104c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3a57310a37f77b0d9a1341a83bf104c">&#9670;&nbsp;</a></span>make_soa_zip() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... Containers&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmpt_1_1soa__const__zip.html">soa_const_zip</a>&lt;Containers...&gt; mpt::make_soa_zip </td>
+          <td>(</td>
+          <td class="paramtype">Containers <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;...&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create a constant zip of the given containers. </p>
+
+</div>
+</div>
 <a id="abb7c673fdcee734e82ebb475b01a677f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abb7c673fdcee734e82ebb475b01a677f">&#9670;&nbsp;</a></span>make_type_set()</h2>
 
@@ -958,6 +1352,882 @@ template&lt;class... T&gt; </div>
 </div><div class="memdoc">
 
 <p>Make a set of types. </p>
+
+</div>
+</div>
+<a id="a97fd2dd30249c9bed17d8cf38473e7e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97fd2dd30249c9bed17d8cf38473e7e6">&#9670;&nbsp;</a></span>operator!()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Operand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr is_arfunctor_v&lt;Operand&gt; auto mpt::operator! </td>
+          <td>(</td>
+          <td class="paramtype">Operand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4a60872e14989db6da54eb627a8e7f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4a60872e14989db6da54eb627a8e7f0">&#9670;&nbsp;</a></span>operator!=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto <a class="el" href="namespacempt.html#a97fd2dd30249c9bed17d8cf38473e7e6">mpt::operator!</a>= </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a31771bfb567a3a2df5c469c4e1850a87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31771bfb567a3a2df5c469c4e1850a87">&#9670;&nbsp;</a></span>operator%()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator% </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1783311c6a59c574d2a67fdb531fcb17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1783311c6a59c574d2a67fdb531fcb17">&#9670;&nbsp;</a></span>operator&amp;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&amp; </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa8db21a94be22248d6802652bf1bccab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8db21a94be22248d6802652bf1bccab">&#9670;&nbsp;</a></span>operator&amp;&amp;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&amp;&amp; </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a25494ea2d2f74e159a1b9f38460a87a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25494ea2d2f74e159a1b9f38460a87a0">&#9670;&nbsp;</a></span>operator*()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator* </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af2acb55ce9276bb47f8bf6b0582e28b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2acb55ce9276bb47f8bf6b0582e28b8">&#9670;&nbsp;</a></span>operator+()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator+ </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7fd44ae659d49b5d8aa6ea2bb28a55eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fd44ae659d49b5d8aa6ea2bb28a55eb">&#9670;&nbsp;</a></span>operator-()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator- </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a381190e4a405aa723bd7b093462bb36f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a381190e4a405aa723bd7b093462bb36f">&#9670;&nbsp;</a></span>operator/()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator/ </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a342024e19285a507fa321f37e335e4db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a342024e19285a507fa321f37e335e4db">&#9670;&nbsp;</a></span>operator&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&lt; </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad6fb5d7fe00fbe6908398e73a97f08c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6fb5d7fe00fbe6908398e73a97f08c2">&#9670;&nbsp;</a></span>operator&lt;&lt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba985f6d6f90af78d585d924d14b9859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba985f6d6f90af78d585d924d14b9859">&#9670;&nbsp;</a></span>operator&lt;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&lt;= </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9a43687d4fd44d8b20b71859eb70fbf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a43687d4fd44d8b20b71859eb70fbf1">&#9670;&nbsp;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator== </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adc9fc6585e489a22173a151bf97e41a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc9fc6585e489a22173a151bf97e41a4">&#9670;&nbsp;</a></span>operator&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&gt; </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abab8e870d8cad667784cb865787df531"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abab8e870d8cad667784cb865787df531">&#9670;&nbsp;</a></span>operator&gt;=()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&gt;= </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ade0ed9aa90ebe869f964354a9aa87399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade0ed9aa90ebe869f964354a9aa87399">&#9670;&nbsp;</a></span>operator&gt;&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator&gt;&gt; </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7cc077442e55fd236f3b4b47ffedff31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cc077442e55fd236f3b4b47ffedff31">&#9670;&nbsp;</a></span>operator^()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator^ </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5ba6b1a818a65828f5c2f9df15faaec5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ba6b1a818a65828f5c2f9df15faaec5">&#9670;&nbsp;</a></span>operator|()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator| </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a64e138f9e6d470e7e2210f6e3edc7ac7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64e138f9e6d470e7e2210f6e3edc7ac7">&#9670;&nbsp;</a></span>operator||()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class LeftOperand , class RightOperand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr at_least_one_arfunctor_v&lt;LeftOperand, RightOperand&gt; auto mpt::operator|| </td>
+          <td>(</td>
+          <td class="paramtype">LeftOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>lop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">RightOperand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>rop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa3b9d8170539a627b1fd47ccf525b128"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3b9d8170539a627b1fd47ccf525b128">&#9670;&nbsp;</a></span>operator~()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Operand &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacempt.html#a091cf00459dc78a70d50818357d5944c">requires</a> constexpr is_arfunctor_v&lt;Operand&gt; auto mpt::operator~ </td>
+          <td>(</td>
+          <td class="paramtype">Operand &amp;&amp;&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a07762cae4ecc5f78ee41e4ba2408321f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07762cae4ecc5f78ee41e4ba2408321f">&#9670;&nbsp;</a></span>requires() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container , class... Fields&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">mpt::requires </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a>&lt; Fields &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constant proxy for SOA container values. </p>
+<p>This type of proxy acts as a <a class="el" href="classmpt_1_1soa__value.html">mpt::soa_value</a> object, but referring to values in a SOA container. The construction of this object is limited to copy and move constructors (where the assignment of values is not done). </p>
+
+</div>
+</div>
+<a id="a091cf00459dc78a70d50818357d5944c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a091cf00459dc78a70d50818357d5944c">&#9670;&nbsp;</a></span>requires() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... Fields&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">mpt::requires </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacempt.html#a6ed706cbbc22da9d1fbae158fa3cff0e">IsField</a>&lt; Fields &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A field that is composed by other fields. </p>
+<p>Fields must be built inheriting from this class via </p><div class="fragment"><div class="line"><span class="keyword">struct </span>x : <a class="code" href="structmpt_1_1field.html">mpt::field</a>&lt;float&gt; { };</div>
+<div class="line"><span class="keyword">struct </span>y : <a class="code" href="structmpt_1_1field.html">mpt::field</a>&lt;float&gt; { };</div>
+<div class="line"><span class="keyword">struct </span>z : <a class="code" href="structmpt_1_1field.html">mpt::field</a>&lt;float&gt; { };</div>
+<div class="line"><span class="keyword">struct </span>position : mpt::composite_field&lt;x, y, z&gt; { };</div>
+</div><!-- fragment --><p>It is also possible to declare fields that depend on other composite fields. </p>
+
+</div>
+</div>
+<a id="a02a790a190ed763dc000939af3a2d5da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02a790a190ed763dc000939af3a2d5da">&#9670;&nbsp;</a></span>soa_const_proxy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">mpt::soa_const_proxy </td>
+          <td>(</td>
+          <td class="paramtype">soa_proxy&lt; container_type, <a class="el" href="namespacempt.html#a8521204e519708ce2900df496216e264">fields_type</a> &gt; <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A constant proxy can be built from a proxy when this is constant. </p>
+
+</div>
+</div>
+<a id="aa65ac0663ce949f2d4cba3f47f33df2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa65ac0663ce949f2d4cba3f47f33df2c">&#9670;&nbsp;</a></span>soa_proxy_to_value() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container , class TypesSet &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mpt::soa_proxy_to_value </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacempt.html#a02a790a190ed763dc000939af3a2d5da">soa_const_proxy</a>&lt; Container, TypesSet &gt; <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>proxy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform the given proxy to a value type. </p>
+
+</div>
+</div>
+<a id="a23c3c4da9550fdf0430e5e6068fdb997"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23c3c4da9550fdf0430e5e6068fdb997">&#9670;&nbsp;</a></span>soa_proxy_to_value() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Container , class TypesSet &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mpt::soa_proxy_to_value </td>
+          <td>(</td>
+          <td class="paramtype">soa_proxy&lt; Container, TypesSet &gt; <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>proxy</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform the given proxy to a value type. </p>
+
+</div>
+</div>
+<a id="afbeb208392cc87fd225e6a0356f936ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbeb208392cc87fd225e6a0356f936ad">&#9670;&nbsp;</a></span>soa_proxy_to_value() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mpt::soa_proxy_to_value </td>
+          <td>(</td>
+          <td class="paramtype">T <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform the given proxy to a value type. </p>
 
 </div>
 </div>
@@ -988,6 +2258,7 @@ template&lt;class EnumType &gt; </div>
 </div><div class="memdoc">
 
 <p>Access the name of the given enumeration value. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60" title="Access the name of the given enumeration value.">mpt::to_string_view</a> </dd></dl>
 
 </div>
 </div>
@@ -1018,6 +2289,7 @@ template&lt;class EnumType &gt; </div>
 </div><div class="memdoc">
 
 <p>Access the name of the given enumeration value. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6" title="Access the name of the given enumeration value.">mpt::to_string</a> </dd></dl>
 
 </div>
 </div>
@@ -1073,15 +2345,15 @@ template&lt;std::size_t I, class T0 , class... T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr const auto&amp; mpt::value_at </td>
+          <td class="memname">constexpr <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> auto&amp; mpt::value_at </td>
           <td>(</td>
-          <td class="paramtype">T0 const &amp;&#160;</td>
+          <td class="paramtype">T0 <a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> &amp;&#160;</td>
           <td class="paramname"><em>v0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const T &amp;...&#160;</td>
+          <td class="paramtype"><a class="el" href="namespacempt.html#a1f0a9cdb98655ecbf2d5fd75898fa913">const</a> T &amp;...&#160;</td>
           <td class="paramname"><em>v</em>&#160;</td>
         </tr>
         <tr>
@@ -1134,6 +2406,20 @@ template&lt;class Function , class TypedAny &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="af1023c891a7deda82dff3060a0cd00dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1023c891a7deda82dff3060a0cd00dc">&#9670;&nbsp;</a></span>__pad0__</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structmpt_1_1types.html">mpt::types</a>&lt;Fields...&gt; mpt::__pad0__</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a297407875a94f9be5c007c7c0446d0cd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a297407875a94f9be5c007c7c0446d0cd">&#9670;&nbsp;</a></span>are_same_v</h2>
 
@@ -1158,6 +2444,25 @@ template&lt;class... T&gt; </div>
 
 <p>Check if all the template arguments are the same. </p>
 
+</div>
+</div>
+<a id="a1f0a9cdb98655ecbf2d5fd75898fa913"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f0a9cdb98655ecbf2d5fd75898fa913">&#9670;&nbsp;</a></span>const</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structmpt_1_1types.html">mpt::types</a>&lt;Fields...&gt; Container mpt::const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">public</span>:</div>
+<div class="line">    </div>
+<div class="line">    <span class="keyword">using</span> container_type = Container</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ad6e9a0fb56d202803df06b20f6e62f95"></a>
@@ -1253,7 +2558,60 @@ template&lt;class R , class... T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Restriction to specializations where the given type is in the template argument list </p>
+
+<p>Restriction where the given type is in the template parameter list. </p>
+
+</div>
+</div>
+<a id="ae6770ad31ec53596fe5dfaef6dab7161"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6770ad31ec53596fe5dfaef6dab7161">&#9670;&nbsp;</a></span>is_basic_field_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Field &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto mpt::is_basic_field_v = <a class="el" href="structmpt_1_1is__basic__field.html">is_basic_field</a>&lt;Field&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the given field is a basic field. </p>
+
+</div>
+</div>
+<a id="a125f450a944786e2ad86ec0d36c05b79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a125f450a944786e2ad86ec0d36c05b79">&#9670;&nbsp;</a></span>is_composite_field_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Field &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto mpt::is_composite_field_v = <a class="el" href="structmpt_1_1is__composite__field.html">is_composite_field</a>&lt;Field&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the given field is a composite field type. </p>
 
 </div>
 </div>
@@ -1310,6 +2668,32 @@ template&lt;class Callable &gt; </div>
 <div class="line">      is_const_member_function&lt;Callable&gt;::value</div>
 </div><!-- fragment -->
 <p>Whether the given callable is a const member function. </p>
+
+</div>
+</div>
+<a id="a5c702308b552ff4ec216f94c0d2c1765"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c702308b552ff4ec216f94c0d2c1765">&#9670;&nbsp;</a></span>is_field_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto mpt::is_field_v = <a class="el" href="structmpt_1_1is__field.html">is_field</a>&lt;T&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the given type is a valid field type. </p>
 
 </div>
 </div>
@@ -1449,6 +2833,60 @@ template&lt;class U , class V &gt; </div>
 
 </div>
 </div>
+<a id="a3953ef5937dbecb4cbbee490c4a45ca7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3953ef5937dbecb4cbbee490c4a45ca7">&#9670;&nbsp;</a></span>IsBasicField</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Field &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept mpt::IsBasicField = <a class="el" href="namespacempt.html#ae6770ad31ec53596fe5dfaef6dab7161">is_basic_field_v</a>&lt;Field&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether the given field is a basic field. </p>
+
+</div>
+</div>
+<a id="a2c8f0e820bff5380d9bf6dd6da779e16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c8f0e820bff5380d9bf6dd6da779e16">&#9670;&nbsp;</a></span>IsCompositeField</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Field &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept mpt::IsCompositeField = <a class="el" href="namespacempt.html#a125f450a944786e2ad86ec0d36c05b79">is_composite_field_v</a>&lt;Field&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether the given field is a composite field type. </p>
+
+</div>
+</div>
+<a id="a6ed706cbbc22da9d1fbae158fa3cff0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ed706cbbc22da9d1fbae158fa3cff0e">&#9670;&nbsp;</a></span>IsField</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept mpt::IsField = <a class="el" href="namespacempt.html#a5c702308b552ff4ec216f94c0d2c1765">is_field_v</a>&lt;T&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether the given type is a valid field type. </p>
+
+</div>
+</div>
 <a id="ac948f3bbdd011b022694f56f5a5f6d98"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac948f3bbdd011b022694f56f5a5f6d98">&#9670;&nbsp;</a></span>NonEmptyTemplateArguments</h2>
 
@@ -1464,34 +2902,6 @@ template&lt;class... T&gt; </div>
 </div><div class="memdoc">
 
 <p>Restriction for templates that must have at least one argument. </p>
-
-</div>
-</div>
-<a id="ac903f510b68817ebbbc2affdff1da4e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac903f510b68817ebbbc2affdff1da4e8">&#9670;&nbsp;</a></span>template_object_elements_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto mpt::template_object_elements_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">=</div>
-<div class="line">      template_object_elements&lt;T...&gt;::value</div>
-</div><!-- fragment -->
-<p>Number of template arguments. </p>
 
 </div>
 </div>
@@ -1619,11 +3029,14 @@ template&lt;class... T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Restriction to specializations where the given type is in the template argument list </p>
+
+<p>Restriction where the given type is in the template parameter list. </p>
 
 </div>
 </div>
 </div><!-- contents -->
+<div class="ttc" id="asmart__enum_8hpp_html_ac5d62d032c1e68dc570c44c525360196"><div class="ttname"><a href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a></div><div class="ttdeci">#define MPT_SMART_ENUM(enum_name, enum_properties_name, type, unknown,...)</div><div class="ttdoc">Declare a smart enumeration type.</div><div class="ttdef"><b>Definition:</b> smart_enum.hpp:401</div></div>
+<div class="ttc" id="astructmpt_1_1field_html"><div class="ttname"><a href="structmpt_1_1field.html">mpt::field</a></div><div class="ttdoc">A field refering to a container of single value-types.</div><div class="ttdef"><b>Definition:</b> soa.hpp:108</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

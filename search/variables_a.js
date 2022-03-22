@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['quot_4875',['quot',['http://en.cppreference.com/w/cpp/numeric/math/div.html',1,'std::div_t::quot()'],['http://en.cppreference.com/w/cpp/numeric/math/div.html',1,'std::imaxdiv_t::quot()'],['http://en.cppreference.com/w/cpp/numeric/math/div.html',1,'std::ldiv_t::quot()'],['http://en.cppreference.com/w/cpp/numeric/math/div.html',1,'std::lldiv_t::quot()']]]
+  ['negation_5fv_4964',['negation_v',['http://en.cppreference.com/w/cpp/types/negation.html',1,'std']]],
+  ['nonemptytemplatearguments_4965',['NonEmptyTemplateArguments',['../namespacempt.html#ac948f3bbdd011b022694f56f5a5f6d98',1,'mpt']]]
 ];

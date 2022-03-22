@@ -74,6 +74,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>Determine the signature of a callable.  
+ <a href="structmpt_1_1callable__signature.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="signature_8hpp_source.html">signature.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -81,7 +84,13 @@ Public Types</h2></td></tr>
 <tr class="memitem:a487a9491e43cdea2759226bf94628ad5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmpt_1_1callable__signature.html#a487a9491e43cdea2759226bf94628ad5">type</a> = typename <a class="el" href="structmpt_1_1callable__signature.html">callable_signature</a>&lt; decltype(&amp;Callable::operator())&gt;::<a class="el" href="structmpt_1_1callable__signature.html#a487a9491e43cdea2759226bf94628ad5">type</a></td></tr>
 <tr class="separator:a487a9491e43cdea2759226bf94628ad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Typedef Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class Callable&gt;<br />
+struct mpt::callable_signature&lt; Callable &gt;</h3>
+
+<p>Determine the signature of a callable. </p>
+<p>By default it is assumed that the template argument is a functor with a single version of operator(). The other specializations cover cases where the argument is a (non-)const member function or a global function. </p>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a487a9491e43cdea2759226bf94628ad5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a487a9491e43cdea2759226bf94628ad5">&#9670;&nbsp;</a></span>type</h2>
 

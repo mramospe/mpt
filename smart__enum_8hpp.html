@@ -119,14 +119,9 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespacempt"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt.html">mpt</a></td></tr>
 <tr class="memdesc:namespacempt"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main namespace of the MPT package. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespacempt_1_1detail"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt_1_1detail.html">mpt::detail</a></td></tr>
-<tr class="memdesc:namespacempt_1_1detail"><td class="mdescLeft">&#160;</td><td class="mdescRight">Auxiliar functionalities for the package (developers only) <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a1ce4bd120f251d9e6ee084dbc359f23d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="smart__enum_8hpp.html#a1ce4bd120f251d9e6ee084dbc359f23d">MPT_DEFINE_STRING_CONVERTERS</a>(enum_name)</td></tr>
-<tr class="separator:a1ce4bd120f251d9e6ee084dbc359f23d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5d62d032c1e68dc570c44c525360196"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a>(enum_name,  enum_properties_name,  type,  unknown, ...)</td></tr>
 <tr class="memdesc:ac5d62d032c1e68dc570c44c525360196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a smart enumeration type.  <a href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">More...</a><br /></td></tr>
 <tr class="separator:ac5d62d032c1e68dc570c44c525360196"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,26 +147,17 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa646c520afb3479b3540c5fd46140f5c"><td class="memTemplParams" colspan="2">template&lt;class ConstexprString &gt; </td></tr>
-<tr class="memitem:aa646c520afb3479b3540c5fd46140f5c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt_1_1detail.html#aa646c520afb3479b3540c5fd46140f5c">mpt::detail::make_buffer</a> ()</td></tr>
-<tr class="separator:aa646c520afb3479b3540c5fd46140f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae50e382a8594f7e7895eab99157b2f56"><td class="memTemplParams" colspan="2">template&lt;std::size_t N, std::size_t BufferSize&gt; </td></tr>
-<tr class="memitem:ae50e382a8594f7e7895eab99157b2f56"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt_1_1detail.html#ae50e382a8594f7e7895eab99157b2f56">mpt::detail::make_names</a> (array_buffer_type&lt; BufferSize &gt; const &amp;buffer)</td></tr>
-<tr class="memdesc:ae50e382a8594f7e7895eab99157b2f56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the names of the enumeration values from a buffer string.  <a href="namespacempt_1_1detail.html#ae50e382a8594f7e7895eab99157b2f56">More...</a><br /></td></tr>
-<tr class="separator:ae50e382a8594f7e7895eab99157b2f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade5e989be4274ad02a087df5458edb0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacempt_1_1detail.html#ade5e989be4274ad02a087df5458edb0d">mpt::detail::throw_unknown_enumeration_type</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;str)</td></tr>
-<tr class="memdesc:ade5e989be4274ad02a087df5458edb0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw an error if a string resolves to an unknown value.  <a href="namespacempt_1_1detail.html#ade5e989be4274ad02a087df5458edb0d">More...</a><br /></td></tr>
-<tr class="separator:ade5e989be4274ad02a087df5458edb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a981cfb9d8d13b5f2cdcc9d260a317f63"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:a981cfb9d8d13b5f2cdcc9d260a317f63"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a981cfb9d8d13b5f2cdcc9d260a317f63">mpt::is_unknown</a> (EnumType e)</td></tr>
 <tr class="memdesc:a981cfb9d8d13b5f2cdcc9d260a317f63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the given value corresponds to an unknown value.  <a href="namespacempt.html#a981cfb9d8d13b5f2cdcc9d260a317f63">More...</a><br /></td></tr>
 <tr class="separator:a981cfb9d8d13b5f2cdcc9d260a317f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">mpt::from_string_view</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> const &amp;str)</td></tr>
-<tr class="memdesc:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string.  <a href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">More...</a><br /></td></tr>
+<tr class="memdesc:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string view.  <a href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25">More...</a><br /></td></tr>
 <tr class="separator:a42cec25902fc8f2d18a94a3fcc26aa25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7af99620aec3db8367af63f924e978d4"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:a7af99620aec3db8367af63f924e978d4"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a7af99620aec3db8367af63f924e978d4">mpt::from_string_view_throw_if_unknown</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> const &amp;str)</td></tr>
+<tr class="memdesc:a7af99620aec3db8367af63f924e978d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string view.  <a href="namespacempt.html#a7af99620aec3db8367af63f924e978d4">More...</a><br /></td></tr>
 <tr class="separator:a7af99620aec3db8367af63f924e978d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68a89abe47b6832df6e968d51e5c676f"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:a68a89abe47b6832df6e968d51e5c676f"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f">mpt::from_string</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;str)</td></tr>
@@ -179,6 +165,7 @@ Functions</h2></td></tr>
 <tr class="separator:a68a89abe47b6832df6e968d51e5c676f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc6050590debe82751b8cb4e61edc3bd"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:afc6050590debe82751b8cb4e61edc3bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd">mpt::from_string_throw_if_unknown</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> const &amp;str)</td></tr>
+<tr class="memdesc:afc6050590debe82751b8cb4e61edc3bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the enumeration value from the given string.  <a href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd">More...</a><br /></td></tr>
 <tr class="separator:afc6050590debe82751b8cb4e61edc3bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af83bf5d7802ddce1d2883720fe852e60"><td class="memTemplParams" colspan="2">template&lt;class EnumType &gt; </td></tr>
 <tr class="memitem:af83bf5d7802ddce1d2883720fe852e60"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60">mpt::to_string_view</a> (EnumType e)</td></tr>
@@ -188,39 +175,30 @@ Functions</h2></td></tr>
 <tr class="memitem:af45f0e99cab93e365d4b4e48446ab1c6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6">mpt::to_string</a> (EnumType e)</td></tr>
 <tr class="memdesc:af45f0e99cab93e365d4b4e48446ab1c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access the name of the given enumeration value.  <a href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6">More...</a><br /></td></tr>
 <tr class="separator:af45f0e99cab93e365d4b4e48446ab1c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afbac181fe48cf29131e6aaacfeafbb06"><td class="memTemplParams" colspan="2">template&lt;class EnumType , template&lt; EnumType &gt; class Functor, std::size_t... I&gt; </td></tr>
-<tr class="memitem:afbac181fe48cf29131e6aaacfeafbb06"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="elRef" href="http://en.cppreference.com/w/cpp/container/array.html">std::array</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/variant.html">std::variant</a>&lt; Functor&lt; smart_enum_properties_t&lt; EnumType &gt;::values_with_unknown[I]&gt;... &gt;, sizeof...(I)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt_1_1detail.html#afbac181fe48cf29131e6aaacfeafbb06">mpt::detail::make_array_of_functors</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/utility/integer_sequence.html">std::index_sequence</a>&lt; I... &gt;)</td></tr>
-<tr class="memdesc:afbac181fe48cf29131e6aaacfeafbb06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make the array of functors for a switch statement.  <a href="namespacempt_1_1detail.html#afbac181fe48cf29131e6aaacfeafbb06">More...</a><br /></td></tr>
-<tr class="separator:afbac181fe48cf29131e6aaacfeafbb06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73092a5341c7f594cfd9bbe7225d2613"><td class="memTemplParams" colspan="2">template&lt;class EnumType , template&lt; EnumType &gt; class Functor, class... Args&gt; </td></tr>
 <tr class="memitem:a73092a5341c7f594cfd9bbe7225d2613"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacempt.html#a73092a5341c7f594cfd9bbe7225d2613">mpt::apply_with_switch</a> (EnumType e, Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:a73092a5341c7f594cfd9bbe7225d2613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply a functor depending on the value of an enumeration type.  <a href="namespacempt.html#a73092a5341c7f594cfd9bbe7225d2613">More...</a><br /></td></tr>
 <tr class="separator:a73092a5341c7f594cfd9bbe7225d2613"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a1ce4bd120f251d9e6ee084dbc359f23d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ce4bd120f251d9e6ee084dbc359f23d">&#9670;&nbsp;</a></span>MPT_DEFINE_STRING_CONVERTERS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MPT_DEFINE_STRING_CONVERTERS</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">enum_name</td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">  <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> <a class="code" href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6">to_string</a>(enum_name e) { <span class="keywordflow">return</span> <a class="code" href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6">mpt::to_string</a>(e); }             \</div>
-<div class="line">  std::string_view <a class="code" href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60">to_string_view</a>(enum_name e) {                               \</div>
-<div class="line">    return <a class="code" href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60">mpt::to_string_view</a>(e);                                             \</div>
-<div class="line">  }                                                                            \</div>
-<div class="line">  static_assert(<span class="keyword">true</span>)</div>
-</div><!-- fragment -->
-</div>
-</div>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>This header defines tools to create and handle smart enumeration types. A smart enumeration type is an enumeration type that can be created/converted from/to a string of characters. The definition of smart enumeration types is done through the <a class="el" href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a> macro. Consider, for example:</p><div class="fragment"><div class="line"><a class="code" href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a>(position, position_properties, <span class="keywordtype">int</span>, unknown_position, bottom,</div>
+<div class="line">middle, top);</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> some_function(position p) {</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">switch</span> (p) {</div>
+<div class="line">    <span class="keywordflow">case</span> (unknown_position):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">    <span class="keywordflow">case</span> (bottom):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">    <span class="keywordflow">case</span> (middle):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">    <span class="keywordflow">case</span> (top):</div>
+<div class="line">      <span class="keywordflow">return</span> ...;</div>
+<div class="line">  }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> In this case we are creating an enumeration type called <em>position</em>, whose properties will be saved in a new type called <em>position_properties</em>. The enumeration type will be of type <em>int</em>, whenever there is a problem with the processing of the enumeration type (like for conversion to a string of characters) the value <em>unknown_position</em> will be returned, and <em>bottom</em>, <em>middle</em> and <em>top</em> are the members of the enumeration type, with values <em>1</em>, <em>2</em> and <em>3</em>. </p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="ac5d62d032c1e68dc570c44c525360196"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5d62d032c1e68dc570c44c525360196">&#9670;&nbsp;</a></span>MPT_SMART_ENUM</h2>
 
@@ -266,13 +244,34 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Declare a smart enumeration type. </p>
+<p>The arguments are:</p>
+<ul>
+<li><em>enum_name:</em> name of the enumeration type, exposed in the current scope.</li>
+<li><em>enum_properties_name:</em> name of the structured object containing the properties of the enumeration type.</li>
+<li><em>type:</em> underlying type of the enumeration type.</li>
+<li><em>unknown:</em> name of the value that is reserved in case of problems parsing enumeration types.</li>
+<li><em></em>...: list of names that define the members of the enumeration type.</li>
+</ul>
+<p>The exposed <em>enum_properties_name</em> type will contain the following members</p>
+<ul>
+<li><em>underlying_type:</em> type provided in <em>type</em> </li>
+<li><em>va_args_with_unknown:</em> (for internal use only) representation of the input arguments as a string, enclosed in a dedicated type</li>
+<li><em>va_args:</em> (for internal use only) similar to <em>va_args_with_unknown</em>, but without the <em>unknown</em> value included</li>
+<li><em>unknown_value:</em> value that is used in case of problems with parsing enumeration values</li>
+<li><em>size:</em> number of names in the enumeration type, wihtout the unknown</li>
+<li><em>size_with_unknown:</em> total number of names in the enumeration type</li>
+<li><em>names:</em> names of the enumeration values, saved as <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string_view.html">std::string_view</a> objects</li>
+<li><em>names_with_unknown:</em> similar to <em>names</em> but with the unknown value included</li>
+<li><em>values:</em> values of the enumeration type saved in an array</li>
+<li><em>values_with_unknown:</em> similar to <em>values</em> but with the unknown value included</li>
+</ul>
+<p>Invoking this macro also creates a function called <em>properties</em> that is used in order to access the aforementioned class via <a class="el" href="structmpt_1_1smart__enum__properties.html">mpt::smart_enum_properties</a> and <a class="el" href="namespacempt.html#a9848281fe9419f251d30eb52b3bf6cbc">mpt::smart_enum_properties_t</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structmpt_1_1smart__enum__properties.html" title="Access the properties of an enumeration type via ADL.">mpt::smart_enum_properties</a> <a class="el" href="namespacempt.html#a9848281fe9419f251d30eb52b3bf6cbc" title="Access the properties of an enumeration type via ADL.">mpt::smart_enum_properties_t</a> <a class="el" href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6" title="Access the name of the given enumeration value.">mpt::to_string</a> <a class="el" href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60" title="Access the name of the given enumeration value.">mpt::to_string_view</a> <a class="el" href="namespacempt.html#a68a89abe47b6832df6e968d51e5c676f" title="Determine the enumeration value from the given string.">mpt::from_string</a> <a class="el" href="namespacempt.html#a42cec25902fc8f2d18a94a3fcc26aa25" title="Determine the enumeration value from the given string view.">mpt::from_string_view</a> <a class="el" href="namespacempt.html#afc6050590debe82751b8cb4e61edc3bd" title="Determine the enumeration value from the given string.">mpt::from_string_throw_if_unknown</a> <a class="el" href="namespacempt.html#a7af99620aec3db8367af63f924e978d4" title="Determine the enumeration value from the given string view.">mpt::from_string_view_throw_if_unknown</a> </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div><div class="ttdoc">STL class.</div></div>
-<div class="ttc" id="anamespacempt_html_af45f0e99cab93e365d4b4e48446ab1c6"><div class="ttname"><a href="namespacempt.html#af45f0e99cab93e365d4b4e48446ab1c6">mpt::to_string</a></div><div class="ttdeci">constexpr auto to_string(EnumType e)</div><div class="ttdoc">Access the name of the given enumeration value.</div><div class="ttdef"><b>Definition:</b> smart_enum.hpp:171</div></div>
-<div class="ttc" id="anamespacempt_html_af83bf5d7802ddce1d2883720fe852e60"><div class="ttname"><a href="namespacempt.html#af83bf5d7802ddce1d2883720fe852e60">mpt::to_string_view</a></div><div class="ttdeci">constexpr auto to_string_view(EnumType e)</div><div class="ttdoc">Access the name of the given enumeration value.</div><div class="ttdef"><b>Definition:</b> smart_enum.hpp:159</div></div>
+<div class="ttc" id="asmart__enum_8hpp_html_ac5d62d032c1e68dc570c44c525360196"><div class="ttname"><a href="smart__enum_8hpp.html#ac5d62d032c1e68dc570c44c525360196">MPT_SMART_ENUM</a></div><div class="ttdeci">#define MPT_SMART_ENUM(enum_name, enum_properties_name, type, unknown,...)</div><div class="ttdoc">Declare a smart enumeration type.</div><div class="ttdef"><b>Definition:</b> smart_enum.hpp:401</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

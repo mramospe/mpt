@@ -1,8 +1,9 @@
 <map id="include/mpt/types.hpp" name="include/mpt/types.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="110,5,277,32"/>
-<area shape="rect" id="node2" href="$all_8hpp.html" title=" " alt="" coords="188,229,335,256"/>
-<area shape="rect" id="node3" href="$keywords_8hpp.html" title=" " alt="" coords="30,155,223,181"/>
-<area shape="rect" id="node4" href="$signature_8hpp.html" title=" " alt="" coords="165,80,357,107"/>
-<area shape="rect" id="node6" href="$typed__any_8hpp.html" title=" " alt="" coords="407,80,604,107"/>
-<area shape="rect" id="node5" href="$members_8hpp.html" title=" " alt="" coords="299,155,493,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="203,5,370,32"/>
+<area shape="rect" id="node2" href="$all_8hpp.html" title=" " alt="" coords="257,229,404,256"/>
+<area shape="rect" id="node3" href="$keywords_8hpp.html" title=" " alt="" coords="32,155,226,181"/>
+<area shape="rect" id="node4" href="$signature_8hpp.html" title=" " alt="" coords="190,80,382,107"/>
+<area shape="rect" id="node6" href="$soa_8hpp.html" title=" " alt="" coords="520,155,674,181"/>
+<area shape="rect" id="node7" href="$typed__any_8hpp.html" title=" " alt="" coords="590,80,788,107"/>
+<area shape="rect" id="node5" href="$members_8hpp.html" title=" " alt="" coords="302,155,495,181"/>
 </map>

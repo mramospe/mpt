@@ -1,0 +1,7 @@
+<map id="mpt::base_soa_iterator&lt; Iterator, ContainerType &gt;" name="mpt::base_soa_iterator&lt; Iterator, ContainerType &gt;">
+<area shape="rect" id="node1" title="Base class of any SOA iterator." alt="" coords="5,72,207,113"/>
+<area shape="rect" id="node2" href="$classmpt_1_1base__soa__iterator.html" title=" " alt="" coords="435,5,632,76"/>
+<area shape="rect" id="node4" href="$classmpt_1_1base__soa__iterator.html" title=" " alt="" coords="439,101,627,186"/>
+<area shape="rect" id="node3" href="$classmpt_1_1soa__iterator_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html" title="Iterator over a container with a struct&#45;of&#45;arrays memory layout." alt="" coords="687,13,854,69"/>
+<area shape="rect" id="node5" href="$classmpt_1_1soa__const__iterator_3_01Container_00_01mpt_1_1types_3_01Fields_8_8_8_01_4_01_4.html" title="Constant iterator over a container with a SOA memory layout." alt="" coords="681,115,860,171"/>
+</map>

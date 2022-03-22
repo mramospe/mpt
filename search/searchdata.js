@@ -5,9 +5,10 @@ var indexSectionsWithContent =
   2: "ms",
   3: "abcdefiklmnoqrstuv",
   4: "_abcdefghijklmnopqrstuvwxyz~",
-  5: "acdefhilmnqrstuv",
-  6: "abcfikostv",
-  7: "m"
+  5: "_acdefhilmnqrstuv",
+  6: "abcdfikoprstv",
+  7: "ms",
+  8: "m"
 };
 
 var indexSectionNames =
@@ -19,7 +20,8 @@ var indexSectionNames =
   4: "functions",
   5: "variables",
   6: "typedefs",
-  7: "defines"
+  7: "related",
+  8: "defines"
 };
 
 var indexSectionLabels =
@@ -31,6 +33,7 @@ var indexSectionLabels =
   4: "Functions",
   5: "Variables",
   6: "Typedefs",
-  7: "Macros"
+  7: "Friends",
+  8: "Macros"
 };
 
