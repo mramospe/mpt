@@ -84,8 +84,8 @@ jobs:
             if [ ${CIRCLE_BRANCH} != master ]; then RELEASE_TAG=devel-${VERSION}; else RELEASE_TAG=${VERSION}; fi
             echo ${RELEASE_TAG} >> /tmp/deployment/tag.txt
             # Generate the changelogs
-            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-changelog.md --since-tag ${LATEST_TAG} --future-release ${VERSION} -t ${GITHUB_TOKEN} --release-branch ${CIRCLE_BRANCH}
-            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-full-changelog.md --since-tag v0.0.0 --future-release ${VERSION} -t ${GITHUB_TOKEN} --release-branch ${CIRCLE_BRANCH}
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-changelog.md --since-tag ${LATEST_TAG} --future-release ${VERSION} -t ${GITHUB_TOKEN} --release-branch devel
+            github_changelog_generator -u mramospe -p mpt -o /tmp/deployment/changelogs/${VERSION}-full-changelog.md --since-tag v0.0.0 --future-release ${VERSION} -t ${GITHUB_TOKEN} --release-branch devel
       - persist_to_workspace:
           root: /tmp
           paths:
