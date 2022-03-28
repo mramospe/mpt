@@ -25,6 +25,7 @@ jobs:
           name: Run the main tests
           command: |
             ./build/test/cpp/test_all
+            ./build/test/cpp/test_arfunctors
             ./build/test/cpp/test_keywords
             ./build/test/cpp/test_members
             ./build/test/cpp/test_signature
