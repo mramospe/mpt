@@ -192,6 +192,65 @@ namespace mpt {
   struct arfunctor {};
 
   namespace {
+
+#ifndef MPT_DOXYGEN_WARD
+    template <class Signature> struct base_runtime_arfunctor_wrapper;
+#endif
+
+    /*!\brief Abstract runtime arithmetic and relation functor wrapper
+
+    This is the base type for any run-time functor wrapper.
+    It allows to call any functor using polymorphism.
+   */
+    template <class Output, class... Input>
+    struct base_runtime_arfunctor_wrapper<Output(Input...)> {
+    public:
+      virtual ~base_runtime_arfunctor_wrapper() {}
+
+      /// Force a signature to be used to call the functor
+      virtual Output operator()(Input const &...) const = 0;
+
+      /// Provide a clone of the wrapper
+      virtual base_runtime_arfunctor_wrapper *clone() const = 0;
+    };
+
+    /*!\brief Runtime arithmetic and relation functor wrapper
+
+    This object wraps any functor type without needing to inherit from
+    any additional class (i.e. allows to work directly with
+    \ref mpt::arfunctor objects).
+   */
+    template <class Functor, class Output, class... Input>
+    class runtime_arfunctor_wrapper
+        : public base_runtime_arfunctor_wrapper<Output(Input...)> {
+
+    public:
+      runtime_arfunctor_wrapper() = default;
+      runtime_arfunctor_wrapper(Functor const &functor) : m_functor{functor} {}
+      runtime_arfunctor_wrapper(Functor &&functor)
+          : m_functor{std::move(functor)} {}
+      runtime_arfunctor_wrapper(runtime_arfunctor_wrapper const &) = default;
+      runtime_arfunctor_wrapper(runtime_arfunctor_wrapper &&) = default;
+      runtime_arfunctor_wrapper &
+      operator=(runtime_arfunctor_wrapper const &) = default;
+      runtime_arfunctor_wrapper &
+      operator=(runtime_arfunctor_wrapper &&) = default;
+
+      /// Call the wrapped functor
+      Output operator()(Input const &... args) const override {
+        return m_functor(args...);
+      }
+
+      /// Return a clone of this object
+      base_runtime_arfunctor_wrapper<Output(Input...)> *clone() const override {
+        return new runtime_arfunctor_wrapper{*this};
+      }
+
+    private:
+      /// Wrapped functor
+      Functor m_functor;
+    };
+
     /// Check if the provided type is an arithmetic and relational functor
     template <class T>
     struct is_arfunctor
@@ -202,16 +261,129 @@ namespace mpt {
     /// Whether the provided type is an arithmetic and relational functor
     template <class T>
     static constexpr auto is_arfunctor_v = is_arfunctor<T>::value;
+  } // namespace
+
+#ifndef MPT_DOXYGEN_WARD
+  template <class Signature> class runtime_arfunctor;
+#endif
+
+  /*!\brief Run-time arithmetic and relational functor
+
+    This object is a run-time wrapper of any \ref mpt::arfunctor object.
+    It allows to perform arithmetic and relational operations among functors
+    at run-time.
+    This requires to define the signature for which the functor will
+    be called.
+   */
+  template <class Output, class... Input>
+  class runtime_arfunctor<Output(Input...)> {
+
+  public:
+    runtime_arfunctor() = delete;
+
+    /// Build the class from an arithmetic and relational functor
+    template <class Functor>
+    requires is_arfunctor_v<Functor> runtime_arfunctor(Functor &&functor)
+        : m_ptr{new runtime_arfunctor_wrapper<std::remove_cvref_t<Functor>,
+                                              Output, Input...>{
+              std::forward<Functor>(functor)}} {}
+
+    runtime_arfunctor(runtime_arfunctor const &other)
+        : m_ptr{other.m_ptr->clone()} {}
+
+    runtime_arfunctor(runtime_arfunctor &&other) : m_ptr{other.m_ptr} {
+      other.m_ptr = nullptr;
+    }
+
+    runtime_arfunctor &operator=(runtime_arfunctor const &other) {
+
+      if (m_ptr)
+        delete m_ptr;
+
+      m_ptr = other.m_ptr->clone();
+    }
+
+    runtime_arfunctor &operator=(runtime_arfunctor &&other) {
+      m_ptr = other.m_ptr;
+      other.m_ptr = nullptr;
+    }
+
+    ~runtime_arfunctor() {
+      if (m_ptr)
+        delete m_ptr;
+    }
+
+    /// Call the internal functor
+    Output operator()(Input const &... args) const {
+      return m_ptr->operator()(args...);
+    }
+
+  private:
+    /// Pointer to the internal functor wrapper
+    base_runtime_arfunctor_wrapper<Output(Input...)> *m_ptr = nullptr;
+  };
+
+  namespace {
+    /// Check if the type refers to a runtime arithmetic and relational functor
+    template <class T> struct is_runtime_arfunctor_impl : std::false_type {};
+
+    /// Check if the type refers to a runtime arithmetic and relational functor
+    template <class Output, class... Input>
+    struct is_runtime_arfunctor_impl<runtime_arfunctor<Output(Input...)>>
+        : std::true_type {};
+
+    /// Check if the type refers to a runtime arithmetic and relational functor
+    template <class T>
+    struct is_runtime_arfunctor
+        : is_runtime_arfunctor_impl<std::remove_cvref_t<T>> {};
+
+    /// Whether the type refers to a runtime arithmetic and relational functor
+    template <class T>
+    static constexpr auto is_runtime_arfunctor_v =
+        is_runtime_arfunctor<T>::value;
 
     /// Depending on the input argument type, evaluate the functor or return the value
     template <class T, class... Args>
     auto evaluate_arfunctor_or_value(T &&fv, [[maybe_unused]] Args &&... args) {
-      if constexpr (is_arfunctor_v<T>)
+      if constexpr (is_arfunctor_v<T> || is_runtime_arfunctor_v<T>)
         return fv(args...);
       else
         return fv;
     }
+
+    /// Class to create arfunctor objects that act at runtime
+    template <class Signature, class Functor> struct make_runtime_arfunctor_t;
+
+    /// Class to create arfunctor objects that act at runtime
+    template <class Output, class Functor, class... Input>
+    struct make_runtime_arfunctor_t<Output(Input...), Functor> {
+      runtime_arfunctor<Output(Input...)> operator()(Functor &&functor) {
+        return {std::move<Functor>(functor)};
+      }
+      runtime_arfunctor<Output(Input...)> operator()(Functor const &functor) {
+        return {functor};
+      }
+    };
   } // namespace
+
+  /*!\brief Create a run-time arithmetic and relational functor
+
+    The call to this function will return a \ref mpt:runtime_arfunctor object, with
+    a similar functionality as any \ref mpt:arfunctor object but where the
+    types can be determined at runtime.
+    This means that functors are allocated and stored as pointers using
+    polymorphism internally.
+    It is possible to combine compile-time and run-time functors, resulting in
+    a run-time functor with pointers to both of them.
+    It is recommended to make use of compile-time functors as much as possible
+    to avoid allocations that can be avoided.
+   */
+  template <class Signature, class Functor>
+  requires is_arfunctor_v<Functor> auto
+  make_runtime_arfunctor(Functor &&functor) {
+    return make_runtime_arfunctor_t<Signature, std::remove_cvref_t<Functor>>{}(
+        std::forward<Functor>(functor));
+  }
 
   /*!\brief Composed operation between two objects
 
@@ -267,161 +439,223 @@ namespace mpt {
   }
 
   namespace {
+    /// Build a composed functor from the operator and the operand types
+    template <class Operator, class FunctorType, class... Operand>
+    FunctorType make_runtime_composed_arfunctor(Operand &&... op) {
+      return FunctorType{
+          composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>{
+              std::forward<Operand>(op)...}};
+    }
+
     /// Check that at least one of the operands is a functor
-    template <class LeftOperand, class RightOperand>
-    struct at_least_one_arfunctor
-        : std::conditional_t<(is_arfunctor_v<LeftOperand> ||
-                              is_arfunctor_v<RightOperand>),
+    template <class... Operands>
+    struct constrain_to_arfunctor_types
+        : std::conditional_t<((is_arfunctor_v<Operands> ||
+                               is_runtime_arfunctor_v<Operands>) ||
+                              ...),
                              std::true_type, std::false_type> {};
 
     /// Whether one of the operands is a functor
-    template <class LeftOperand, class RightOperand>
-    static constexpr auto at_least_one_arfunctor_v =
-        at_least_one_arfunctor<LeftOperand, RightOperand>::value;
+    template <class... Operands>
+    static constexpr auto constrain_to_arfunctor_types_v =
+        constrain_to_arfunctor_types<Operands...>::value;
+
+    /// Return either a compile-time or run-time functor depending on  the input
+    template <class Operator, class LeftOperand, class RightOperand>
+    constexpr auto switch_binary_operator(LeftOperand &&lop,
+                                          RightOperand &&rop) {
+      if constexpr (is_runtime_arfunctor_v<LeftOperand> ||
+                    is_runtime_arfunctor_v<RightOperand>) {
+        using functor_type =
+            std::conditional_t<is_runtime_arfunctor_v<LeftOperand>,
+                               std::remove_cvref_t<LeftOperand>,
+                               std::remove_cvref_t<RightOperand>>;
+        return make_runtime_composed_arfunctor<Operator, functor_type>(
+            std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
+      } else
+        return make_composed_arfunctor<Operator>(
+            std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
+    }
+
+    /// Return either a compile-time or run-time functor depending on  the input
+    template <class Operator, class Operand>
+    constexpr auto switch_unary_operator(Operand &&op) {
+      if constexpr (is_runtime_arfunctor_v<Operand>)
+        return make_runtime_composed_arfunctor<Operator,
+                                               std::remove_cvref_t<Operand>>(
+            std::forward<Operand>(op));
+      else
+        return make_composed_arfunctor<Operator>(std::forward<Operand>(op));
+    }
   } // namespace
+
+  //
+  // Compile-time operators
+  //
 
   // Arithmetic operators
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator+(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<add>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
+    return switch_binary_operator<add>(std::forward<LeftOperand>(lop),
+                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator-(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<sub>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
+    return switch_binary_operator<sub>(std::forward<LeftOperand>(lop),
+                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator*(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<mul>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
+    return switch_binary_operator<mul>(std::forward<LeftOperand>(lop),
+                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator/(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<div>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
+    return switch_binary_operator<div>(std::forward<LeftOperand>(lop),
+                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator%(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<modulo>(std::forward<LeftOperand>(lop),
-                                           std::forward<RightOperand>(rop));
+    return switch_binary_operator<modulo>(std::forward<LeftOperand>(lop),
+                                          std::forward<RightOperand>(rop));
   }
 
   // Relational operators
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator==(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<eq>(std::forward<LeftOperand>(lop),
-                                       std::forward<RightOperand>(rop));
+    return switch_binary_operator<eq>(std::forward<LeftOperand>(lop),
+                                      std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator!=(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<neq>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
+    return switch_binary_operator<neq>(std::forward<LeftOperand>(lop),
+                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator<(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<lt>(std::forward<LeftOperand>(lop),
-                                       std::forward<RightOperand>(rop));
+    return switch_binary_operator<lt>(std::forward<LeftOperand>(lop),
+                                      std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator<=(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<leq>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
-  }
-
-  template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
-  operator>(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<gt>(std::forward<LeftOperand>(lop),
+    return switch_binary_operator<leq>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
+  operator>(LeftOperand &&lop, RightOperand &&rop) {
+    return switch_binary_operator<gt>(std::forward<LeftOperand>(lop),
+                                      std::forward<RightOperand>(rop));
+  }
+
+  template <class LeftOperand, class RightOperand>
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator>=(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<geq>(std::forward<LeftOperand>(lop),
-                                        std::forward<RightOperand>(rop));
+    return switch_binary_operator<geq>(std::forward<LeftOperand>(lop),
+                                       std::forward<RightOperand>(rop));
   }
 
   // Logical operators
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator&&(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<logical_and>(
-        std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
-  }
-
-  template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
-  operator||(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<logical_or>(std::forward<LeftOperand>(lop),
+    return switch_binary_operator<logical_and>(std::forward<LeftOperand>(lop),
                                                std::forward<RightOperand>(rop));
   }
 
+  template <class LeftOperand, class RightOperand>
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
+  operator||(LeftOperand &&lop, RightOperand &&rop) {
+    return switch_binary_operator<logical_or>(std::forward<LeftOperand>(lop),
+                                              std::forward<RightOperand>(rop));
+  }
+
   template <class Operand>
-  requires is_arfunctor_v<Operand> constexpr auto operator!(Operand &&op) {
-    return make_composed_arfunctor<notop>(std::forward<Operand>(op));
+  requires(is_arfunctor_v<Operand> ||
+           is_runtime_arfunctor_v<Operand>) constexpr auto
+  operator!(Operand &&op) {
+    return switch_unary_operator<notop>(std::forward<Operand>(op));
   }
 
   // Bitwise operators
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator&(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<bitwise_and>(
-        std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
-  }
-
-  template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
-  operator|(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<bitwise_or>(std::forward<LeftOperand>(lop),
+    return switch_binary_operator<bitwise_and>(std::forward<LeftOperand>(lop),
                                                std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
+  operator|(LeftOperand &&lop, RightOperand &&rop) {
+    return switch_binary_operator<bitwise_or>(std::forward<LeftOperand>(lop),
+                                              std::forward<RightOperand>(rop));
+  }
+
+  template <class LeftOperand, class RightOperand>
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator^(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<bitwise_xor>(
-        std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
+    return switch_binary_operator<bitwise_xor>(std::forward<LeftOperand>(lop),
+                                               std::forward<RightOperand>(rop));
   }
 
   template <class Operand>
-  requires is_arfunctor_v<Operand> constexpr auto operator~(Operand &&op) {
-    return make_composed_arfunctor<bitwise_complement>(
-        std::forward<Operand>(op));
+  requires(is_arfunctor_v<Operand> ||
+           is_runtime_arfunctor_v<Operand>) constexpr auto
+  operator~(Operand &&op) {
+    return switch_unary_operator<bitwise_complement>(std::forward<Operand>(op));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator<<(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<bitwise_shift_left>(
+    return switch_binary_operator<bitwise_shift_left>(
         std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires at_least_one_arfunctor_v<LeftOperand, RightOperand> constexpr auto
+  requires constrain_to_arfunctor_types_v<LeftOperand,
+                                          RightOperand> constexpr auto
   operator>>(LeftOperand &&lop, RightOperand &&rop) {
-    return make_composed_arfunctor<bitwise_shift_right>(
+    return switch_binary_operator<bitwise_shift_right>(
         std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
   }
 } // namespace mpt
