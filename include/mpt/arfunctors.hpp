@@ -263,9 +263,7 @@ namespace mpt {
     static constexpr auto is_arfunctor_v = is_arfunctor<T>::value;
   } // namespace
 
-#ifndef MPT_DOXYGEN_WARD
   template <class Signature> class runtime_arfunctor;
-#endif
 
   /*!\brief Run-time arithmetic and relational functor
 
@@ -368,8 +366,8 @@ namespace mpt {
 
   /*!\brief Create a run-time arithmetic and relational functor
 
-    The call to this function will return a \ref mpt:runtime_arfunctor object, with
-    a similar functionality as any \ref mpt:arfunctor object but where the
+    The call to this function will return a \ref mpt::runtime_arfunctor object, with
+    a similar functionality as any \ref mpt::arfunctor object but where the
     types can be determined at runtime.
     This means that functors are allocated and stored as pointers using
     polymorphism internally.
