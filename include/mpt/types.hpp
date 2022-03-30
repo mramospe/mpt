@@ -276,4 +276,19 @@ namespace mpt {
   template <class... T>
   static constexpr auto are_same_v = are_same<T...>::value;
 
+  /// Declare a templated type with the same set of types contained in another
+  template <class Source, template <class...> class Target>
+  struct rename_template;
+
+#ifndef MPT_DOXYGEN_WARD
+  template <template <class...> class Source, template <class...> class Target,
+            class... T>
+  struct rename_template<Source<T...>, Target> {
+    using type = Target<T...>;
+  };
+#endif
+
+  /// Declare a templated type with the same set of types contained in another
+  template <class Source, template <class...> class Target>
+  using rename_template_t = typename rename_template<Source, Target>::type;
 } // namespace mpt

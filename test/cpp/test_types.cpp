@@ -39,5 +39,8 @@ int main() {
       std::tuple, float, double, int, float, long double, int>;
   static_assert(std::tuple_size_v<tuple_type> == 4);
 
+  static_assert(
+      std::tuple_size_v<mpt::rename_template_t<variant_type, std::tuple>> == 4);
+
   return mpt::test::to_return_code(types.run());
 }
