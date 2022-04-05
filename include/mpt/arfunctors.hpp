@@ -460,7 +460,7 @@ namespace mpt {
 
     /// Whether an operation between two types can be resolved with arfunctor operators
     template <class... Operands>
-    concept AreValidArithmeticOrRelationalOperands =
+    concept ValidArithmeticOrRelationalOperands =
         constrain_to_arfunctor_types_v<Operands...>;
 
     /// Return either a compile-time or run-time functor depending on  the input
@@ -499,40 +499,40 @@ namespace mpt {
   // Arithmetic operators
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator+(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<add>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator-(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<sub>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator*(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<mul>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator/(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<div>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator%(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<modulo>(std::forward<LeftOperand>(lop),
                                           std::forward<RightOperand>(rop));
@@ -541,48 +541,48 @@ namespace mpt {
   // Relational operators
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator==(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<eq>(std::forward<LeftOperand>(lop),
                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator!=(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<neq>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator<(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<lt>(std::forward<LeftOperand>(lop),
                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator<=(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<leq>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator>(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<gt>(std::forward<LeftOperand>(lop),
                                       std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator>=(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<geq>(std::forward<LeftOperand>(lop),
                                        std::forward<RightOperand>(rop));
@@ -591,24 +591,23 @@ namespace mpt {
   // Logical operators
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator&&(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<logical_and>(std::forward<LeftOperand>(lop),
                                                std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator||(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<logical_or>(std::forward<LeftOperand>(lop),
                                               std::forward<RightOperand>(rop));
   }
 
   template <class Operand>
-  requires(is_arfunctor_v<Operand> ||
-           is_runtime_arfunctor_v<Operand>) constexpr auto
+  requires ValidArithmeticOrRelationalOperands<Operand> constexpr auto
   operator!(Operand &&op) {
     return switch_unary_operator<notop>(std::forward<Operand>(op));
   }
@@ -616,47 +615,46 @@ namespace mpt {
   // Bitwise operators
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator&(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<bitwise_and>(std::forward<LeftOperand>(lop),
                                                std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator|(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<bitwise_or>(std::forward<LeftOperand>(lop),
                                               std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator^(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<bitwise_xor>(std::forward<LeftOperand>(lop),
                                                std::forward<RightOperand>(rop));
   }
 
   template <class Operand>
-  requires(is_arfunctor_v<Operand> ||
-           is_runtime_arfunctor_v<Operand>) constexpr auto
+  requires ValidArithmeticOrRelationalOperands<Operand> constexpr auto
   operator~(Operand &&op) {
     return switch_unary_operator<bitwise_complement>(std::forward<Operand>(op));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator<<(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<bitwise_shift_left>(
         std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
   }
 
   template <class LeftOperand, class RightOperand>
-  requires AreValidArithmeticOrRelationalOperands<LeftOperand,
-                                                  RightOperand> constexpr auto
+  requires ValidArithmeticOrRelationalOperands<LeftOperand,
+                                               RightOperand> constexpr auto
   operator>>(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<bitwise_shift_right>(
         std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
