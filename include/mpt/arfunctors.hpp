@@ -191,28 +191,28 @@ namespace mpt {
    */
   struct arfunctor {};
 
-  namespace {
-
 #ifndef MPT_DOXYGEN_WARD
-    template <class Signature> struct base_runtime_arfunctor_wrapper;
+  template <class Signature> struct runtime_arfunctor_wrapper;
 #endif
 
-    /*!\brief Abstract runtime arithmetic and relation functor wrapper
+  /*!\brief Abstract runtime arithmetic and relation functor wrapper
 
     This is the base type for any run-time functor wrapper.
     It allows to call any functor using polymorphism.
    */
-    template <class Output, class... Input>
-    struct base_runtime_arfunctor_wrapper<Output(Input...)> {
-    public:
-      virtual ~base_runtime_arfunctor_wrapper() {}
+  template <class Output, class... Input>
+  struct runtime_arfunctor_wrapper<Output(Input...)> {
+  public:
+    virtual ~runtime_arfunctor_wrapper() {}
 
-      /// Force a signature to be used to call the functor
-      virtual Output operator()(Input const &...) const = 0;
+    /// Force a signature to be used to call the functor
+    virtual Output operator()(Input const &...) const = 0;
 
-      /// Provide a clone of the wrapper
-      virtual base_runtime_arfunctor_wrapper *clone() const = 0;
-    };
+    /// Provide a clone of the wrapper
+    virtual runtime_arfunctor_wrapper *clone() const = 0;
+  };
+
+  namespace {
 
     /*!\brief Runtime arithmetic and relation functor wrapper
 
@@ -221,20 +221,23 @@ namespace mpt {
     \ref mpt::arfunctor objects).
    */
     template <class Functor, class Output, class... Input>
-    class runtime_arfunctor_wrapper
-        : public base_runtime_arfunctor_wrapper<Output(Input...)> {
+    class specialized_runtime_arfunctor_wrapper
+        : public runtime_arfunctor_wrapper<Output(Input...)> {
 
     public:
-      runtime_arfunctor_wrapper() = default;
-      runtime_arfunctor_wrapper(Functor const &functor) : m_functor{functor} {}
-      runtime_arfunctor_wrapper(Functor &&functor)
+      specialized_runtime_arfunctor_wrapper() = default;
+      specialized_runtime_arfunctor_wrapper(Functor const &functor)
+          : m_functor{functor} {}
+      specialized_runtime_arfunctor_wrapper(Functor &&functor)
           : m_functor{std::move(functor)} {}
-      runtime_arfunctor_wrapper(runtime_arfunctor_wrapper const &) = default;
-      runtime_arfunctor_wrapper(runtime_arfunctor_wrapper &&) = default;
-      runtime_arfunctor_wrapper &
-      operator=(runtime_arfunctor_wrapper const &) = default;
-      runtime_arfunctor_wrapper &
-      operator=(runtime_arfunctor_wrapper &&) = default;
+      specialized_runtime_arfunctor_wrapper(
+          specialized_runtime_arfunctor_wrapper const &) = default;
+      specialized_runtime_arfunctor_wrapper(
+          specialized_runtime_arfunctor_wrapper &&) = default;
+      specialized_runtime_arfunctor_wrapper &
+      operator=(specialized_runtime_arfunctor_wrapper const &) = default;
+      specialized_runtime_arfunctor_wrapper &
+      operator=(specialized_runtime_arfunctor_wrapper &&) = default;
 
       /// Call the wrapped functor
       Output operator()(Input const &... args) const override {
@@ -242,8 +245,8 @@ namespace mpt {
       }
 
       /// Return a clone of this object
-      base_runtime_arfunctor_wrapper<Output(Input...)> *clone() const override {
-        return new runtime_arfunctor_wrapper{*this};
+      runtime_arfunctor_wrapper<Output(Input...)> *clone() const override {
+        return new specialized_runtime_arfunctor_wrapper{*this};
       }
 
     private:
@@ -282,8 +285,8 @@ namespace mpt {
     /// Build the class from an arithmetic and relational functor
     template <class Functor>
     requires is_arfunctor_v<Functor> runtime_arfunctor(Functor &&functor)
-        : m_ptr{new runtime_arfunctor_wrapper<std::remove_cvref_t<Functor>,
-                                              Output, Input...>{
+        : m_ptr{new specialized_runtime_arfunctor_wrapper<
+              std::remove_cvref_t<Functor>, Output, Input...>{
               std::forward<Functor>(functor)}} {}
 
     runtime_arfunctor(runtime_arfunctor const &other)
@@ -318,7 +321,7 @@ namespace mpt {
 
   private:
     /// Pointer to the internal functor wrapper
-    base_runtime_arfunctor_wrapper<Output(Input...)> *m_ptr = nullptr;
+    runtime_arfunctor_wrapper<Output(Input...)> *m_ptr = nullptr;
   };
 
   namespace {
