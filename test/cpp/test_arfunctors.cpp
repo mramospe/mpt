@@ -116,6 +116,40 @@ mpt::test::errors test_math() {
   return errors;
 }
 
+mpt::test::errors test_runtime() {
+
+  mpt::test::errors errors;
+
+  auto fx = mpt::make_runtime_arfunctor<float(position const &)>(functor_x);
+  auto fy = mpt::make_runtime_arfunctor<float(position const &)>(functor_y);
+  auto fz = functor_z;
+
+  position pos = {1.f, 2.f, 3.f};
+
+  if (!mpt::test::is_close((fx + fy + fz + 4.f)(pos), 10.f))
+    errors.push_back("Unable to calculate the sum of positions at runtime");
+
+  return errors;
+}
+
+mpt::test::errors test_runtime_math() {
+
+  mpt::test::errors errors;
+
+  auto fx = mpt::make_runtime_arfunctor<float(position const &)>(functor_x);
+  auto fz = functor_z;
+
+  position pos = {1.f, 2.f, 3.f};
+
+  if (!mpt::test::is_close(sqrt(fx + fz)(pos), 2.f))
+    errors.push_back("Unable to calculate the square root");
+
+  if (!in_range(-2.f, fx, +2.f)(pos))
+    errors.push_back("Unable to determine if a quantity is in the given range");
+
+  return errors;
+}
+
 int main() {
 
   mpt::test::collector arfunctors("arfunctors");
@@ -123,5 +157,9 @@ int main() {
   MPT_TEST_UTILS_ADD_TEST(arfunctors, test_configurable);
   MPT_TEST_UTILS_ADD_TEST(arfunctors, test_math);
 
-  return mpt::test::to_return_code(arfunctors.run());
+  mpt::test::collector runtime_arfunctors("runtime arfunctors");
+  MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime);
+  MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime_math);
+
+  return mpt::test::to_return_code(runtime_arfunctors.run(), arfunctors.run());
 }
