@@ -1,6 +1,7 @@
 #include "mpt/arfunctors.hpp"
 #include "test_utils.hpp"
 #include <cmath>
+#include <string>
 
 struct position {
   float x, y, z;
@@ -18,7 +19,21 @@ struct functor_z_t : public mpt::arfunctor {
   template <class Operand> auto operator()(Operand &&op) const { return op.z; }
 } constexpr functor_z;
 
+std::string to_string(functor_x_t const &) { return "x"; }
+
+std::string to_string(functor_y_t const &) { return "y"; }
+
+std::string to_string(functor_z_t const &) { return "z"; }
+
+struct abs_operator {
+  static constexpr std::string_view chars = "abs";
+  template <class Operand> constexpr auto operator()(Operand &&op) const {
+    return op > 0 ? op : -op;
+  }
+};
+
 struct sqrt_operator {
+  static constexpr std::string_view chars = "sqrt";
   template <class Operand> constexpr auto operator()(Operand &&op) const {
     return std::sqrt(op);
   }
@@ -30,6 +45,10 @@ struct in_range_operator {
     return op > lb && op < rb;
   }
 };
+
+template <class Operand> constexpr auto abs(Operand &&op) {
+  return mpt::make_composed_arfunctor<abs_operator>(std::forward<Operand>(op));
+}
 
 template <class Operand> constexpr auto sqrt(Operand &&op) {
   return mpt::make_composed_arfunctor<sqrt_operator>(std::forward<Operand>(op));
@@ -150,6 +169,40 @@ mpt::test::errors test_runtime_math() {
   return errors;
 }
 
+mpt::test::errors test_string() {
+
+  mpt::test::errors errors;
+
+  auto compare = [&errors](auto &&functor, std::string reference) {
+    auto ct_result = to_string(functor);
+    if (ct_result != reference)
+      errors.push_back("Wrong string obtained (compile-time): \"" + ct_result +
+                       "\" (reference: " + reference + "\")");
+
+    auto rt_result = to_string(
+        mpt::make_runtime_arfunctor<float(position const &)>(functor));
+    if (rt_result != reference)
+      errors.push_back("Wrong string obtained (run-time): \"" + rt_result +
+                       "\" (reference: " + reference + "\")");
+  };
+
+  auto rho = sqrt(functor_x * functor_x + functor_y * functor_y);
+  compare(rho, "sqrt(x * x + y * y)");
+
+  auto logical =
+      rho < 2 && abs(functor_z) - 1 > 5 && !(functor_x < 5 || functor_y < 5);
+  compare(logical,
+          "sqrt(x * x + y * y) < 2 && abs(z) - 1 > 5 && !(x < 5 || y < 5)");
+
+  auto bitwise = (rho < 2) & (abs(functor_z) - 1 > 5) &
+                 ~((functor_x < 5) | (functor_y < 5));
+  compare(
+      bitwise,
+      "(sqrt(x * x + y * y) < 2) & (abs(z) - 1 > 5) & ~((x < 5) | (y < 5))");
+
+  return errors;
+}
+
 int main() {
 
   mpt::test::collector arfunctors("arfunctors");
@@ -160,6 +213,7 @@ int main() {
   mpt::test::collector runtime_arfunctors("runtime arfunctors");
   MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime);
   MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime_math);
+  MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_string);
 
   return mpt::test::to_return_code(runtime_arfunctors.run(), arfunctors.run());
 }

@@ -13,6 +13,38 @@ namespace mpt {
   /// Wrapper around a set of types
   template <class... T> struct types {};
 
+  /// Extend the given list with additional types
+  template <class OldTypes, class... T> struct extend_types;
+
+#ifndef MPT_DOXYGEN_WARD
+  template <class... OldType, class... T>
+  struct extend_types<types<OldType...>, T...> {
+    using type = types<OldType..., T...>;
+  };
+#endif
+
+  /// Concatenate two lists of types
+  template <class... Types> struct concatenate_types;
+
+#ifndef MPT_DOXYGEN_WARD
+  template <class... U, class... V, class... Next>
+  struct concatenate_types<types<U...>, types<V...>, Next...> {
+    using type = typename concatenate_types<types<U..., V...>, Next...>::type;
+  };
+
+  template <class... U, class... V>
+  struct concatenate_types<types<U...>, types<V...>> {
+    using type = types<U..., V...>;
+  };
+#endif
+
+  template <class... Types>
+  using concatenate_types_t = typename concatenate_types<Types...>::type;
+
+  /// Template list with additional types added
+  template <class OldTypes, class... T>
+  using extend_types_t = typename extend_types<OldTypes, T...>::type;
+
   /// Whether the type is in the given list
   template <class Reference, class... T> struct has_type : std::false_type {};
 
@@ -153,8 +185,7 @@ namespace mpt {
 
   namespace {
 
-    /// Expand a set of types object with a new type, if it does not contain it
-    /// yet
+    /// Expand a set of types with a new type, if it does not contain it yet
     template <class TypesSet, class NewType, class Enable = void>
     struct expand_types_set;
 

@@ -39,15 +39,34 @@
   \endcode
  */
 #pragma once
+#include "mpt/types.hpp"
+#include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
+#include <iostream>
+
 namespace mpt {
 
   namespace {
+    /// Unary plus
+    struct unary_plus {
+      static constexpr std::string_view chars = "+";
+      template <class Operand> constexpr auto operator()(Operand &&op) const {
+        return +std::forward<Operand>(op);
+      }
+    };
+    /// Unary minus
+    struct unary_minus {
+      static constexpr std::string_view chars = "-";
+      template <class Operand> constexpr auto operator()(Operand &&op) const {
+        return -std::forward<Operand>(op);
+      }
+    };
     /// Addition of two objects
     struct add {
+      static constexpr std::string_view chars = "+";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) + std::forward<R>(rop);
@@ -55,6 +74,7 @@ namespace mpt {
     };
     /// Subtraction of two objects
     struct sub {
+      static constexpr std::string_view chars = "-";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) - std::forward<R>(rop);
@@ -62,6 +82,7 @@ namespace mpt {
     };
     /// Multiplication of two objects
     struct mul {
+      static constexpr std::string_view chars = "*";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) * std::forward<R>(rop);
@@ -69,6 +90,7 @@ namespace mpt {
     };
     /// Division of two objects
     struct div {
+      static constexpr std::string_view chars = "/";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) / std::forward<R>(rop);
@@ -76,6 +98,7 @@ namespace mpt {
     };
     /// Modulo of two objects
     struct modulo {
+      static constexpr std::string_view chars = "%";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) % std::forward<R>(rop);
@@ -83,12 +106,14 @@ namespace mpt {
     };
     /// Whether the left operand is less than the right operand
     struct lt {
+      static constexpr std::string_view chars = "<";
       template <class L, class R> constexpr auto operator()(L &&lop, R &&rop) {
         return std::forward<L>(lop) < std::forward<R>(rop);
       }
     };
     /// Whether the left operand is less or equal than the right operand
     struct leq {
+      static constexpr std::string_view chars = "<=";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) <= std::forward<R>(rop);
@@ -96,12 +121,14 @@ namespace mpt {
     };
     /// Whether the left operand is greater than the right operand
     struct gt {
+      static constexpr std::string_view chars = ">";
       template <class L, class R> constexpr auto operator()(L &&lop, R &&rop) {
         return std::forward<L>(lop) > std::forward<R>(rop);
       }
     };
     /// Whether the left operand is greater or equal than the right operand
     struct geq {
+      static constexpr std::string_view chars = ">=";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) >= std::forward<R>(rop);
@@ -109,6 +136,7 @@ namespace mpt {
     };
     /// Whether the left operand is equal to the right operand
     struct eq {
+      static constexpr std::string_view chars = "==";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) == std::forward<R>(rop);
@@ -116,6 +144,7 @@ namespace mpt {
     };
     /// Whether the left operand is not equal to the right operand
     struct neq {
+      static constexpr std::string_view chars = "!=";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) != std::forward<R>(rop);
@@ -123,6 +152,7 @@ namespace mpt {
     };
     /// Logical and operation between two operands
     struct logical_and {
+      static constexpr std::string_view chars = "&&";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) && std::forward<R>(rop);
@@ -130,6 +160,7 @@ namespace mpt {
     };
     /// Logical or operation between two operands
     struct logical_or {
+      static constexpr std::string_view chars = "||";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) || std::forward<R>(rop);
@@ -137,12 +168,14 @@ namespace mpt {
     };
     /// Logical not operation of an operand
     struct notop {
+      static constexpr std::string_view chars = "!";
       template <class Operand> constexpr auto operator()(Operand &&op) const {
         return !std::forward<Operand>(op);
       }
     };
     /// Bitwise and operation between two operands
     struct bitwise_and {
+      static constexpr std::string_view chars = "&";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) & std::forward<R>(rop);
@@ -150,6 +183,7 @@ namespace mpt {
     };
     /// Bitwise or operation between two operands
     struct bitwise_or {
+      static constexpr std::string_view chars = "|";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) | std::forward<R>(rop);
@@ -157,6 +191,7 @@ namespace mpt {
     };
     /// Bitwise xor operation between two operands
     struct bitwise_xor {
+      static constexpr std::string_view chars = "^";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) ^ std::forward<R>(rop);
@@ -164,12 +199,14 @@ namespace mpt {
     };
     /// Bitwise complement of an operand
     struct bitwise_complement {
+      static constexpr std::string_view chars = "~";
       template <class Operand> constexpr auto operator()(Operand &&op) const {
         return ~std::forward<Operand>(op);
       }
     };
     /// Bitwise left shift operation between two operands
     struct bitwise_shift_left {
+      static constexpr std::string_view chars = "<<";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) << std::forward<R>(rop);
@@ -177,11 +214,42 @@ namespace mpt {
     };
     /// Bitwise right shift operation between two operands
     struct bitwise_shift_right {
+      static constexpr std::string_view chars = ">>";
       template <class L, class R>
       constexpr auto operator()(L &&lop, R &&rop) const {
         return std::forward<L>(lop) >> std::forward<R>(rop);
       }
     };
+
+    using binary_arithmetic_operators = mpt::types<add, sub, mul, div, modulo>;
+    using binary_relational_operators = mpt::types<lt, leq, gt, geq, eq, neq>;
+    using binary_logical_operators = mpt::types<logical_and, logical_or>;
+    using binary_bitwise_comparison_operators =
+        mpt::types<bitwise_and, bitwise_or, bitwise_xor>;
+    using binary_bitwise_shift_operators =
+        mpt::types<bitwise_shift_left, bitwise_shift_right>;
+    using binary_operators = mpt::concatenate_types_t<
+        binary_arithmetic_operators, binary_relational_operators,
+        binary_logical_operators, binary_bitwise_comparison_operators,
+        binary_bitwise_shift_operators>;
+    using unary_operators =
+        mpt::types<unary_plus, unary_minus, notop, bitwise_complement>;
+
+    template <class Operator>
+    concept IsBinaryOperator =
+        mpt::templated_object_has_type_v<Operator, binary_operators>;
+
+    template <class Operator>
+    concept IsUnaryOperator =
+        mpt::templated_object_has_type_v<Operator, unary_operators>;
+
+    template <class Operator>
+    concept IsArithmeticOperator =
+        mpt::templated_object_has_type_v<Operator, binary_arithmetic_operators>;
+
+    template <class Operator>
+    concept IsRelationalOperator =
+        mpt::templated_object_has_type_v<Operator, binary_relational_operators>;
   } // namespace
 
   /*!\brief Base arithmetic and relational functor class
@@ -207,6 +275,15 @@ namespace mpt {
 
     /// Force a signature to be used to call the functor
     virtual Output operator()(Input const &...) const = 0;
+
+    /*!\brief Represent the functor as a string
+
+      This is used for parsing functors from strings.
+      A runtime instance whose underlying functor does
+      not have a corresponding conversion function will
+      lead to a runtime error.
+     */
+    virtual std::string as_string() const = 0;
 
     /// Provide a clone of the wrapper
     virtual arfunctor_wrapper *clone() const = 0;
@@ -247,6 +324,9 @@ namespace mpt {
       arfunctor_wrapper<Output(Input...)> *clone() const override {
         return new specialized_arfunctor_wrapper{*this};
       }
+
+      /// Represent the functor as a string
+      std::string as_string() const override { return to_string(m_functor); }
 
     private:
       /// Wrapped functor
@@ -316,6 +396,11 @@ namespace mpt {
     /// Call the internal functor
     Output operator()(Input const &... args) const {
       return m_ptr->operator()(args...);
+    }
+
+    /// Conversion to \ref std::string
+    friend std::string to_string(runtime_arfunctor<Output(Input...)> const &f) {
+      return f.m_ptr->as_string();
     }
 
   private:
@@ -419,6 +504,8 @@ namespace mpt {
           args...);
     }
 
+    operands_type const &operands() const { return m_operands; }
+
   private:
     /// Operands
     operands_type m_operands;
@@ -499,6 +586,18 @@ namespace mpt {
   //
 
   // Arithmetic operators
+
+  template <class Operand>
+  requires ValidArithmeticOrRelationalOperands<Operand> constexpr auto
+  operator+(Operand &&op) {
+    return switch_unary_operator<unary_plus>(std::forward<Operand>(op));
+  }
+
+  template <class Operand>
+  requires ValidArithmeticOrRelationalOperands<Operand> constexpr auto
+  operator-(Operand &&op) {
+    return switch_unary_operator<unary_minus>(std::forward<Operand>(op));
+  }
 
   template <class LeftOperand, class RightOperand>
   requires ValidArithmeticOrRelationalOperands<LeftOperand,
@@ -660,5 +759,289 @@ namespace mpt {
   operator>>(LeftOperand &&lop, RightOperand &&rop) {
     return switch_binary_operator<bitwise_shift_right>(
         std::forward<LeftOperand>(lop), std::forward<RightOperand>(rop));
+  }
+
+  //
+  // String conversion
+  //
+  namespace {
+
+    /// Allow to do conversion to \ref std::string for arithmetic types
+    template <class T> std::string to_string(T const &t) {
+      return std::to_string(t);
+    }
+
+    /// Concatenate strings
+    template <class... String> std::string concatenate_strings(String &&... s) {
+      std::string result;
+      result.reserve((std::size(s) + ...));
+      ((result += std::forward<String>(s)), ...);
+      return result;
+    }
+
+    static constexpr auto space = std::string_view{" "};
+    static constexpr auto lpar = std::string_view{"("};
+    static constexpr auto rpar = std::string_view{")"};
+
+    /// Convert a call to an operator (with several operands) to a string
+    template <class Operator, class... Operand, std::size_t... I>
+    std::string
+    to_string_impl(composed_arfunctor<Operator, Operand...> const &f,
+                   std::index_sequence<I...>) {
+      return concatenate_strings(Operator::chars, lpar,
+                                 to_string(std::get<I>(f.operands()))..., rpar);
+    }
+
+    /// Check if an operand is a composed functor
+    template <class Operand> struct is_composed_arfunctor : std::false_type {};
+
+    /// Check if an operand is a composed functor
+    template <class Operator, class... Operand>
+    struct is_composed_arfunctor<composed_arfunctor<Operator, Operand...>>
+        : std::true_type {};
+
+    /// Whether an operand is a composed functor or not
+    template <class Operand>
+    static constexpr auto is_composed_arfunctor_v =
+        is_composed_arfunctor<Operand>::value;
+
+    template <class Operator, class SafeOperators>
+    struct must_be_parenthesized : std::false_type {};
+
+    template <class Operator, class... SafeOperator>
+    struct must_be_parenthesized<Operator, mpt::types<SafeOperator...>>
+        : std::conditional_t<(IsBinaryOperator<Operator> &&
+                              !mpt::has_type_v<Operator, SafeOperator...>),
+                             std::true_type, std::false_type> {};
+
+    template <class Operator, class... SafeOperator>
+    static constexpr auto must_be_parenthesized_v =
+        must_be_parenthesized<Operator, SafeOperator...>::value;
+
+    /// Parse the strings of two operands
+    template <class Operator, class LeftOperand, class RightOperand,
+              class SafeLeftOperators, class SafeRightOperators>
+    auto to_string_with_parentheses(LeftOperand const &lop,
+                                    RightOperand const &rop, SafeLeftOperators,
+                                    SafeRightOperators) {
+      return concatenate_strings(to_string(lop), space, Operator::chars, space,
+                                 to_string(rop));
+    }
+
+    /// Parse the strings of two operands in which that on the left is composed
+    template <class Operator, class LO, class RightOperand, class... L,
+              class SafeLeftOperators, class SafeRightOperators>
+    auto to_string_with_parentheses(composed_arfunctor<LO, L...> const &lop,
+                                    RightOperand const &rop, SafeLeftOperators,
+                                    SafeRightOperators) {
+      if constexpr (must_be_parenthesized_v<LO, SafeLeftOperators>)
+        return concatenate_strings(lpar, to_string(lop), rpar, space,
+                                   Operator::chars, space, to_string(rop));
+      else
+        return concatenate_strings(to_string(lop), space, Operator::chars,
+                                   space, to_string(rop));
+    }
+
+    /// Parse the strings of two operands in which that on the right is composed
+    template <class Operator, class RO, class LeftOperand, class... R,
+              class SafeLeftOperators, class SafeRightOperators>
+    auto to_string_with_parentheses(LeftOperand const &lop,
+                                    composed_arfunctor<RO, R...> const &rop,
+                                    SafeLeftOperators, SafeRightOperators) {
+
+      if constexpr (must_be_parenthesized_v<RO, SafeRightOperators>)
+        return concatenate_strings(to_string(lop), space, Operator::chars,
+                                   space, lpar, to_string(rop), rpar);
+      else
+        return concatenate_strings(to_string(lop), space, Operator::chars,
+                                   space, to_string(rop));
+    }
+
+    /// Parse the strings of two operands in which both are composed
+    template <class Operator, class LO, class RO, class... L, class... R,
+              class SafeLeftOperators, class SafeRightOperators>
+    auto to_string_with_parentheses(composed_arfunctor<LO, L...> const &lop,
+                                    composed_arfunctor<RO, R...> const &rop,
+                                    SafeLeftOperators, SafeRightOperators) {
+      // no wrap
+      if constexpr (must_be_parenthesized_v<LO, SafeLeftOperators> &&
+                    must_be_parenthesized_v<RO, SafeRightOperators>)
+        return concatenate_strings(lpar, to_string(lop), rpar, space,
+                                   Operator::chars, space, lpar, to_string(rop),
+                                   rpar);
+      // wrap only the right operation
+      else if constexpr (!must_be_parenthesized_v<LO, SafeLeftOperators> &&
+                         must_be_parenthesized_v<RO, SafeRightOperators>)
+        return concatenate_strings(to_string(lop), space, Operator::chars,
+                                   space, lpar, to_string(rop), rpar);
+      // wrap only the left operation
+      else if constexpr (must_be_parenthesized_v<LO, SafeLeftOperators> &&
+                         !must_be_parenthesized_v<RO, SafeRightOperators>)
+        return concatenate_strings(lpar, to_string(lop), rpar, space,
+                                   Operator::chars, space, to_string(rop));
+      // wrap both operations
+      else
+        return concatenate_strings(to_string(lop), space, Operator::chars,
+                                   space, to_string(rop));
+    }
+
+    /*!\brief Helper class to determine when to wrap operands with parentheses
+
+      Define operations that can be done without wrapping objects between
+      parentheses. This must be done differently for operators on the
+      left and right operands.
+     */
+    template <class Operator> struct binary_parentheses_handler;
+
+    //
+    // Arithmetic operators
+    //
+
+    template <> struct binary_parentheses_handler<add> {
+      using safe_left_operators = mpt::types<add, sub, mul, div, modulo>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    template <> struct binary_parentheses_handler<sub> {
+      using safe_left_operators = mpt::types<add, sub, mul, div, modulo>;
+      using safe_right_operators = mpt::types<mul, div, modulo>;
+    };
+
+    template <> struct binary_parentheses_handler<mul> {
+      using safe_left_operators = mpt::types<mul, div, modulo>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    template <> struct binary_parentheses_handler<div> {
+      using safe_left_operators = mpt::types<mul, div, modulo>;
+      using safe_right_operators = mpt::types<div>;
+    };
+
+    template <> struct binary_parentheses_handler<modulo> {
+      using safe_left_operators = mpt::types<modulo>;
+      using safe_right_operators = mpt::types<>;
+    };
+
+    //
+    // Relational operators
+    //
+    using relational_safe_types =
+        mpt::concatenate_types_t<binary_arithmetic_operators,
+                                 binary_logical_operators>;
+
+    template <> struct binary_parentheses_handler<lt> {
+      using safe_left_operators = relational_safe_types;
+      using safe_right_operators = relational_safe_types;
+    };
+
+    template <> struct binary_parentheses_handler<leq> {
+      using safe_left_operators = relational_safe_types;
+      using safe_right_operators = relational_safe_types;
+    };
+
+    template <> struct binary_parentheses_handler<gt> {
+      using safe_left_operators = relational_safe_types;
+      using safe_right_operators = relational_safe_types;
+    };
+
+    template <> struct binary_parentheses_handler<geq> {
+      using safe_left_operators = relational_safe_types;
+      using safe_right_operators = relational_safe_types;
+    };
+
+    template <> struct binary_parentheses_handler<eq> {
+      using safe_left_operators = relational_safe_types;
+      using safe_right_operators = relational_safe_types;
+    };
+
+    template <> struct binary_parentheses_handler<neq> {
+      using safe_left_operators = relational_safe_types;
+      using safe_right_operators = relational_safe_types;
+    };
+
+    using logical_safe_types =
+        mpt::concatenate_types_t<binary_arithmetic_operators,
+                                 binary_relational_operators>;
+
+    template <> struct binary_parentheses_handler<logical_and> {
+      using safe_left_operators =
+          mpt::extend_types_t<logical_safe_types, logical_and>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    template <> struct binary_parentheses_handler<logical_or> {
+      using safe_left_operators =
+          mpt::extend_types_t<logical_safe_types, logical_or>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    //
+    // Bitwise operators
+    //
+    using bitwise_shift_operators =
+        mpt::types<bitwise_shift_left, bitwise_shift_right>;
+
+    template <> struct binary_parentheses_handler<bitwise_and> {
+      using safe_left_operators =
+          mpt::extend_types_t<bitwise_shift_operators, bitwise_and>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    template <> struct binary_parentheses_handler<bitwise_or> {
+      using safe_left_operators =
+          mpt::extend_types_t<bitwise_shift_operators, bitwise_or>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    template <> struct binary_parentheses_handler<bitwise_xor> {
+      using safe_left_operators =
+          mpt::extend_types_t<bitwise_shift_operators, bitwise_xor>;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    using bitwise_binary_operators =
+        mpt::types<bitwise_and, bitwise_or, bitwise_xor, bitwise_shift_left,
+                   bitwise_shift_right>;
+
+    template <> struct binary_parentheses_handler<bitwise_shift_left> {
+      using safe_left_operators = bitwise_binary_operators;
+      using safe_right_operators = safe_left_operators;
+    };
+
+    template <> struct binary_parentheses_handler<bitwise_shift_right> {
+      using safe_left_operators = bitwise_binary_operators;
+      using safe_right_operators = safe_left_operators;
+    };
+  } // namespace
+
+  /// Conversion of user-defined operators to strings, as function calls
+  template <class Operator, class... Operand>
+  std::string to_string(composed_arfunctor<Operator, Operand...> const &f) {
+    return to_string_impl(f, std::make_index_sequence<sizeof...(Operand)>());
+  }
+
+  /// Conversion of binary operators to strings
+  template <class Operator, class LeftOperand, class RightOperand>
+  requires IsBinaryOperator<Operator> std::string
+  to_string(composed_arfunctor<Operator, LeftOperand, RightOperand> const &f) {
+    using safe_lop =
+        typename binary_parentheses_handler<Operator>::safe_left_operators;
+    using safe_rop =
+        typename binary_parentheses_handler<Operator>::safe_right_operators;
+    return to_string_with_parentheses<Operator>(std::get<0>(f.operands()),
+                                                std::get<1>(f.operands()),
+                                                safe_lop{}, safe_rop{});
+  }
+
+  /// Conversion of unary operators to strings
+  template <class Operator, class Operand>
+  requires IsUnaryOperator<Operator> std::string
+  to_string(composed_arfunctor<Operator, Operand> const &f) {
+    if constexpr (is_composed_arfunctor_v<Operand>)
+      return concatenate_strings(Operator::chars, lpar,
+                                 to_string(std::get<0>(f.operands())), rpar);
+    else
+      return concatenate_strings(Operator::chars,
+                                 to_string(std::get<0>(f.operands())));
   }
 } // namespace mpt
