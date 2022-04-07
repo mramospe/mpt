@@ -1,6 +1,7 @@
 #include "mpt/arfunctors.hpp"
 #include "test_utils.hpp"
 #include <cmath>
+#include <sstream>
 #include <string>
 
 struct position {
@@ -19,11 +20,17 @@ struct functor_z_t : public mpt::arfunctor {
   template <class Operand> auto operator()(Operand &&op) const { return op.z; }
 } constexpr functor_z;
 
-std::string to_string(functor_x_t const &) { return "x"; }
+std::ostream &operator<<(std::ostream &os, functor_x_t const &) {
+  return os << "x";
+}
 
-std::string to_string(functor_y_t const &) { return "y"; }
+std::ostream &operator<<(std::ostream &os, functor_y_t const &) {
+  return os << "y";
+}
 
-std::string to_string(functor_z_t const &) { return "z"; }
+std::ostream &operator<<(std::ostream &os, functor_z_t const &) {
+  return os << "z";
+}
 
 struct abs_operator {
   static constexpr std::string_view chars = "abs";
@@ -167,6 +174,12 @@ mpt::test::errors test_runtime_math() {
     errors.push_back("Unable to determine if a quantity is in the given range");
 
   return errors;
+}
+
+template <class Functor> std::string to_string(Functor const &functor) {
+  std::stringstream ss;
+  ss << functor;
+  return ss.str();
 }
 
 mpt::test::errors test_string() {

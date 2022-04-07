@@ -40,12 +40,11 @@
  */
 #pragma once
 #include "mpt/types.hpp"
-#include <string>
+#include <ostream>
+#include <string_view>
 #include <tuple>
 #include <type_traits>
 #include <utility>
-
-#include <iostream>
 
 namespace mpt {
 
@@ -283,7 +282,7 @@ namespace mpt {
       not have a corresponding conversion function will
       lead to a runtime error.
      */
-    virtual std::string as_string() const = 0;
+    virtual std::ostream &to_ostream(std::ostream &) const = 0;
 
     /// Provide a clone of the wrapper
     virtual arfunctor_wrapper *clone() const = 0;
@@ -326,7 +325,9 @@ namespace mpt {
       }
 
       /// Represent the functor as a string
-      std::string as_string() const override { return to_string(m_functor); }
+      std::ostream &to_ostream(std::ostream &os) const override {
+        return os << m_functor;
+      }
 
     private:
       /// Wrapped functor
@@ -399,8 +400,9 @@ namespace mpt {
     }
 
     /// Conversion to \ref std::string
-    friend std::string to_string(runtime_arfunctor<Output(Input...)> const &f) {
-      return f.m_ptr->as_string();
+    friend std::ostream &
+    operator<<(std::ostream &os, runtime_arfunctor<Output(Input...)> const &f) {
+      return f.m_ptr->to_ostream(os);
     }
 
   private:
@@ -538,8 +540,8 @@ namespace mpt {
     template <class... Operands>
     struct constrain_to_arfunctor_types
         : std::conditional_t<((is_arfunctor_v<Operands> ||
-                               is_runtime_arfunctor_v<Operands>) ||
-                              ...),
+                               is_runtime_arfunctor_v<Operands> ||
+                               std::is_arithmetic_v<Operands>)&&...),
                              std::true_type, std::false_type> {};
 
     /// Whether one of the operands is a functor
@@ -766,31 +768,9 @@ namespace mpt {
   //
   namespace {
 
-    /// Allow to do conversion to \ref std::string for arithmetic types
-    template <class T> std::string to_string(T const &t) {
-      return std::to_string(t);
-    }
-
-    /// Concatenate strings
-    template <class... String> std::string concatenate_strings(String &&... s) {
-      std::string result;
-      result.reserve((std::size(s) + ...));
-      ((result += std::forward<String>(s)), ...);
-      return result;
-    }
-
     static constexpr auto space = std::string_view{" "};
     static constexpr auto lpar = std::string_view{"("};
     static constexpr auto rpar = std::string_view{")"};
-
-    /// Convert a call to an operator (with several operands) to a string
-    template <class Operator, class... Operand, std::size_t... I>
-    std::string
-    to_string_impl(composed_arfunctor<Operator, Operand...> const &f,
-                   std::index_sequence<I...>) {
-      return concatenate_strings(Operator::chars, lpar,
-                                 to_string(std::get<I>(f.operands()))..., rpar);
-    }
 
     /// Check if an operand is a composed functor
     template <class Operand> struct is_composed_arfunctor : std::false_type {};
@@ -814,75 +794,46 @@ namespace mpt {
                               !mpt::has_type_v<Operator, SafeOperator...>),
                              std::true_type, std::false_type> {};
 
-    template <class Operator, class... SafeOperator>
+    template <class Operator, class SafeOperators>
     static constexpr auto must_be_parenthesized_v =
-        must_be_parenthesized<Operator, SafeOperator...>::value;
+        must_be_parenthesized<Operator, SafeOperators>::value;
+
+    template <class T, class SafeOperators>
+    std::ostream &process_parentheses(std::ostream &os, T const &obj,
+                                      SafeOperators) {
+      return os << obj;
+    }
+
+    template <class Operator, class... Operand, class SafeOperators>
+    std::ostream &
+    process_parentheses(std::ostream &os,
+                        composed_arfunctor<Operator, Operand...> const &obj,
+                        SafeOperators) {
+      if constexpr (must_be_parenthesized_v<Operator, SafeOperators>)
+        return os << lpar << obj << rpar;
+      else
+        return os << obj;
+    }
+
+    /// Convert a call to an operator (with several operands) to a string
+    template <class Operator, class... Operand, std::size_t... I>
+    std::ostream &to_ostream(std::ostream &os,
+                             composed_arfunctor<Operator, Operand...> const &f,
+                             std::index_sequence<I...>) {
+      return os << Operator::chars << lpar << (std::get<I>(f.operands()) << ...)
+                << rpar;
+    }
 
     /// Parse the strings of two operands
     template <class Operator, class LeftOperand, class RightOperand,
               class SafeLeftOperators, class SafeRightOperators>
-    auto to_string_with_parentheses(LeftOperand const &lop,
-                                    RightOperand const &rop, SafeLeftOperators,
-                                    SafeRightOperators) {
-      return concatenate_strings(to_string(lop), space, Operator::chars, space,
-                                 to_string(rop));
-    }
-
-    /// Parse the strings of two operands in which that on the left is composed
-    template <class Operator, class LO, class RightOperand, class... L,
-              class SafeLeftOperators, class SafeRightOperators>
-    auto to_string_with_parentheses(composed_arfunctor<LO, L...> const &lop,
-                                    RightOperand const &rop, SafeLeftOperators,
-                                    SafeRightOperators) {
-      if constexpr (must_be_parenthesized_v<LO, SafeLeftOperators>)
-        return concatenate_strings(lpar, to_string(lop), rpar, space,
-                                   Operator::chars, space, to_string(rop));
-      else
-        return concatenate_strings(to_string(lop), space, Operator::chars,
-                                   space, to_string(rop));
-    }
-
-    /// Parse the strings of two operands in which that on the right is composed
-    template <class Operator, class RO, class LeftOperand, class... R,
-              class SafeLeftOperators, class SafeRightOperators>
-    auto to_string_with_parentheses(LeftOperand const &lop,
-                                    composed_arfunctor<RO, R...> const &rop,
-                                    SafeLeftOperators, SafeRightOperators) {
-
-      if constexpr (must_be_parenthesized_v<RO, SafeRightOperators>)
-        return concatenate_strings(to_string(lop), space, Operator::chars,
-                                   space, lpar, to_string(rop), rpar);
-      else
-        return concatenate_strings(to_string(lop), space, Operator::chars,
-                                   space, to_string(rop));
-    }
-
-    /// Parse the strings of two operands in which both are composed
-    template <class Operator, class LO, class RO, class... L, class... R,
-              class SafeLeftOperators, class SafeRightOperators>
-    auto to_string_with_parentheses(composed_arfunctor<LO, L...> const &lop,
-                                    composed_arfunctor<RO, R...> const &rop,
-                                    SafeLeftOperators, SafeRightOperators) {
-      // no wrap
-      if constexpr (must_be_parenthesized_v<LO, SafeLeftOperators> &&
-                    must_be_parenthesized_v<RO, SafeRightOperators>)
-        return concatenate_strings(lpar, to_string(lop), rpar, space,
-                                   Operator::chars, space, lpar, to_string(rop),
-                                   rpar);
-      // wrap only the right operation
-      else if constexpr (!must_be_parenthesized_v<LO, SafeLeftOperators> &&
-                         must_be_parenthesized_v<RO, SafeRightOperators>)
-        return concatenate_strings(to_string(lop), space, Operator::chars,
-                                   space, lpar, to_string(rop), rpar);
-      // wrap only the left operation
-      else if constexpr (must_be_parenthesized_v<LO, SafeLeftOperators> &&
-                         !must_be_parenthesized_v<RO, SafeRightOperators>)
-        return concatenate_strings(lpar, to_string(lop), rpar, space,
-                                   Operator::chars, space, to_string(rop));
-      // wrap both operations
-      else
-        return concatenate_strings(to_string(lop), space, Operator::chars,
-                                   space, to_string(rop));
+    std::ostream &to_ostream(std::ostream &os, LeftOperand const &lop,
+                             RightOperand const &rop, SafeLeftOperators slo,
+                             SafeRightOperators sro) {
+      process_parentheses(os, lop, slo);
+      os << space << Operator::chars << space;
+      process_parentheses(os, rop, sro);
+      return os;
     }
 
     /*!\brief Helper class to determine when to wrap operands with parentheses
@@ -1012,36 +963,39 @@ namespace mpt {
       using safe_left_operators = bitwise_binary_operators;
       using safe_right_operators = safe_left_operators;
     };
+
+    /// Conversion of user-defined operators to strings, as function calls
+    template <class Operator, class... Operand>
+    std::ostream &
+    operator<<(std::ostream &os,
+               composed_arfunctor<Operator, Operand...> const &f) {
+      return to_ostream(os, f, std::make_index_sequence<sizeof...(Operand)>());
+    }
+
+    /// Conversion of binary operators to strings
+    template <class Operator, class LeftOperand, class RightOperand>
+    requires IsBinaryOperator<Operator> std::ostream &operator<<(
+        std::ostream &os,
+        composed_arfunctor<Operator, LeftOperand, RightOperand> const &f) {
+      using safe_lop =
+          typename binary_parentheses_handler<Operator>::safe_left_operators;
+      using safe_rop =
+          typename binary_parentheses_handler<Operator>::safe_right_operators;
+      return to_ostream<Operator>(os, std::get<0>(f.operands()),
+                                  std::get<1>(f.operands()), safe_lop{},
+                                  safe_rop{});
+    }
+
+    /// Conversion of unary operators to strings
+    template <class Operator, class Operand>
+    requires IsUnaryOperator<Operator> std::ostream &
+    operator<<(std::ostream &os,
+               composed_arfunctor<Operator, Operand> const &f) {
+      if constexpr (is_composed_arfunctor_v<Operand>)
+        return os << Operator::chars << lpar << std::get<0>(f.operands())
+                  << rpar;
+      else
+        return os << Operator::chars << std::get<0>(f.operands());
+    }
   } // namespace
-
-  /// Conversion of user-defined operators to strings, as function calls
-  template <class Operator, class... Operand>
-  std::string to_string(composed_arfunctor<Operator, Operand...> const &f) {
-    return to_string_impl(f, std::make_index_sequence<sizeof...(Operand)>());
-  }
-
-  /// Conversion of binary operators to strings
-  template <class Operator, class LeftOperand, class RightOperand>
-  requires IsBinaryOperator<Operator> std::string
-  to_string(composed_arfunctor<Operator, LeftOperand, RightOperand> const &f) {
-    using safe_lop =
-        typename binary_parentheses_handler<Operator>::safe_left_operators;
-    using safe_rop =
-        typename binary_parentheses_handler<Operator>::safe_right_operators;
-    return to_string_with_parentheses<Operator>(std::get<0>(f.operands()),
-                                                std::get<1>(f.operands()),
-                                                safe_lop{}, safe_rop{});
-  }
-
-  /// Conversion of unary operators to strings
-  template <class Operator, class Operand>
-  requires IsUnaryOperator<Operator> std::string
-  to_string(composed_arfunctor<Operator, Operand> const &f) {
-    if constexpr (is_composed_arfunctor_v<Operand>)
-      return concatenate_strings(Operator::chars, lpar,
-                                 to_string(std::get<0>(f.operands())), rpar);
-    else
-      return concatenate_strings(Operator::chars,
-                                 to_string(std::get<0>(f.operands())));
-  }
 } // namespace mpt
