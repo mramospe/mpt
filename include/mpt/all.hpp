@@ -1,5 +1,6 @@
 #pragma once
 #include "mpt/arfunctors.hpp"
+#include "mpt/arfunctors_parser.hpp"
 #include "mpt/keywords.hpp"
 #include "mpt/members.hpp"
 #include "mpt/signature.hpp"

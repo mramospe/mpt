@@ -290,7 +290,7 @@ namespace mpt {
 
   namespace {
 
-    /*!\brief Runtime arithmetic and relation functor wrapper
+    /*!\brief Runtime arithmetic and relational functor wrapper
 
     This object wraps any functor type without needing to inherit from
     any additional class (i.e. allows to work directly with
@@ -785,31 +785,32 @@ namespace mpt {
     static constexpr auto is_composed_arfunctor_v =
         is_composed_arfunctor<Operand>::value;
 
-    template <class Operator, class SafeOperators>
+    template <class Operator, class AssociativeOperators>
     struct must_be_parenthesized : std::false_type {};
 
-    template <class Operator, class... SafeOperator>
-    struct must_be_parenthesized<Operator, mpt::types<SafeOperator...>>
-        : std::conditional_t<(IsBinaryOperator<Operator> &&
-                              !mpt::has_type_v<Operator, SafeOperator...>),
-                             std::true_type, std::false_type> {};
+    template <class Operator, class... AssociativeOperator>
+    struct must_be_parenthesized<Operator, mpt::types<AssociativeOperator...>>
+        : std::conditional_t<
+              (IsBinaryOperator<Operator> &&
+               !mpt::has_type_v<Operator, AssociativeOperator...>),
+              std::true_type, std::false_type> {};
 
-    template <class Operator, class SafeOperators>
+    template <class Operator, class AssociativeOperators>
     static constexpr auto must_be_parenthesized_v =
-        must_be_parenthesized<Operator, SafeOperators>::value;
+        must_be_parenthesized<Operator, AssociativeOperators>::value;
 
-    template <class T, class SafeOperators>
+    template <class T, class AssociativeOperators>
     std::ostream &process_parentheses(std::ostream &os, T const &obj,
-                                      SafeOperators) {
+                                      AssociativeOperators) {
       return os << obj;
     }
 
-    template <class Operator, class... Operand, class SafeOperators>
+    template <class Operator, class... Operand, class AssociativeOperators>
     std::ostream &
     process_parentheses(std::ostream &os,
                         composed_arfunctor<Operator, Operand...> const &obj,
-                        SafeOperators) {
-      if constexpr (must_be_parenthesized_v<Operator, SafeOperators>)
+                        AssociativeOperators) {
+      if constexpr (must_be_parenthesized_v<Operator, AssociativeOperators>)
         return os << lpar << obj << rpar;
       else
         return os << obj;
@@ -826,10 +827,11 @@ namespace mpt {
 
     /// Parse the strings of two operands
     template <class Operator, class LeftOperand, class RightOperand,
-              class SafeLeftOperators, class SafeRightOperators>
+              class AssociativeLeftOperators, class AssociativeRightOperators>
     std::ostream &to_ostream(std::ostream &os, LeftOperand const &lop,
-                             RightOperand const &rop, SafeLeftOperators slo,
-                             SafeRightOperators sro) {
+                             RightOperand const &rop,
+                             AssociativeLeftOperators slo,
+                             AssociativeRightOperators sro) {
       process_parentheses(os, lop, slo);
       os << space << Operator::chars << space;
       process_parentheses(os, rop, sro);
@@ -849,81 +851,81 @@ namespace mpt {
     //
 
     template <> struct binary_parentheses_handler<add> {
-      using safe_left_operators = mpt::types<add, sub, mul, div, modulo>;
-      using safe_right_operators = safe_left_operators;
+      using associative_left_operators = mpt::types<add, sub, mul, div, modulo>;
+      using associative_right_operators = associative_left_operators;
     };
 
     template <> struct binary_parentheses_handler<sub> {
-      using safe_left_operators = mpt::types<add, sub, mul, div, modulo>;
-      using safe_right_operators = mpt::types<mul, div, modulo>;
+      using associative_left_operators = mpt::types<add, sub, mul, div, modulo>;
+      using associative_right_operators = mpt::types<mul, div, modulo>;
     };
 
     template <> struct binary_parentheses_handler<mul> {
-      using safe_left_operators = mpt::types<mul, div, modulo>;
-      using safe_right_operators = safe_left_operators;
+      using associative_left_operators = mpt::types<mul, div, modulo>;
+      using associative_right_operators = associative_left_operators;
     };
 
     template <> struct binary_parentheses_handler<div> {
-      using safe_left_operators = mpt::types<mul, div, modulo>;
-      using safe_right_operators = mpt::types<div>;
+      using associative_left_operators = mpt::types<mul, div, modulo>;
+      using associative_right_operators = mpt::types<div>;
     };
 
     template <> struct binary_parentheses_handler<modulo> {
-      using safe_left_operators = mpt::types<modulo>;
-      using safe_right_operators = mpt::types<>;
+      using associative_left_operators = mpt::types<modulo>;
+      using associative_right_operators = mpt::types<>;
     };
 
     //
     // Relational operators
     //
-    using relational_safe_types =
+    using relational_associative_types =
         mpt::concatenate_types_t<binary_arithmetic_operators,
                                  binary_logical_operators>;
 
     template <> struct binary_parentheses_handler<lt> {
-      using safe_left_operators = relational_safe_types;
-      using safe_right_operators = relational_safe_types;
+      using associative_left_operators = relational_associative_types;
+      using associative_right_operators = relational_associative_types;
     };
 
     template <> struct binary_parentheses_handler<leq> {
-      using safe_left_operators = relational_safe_types;
-      using safe_right_operators = relational_safe_types;
+      using associative_left_operators = relational_associative_types;
+      using associative_right_operators = relational_associative_types;
     };
 
     template <> struct binary_parentheses_handler<gt> {
-      using safe_left_operators = relational_safe_types;
-      using safe_right_operators = relational_safe_types;
+      using associative_left_operators = relational_associative_types;
+      using associative_right_operators = relational_associative_types;
     };
 
     template <> struct binary_parentheses_handler<geq> {
-      using safe_left_operators = relational_safe_types;
-      using safe_right_operators = relational_safe_types;
+      using associative_left_operators = relational_associative_types;
+      using associative_right_operators = relational_associative_types;
     };
 
     template <> struct binary_parentheses_handler<eq> {
-      using safe_left_operators = relational_safe_types;
-      using safe_right_operators = relational_safe_types;
+      using associative_left_operators = relational_associative_types;
+      using associative_right_operators = relational_associative_types;
     };
 
     template <> struct binary_parentheses_handler<neq> {
-      using safe_left_operators = relational_safe_types;
-      using safe_right_operators = relational_safe_types;
+      using associative_left_operators = relational_associative_types;
+      using associative_right_operators = relational_associative_types;
     };
 
-    using logical_safe_types =
+    using logical_associative_types =
         mpt::concatenate_types_t<binary_arithmetic_operators,
                                  binary_relational_operators>;
 
     template <> struct binary_parentheses_handler<logical_and> {
-      using safe_left_operators =
-          mpt::extend_types_t<logical_safe_types, logical_and>;
-      using safe_right_operators = safe_left_operators;
+      using associative_left_operators =
+          mpt::extend_types_t<logical_associative_types, logical_and>;
+      using associative_right_operators = associative_left_operators;
     };
 
     template <> struct binary_parentheses_handler<logical_or> {
-      using safe_left_operators =
-          mpt::extend_types_t<logical_safe_types, logical_or>;
-      using safe_right_operators = safe_left_operators;
+      using associative_left_operators =
+          mpt::extend_types_t<logical_associative_types, logical_or>;
+      using associative_right_operators = associative_left_operators;
     };
 
     //
@@ -933,21 +935,21 @@ namespace mpt {
         mpt::types<bitwise_shift_left, bitwise_shift_right>;
 
     template <> struct binary_parentheses_handler<bitwise_and> {
-      using safe_left_operators =
+      using associative_left_operators =
           mpt::extend_types_t<bitwise_shift_operators, bitwise_and>;
-      using safe_right_operators = safe_left_operators;
+      using associative_right_operators = associative_left_operators;
     };
 
     template <> struct binary_parentheses_handler<bitwise_or> {
-      using safe_left_operators =
+      using associative_left_operators =
           mpt::extend_types_t<bitwise_shift_operators, bitwise_or>;
-      using safe_right_operators = safe_left_operators;
+      using associative_right_operators = associative_left_operators;
     };
 
     template <> struct binary_parentheses_handler<bitwise_xor> {
-      using safe_left_operators =
+      using associative_left_operators =
           mpt::extend_types_t<bitwise_shift_operators, bitwise_xor>;
-      using safe_right_operators = safe_left_operators;
+      using associative_right_operators = associative_left_operators;
     };
 
     using bitwise_binary_operators =
@@ -955,13 +957,13 @@ namespace mpt {
                    bitwise_shift_right>;
 
     template <> struct binary_parentheses_handler<bitwise_shift_left> {
-      using safe_left_operators = bitwise_binary_operators;
-      using safe_right_operators = safe_left_operators;
+      using associative_left_operators = bitwise_binary_operators;
+      using associative_right_operators = associative_left_operators;
     };
 
     template <> struct binary_parentheses_handler<bitwise_shift_right> {
-      using safe_left_operators = bitwise_binary_operators;
-      using safe_right_operators = safe_left_operators;
+      using associative_left_operators = bitwise_binary_operators;
+      using associative_right_operators = associative_left_operators;
     };
 
     /// Conversion of user-defined operators to strings, as function calls
@@ -977,13 +979,13 @@ namespace mpt {
     requires IsBinaryOperator<Operator> std::ostream &operator<<(
         std::ostream &os,
         composed_arfunctor<Operator, LeftOperand, RightOperand> const &f) {
-      using safe_lop =
-          typename binary_parentheses_handler<Operator>::safe_left_operators;
-      using safe_rop =
-          typename binary_parentheses_handler<Operator>::safe_right_operators;
+      using associative_lop = typename binary_parentheses_handler<
+          Operator>::associative_left_operators;
+      using associative_rop = typename binary_parentheses_handler<
+          Operator>::associative_right_operators;
       return to_ostream<Operator>(os, std::get<0>(f.operands()),
-                                  std::get<1>(f.operands()), safe_lop{},
-                                  safe_rop{});
+                                  std::get<1>(f.operands()), associative_lop{},
+                                  associative_rop{});
     }
 
     /// Conversion of unary operators to strings
