@@ -2,7 +2,8 @@
   Utilities to parse arithmetic and relational functors from strings
 */
 #pragma once
-#include "mpt/arfunctors.hpp"
+#include "mpt/arfunctors/core/operators.hpp"
+#include "mpt/arfunctors/core/runtime_arfunctor.hpp"
 #include <cstring>
 #include <string>
 #include <type_traits>
