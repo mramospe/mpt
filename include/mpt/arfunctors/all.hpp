@@ -1,5 +1,5 @@
 #pragma once
 #include "mpt/arfunctors/core/all.hpp"
-#include "mpt/arfunctors/parser.hpp"
+//#include "mpt/arfunctors/parser.hpp"
 
-namespace mpt::arfunctors { }
+namespace mpt::arfunctors {}

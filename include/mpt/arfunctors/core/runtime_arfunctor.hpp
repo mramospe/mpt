@@ -1,4 +1,7 @@
 #pragma once
+#include <memory>
+#include <type_traits>
+#include <utility>
 
 namespace mpt::arfunctors {
 
@@ -20,18 +23,6 @@ namespace mpt::arfunctors {
 
       /// Force a signature to be used to call the functor
       virtual Output operator()(Input const &...) const = 0;
-
-      /*!\brief Represent the functor as a string
-
-      This is used for parsing functors from strings.
-      A runtime instance whose underlying functor does
-      not have a corresponding conversion function will
-      lead to a runtime error.
-     */
-      virtual std::ostream &to_ostream(std::ostream &) const = 0;
-
-      /// Provide a clone of the wrapper
-      virtual runtime_arfunctor_wrapper *clone() const = 0;
     };
 
     namespace {
@@ -47,7 +38,7 @@ namespace mpt::arfunctors {
           : public runtime_arfunctor_wrapper<Output(Input...)> {
 
       public:
-        specialized_runtime_arfunctor_wrapper() = default;
+        specialized_runtime_arfunctor_wrapper() = delete;
         specialized_runtime_arfunctor_wrapper(Functor const &functor)
             : m_functor{functor} {}
         specialized_runtime_arfunctor_wrapper(Functor &&functor)
@@ -64,11 +55,6 @@ namespace mpt::arfunctors {
         /// Call the wrapped functor
         Output operator()(Input const &...args) const override {
           return m_functor(args...);
-        }
-
-        /// Return a clone of this object
-        runtime_arfunctor_wrapper<Output(Input...)> *clone() const override {
-          return new specialized_runtime_arfunctor_wrapper{*this};
         }
 
       private:
@@ -95,70 +81,32 @@ namespace mpt::arfunctors {
 
       /// Build the class from an arithmetic and relational functor
       template <class Functor>
-      requires is_arfunctor_v<Functor> runtime_arfunctor(Functor &&functor)
-          : m_ptr{new specialized_runtime_arfunctor_wrapper<
-                std::remove_cvref_t<Functor>, Output, Input...>{
-                std::forward<Functor>(functor)}} {}
+      runtime_arfunctor(Functor &&functor)
+          : m_ptr{std::make_shared<specialized_runtime_arfunctor_wrapper<
+                std::remove_cvref_t<Functor>, Output, Input...>>(
+                std::forward<Functor>(functor))} {}
 
-      runtime_arfunctor(runtime_arfunctor const &other)
-          : m_ptr{other.m_ptr->clone()} {}
+      runtime_arfunctor(runtime_arfunctor const &other) = default;
+      runtime_arfunctor(runtime_arfunctor &&other) = default;
+      runtime_arfunctor &operator=(runtime_arfunctor const &other) = default;
+      runtime_arfunctor &operator=(runtime_arfunctor &&other) = default;
 
-      runtime_arfunctor(runtime_arfunctor &&other) : m_ptr{other.m_ptr} {
-        other.m_ptr = nullptr;
-      }
-
-      runtime_arfunctor &operator=(runtime_arfunctor const &other) {
-
-        if (m_ptr)
-          delete m_ptr;
-
-        m_ptr = other.m_ptr->clone();
-      }
-
-      runtime_arfunctor &operator=(runtime_arfunctor &&other) {
-        m_ptr = other.m_ptr;
-        other.m_ptr = nullptr;
-      }
-
-      ~runtime_arfunctor() {
-        if (m_ptr)
-          delete m_ptr;
-      }
-
-      /// Call the internal functor
+      /// Call the internal functorspecialized_runtime_arfunctor_wrapper
       Output operator()(Input const &...args) const {
         return m_ptr->operator()(args...);
       }
 
-      /// Conversion to \ref std::string
-      friend std::ostream &
-      operator<<(std::ostream &os,
-                 runtime_arfunctor<Output(Input...)> const &f) {
-        return f.m_ptr->to_ostream(os);
-      }
-
     private:
       /// Pointer to the internal functor wrapper
-      runtime_arfunctor_wrapper<Output(Input...)> *m_ptr = nullptr;
+      std::shared_ptr<runtime_arfunctor_wrapper<Output(Input...)>> m_ptr =
+          nullptr;
     };
+  } // namespace core
 
-    namespace {
-      /// Class to create arfunctor objects that act at runtime
-      template <class Signature, class Functor> struct make_runtime_arfunctor_t;
+  template <class Signature>
+  using runtime_arfunctor = core::runtime_arfunctor<Signature>;
 
-      /// Class to create arfunctor objects that act at runtime
-      template <class Output, class Functor, class... Input>
-      struct make_runtime_arfunctor_t<Output(Input...), Functor> {
-        runtime_arfunctor<Output(Input...)> operator()(Functor &&functor) {
-          return {std::move<Functor>(functor)};
-        }
-        runtime_arfunctor<Output(Input...)> operator()(Functor const &functor) {
-          return {functor};
-        }
-      };
-    } // namespace
-
-    /*!\brief Create a run-time arithmetic and relational functor
+  /*!\brief Create a run-time arithmetic and relational functor
 
     The call to this function will return a \ref mpt::runtime_arfunctor object, with
     a similar functionality as any \ref mpt::arfunctor object but where the
@@ -170,22 +118,16 @@ namespace mpt::arfunctors {
     It is recommended to make use of compile-time functors as much as possible
     to avoid allocations that can be avoided.
    */
-    template <class Signature, class Functor>
-    auto make_runtime_arfunctor(Functor &&functor) {
-      return make_runtime_arfunctor_t<Signature,
-                                      std::remove_cvref_t<Functor>>{}(
-          std::forward<Functor>(functor));
-    }
+  template <class Signature, class Functor>
+  auto make_runtime_arfunctor(Functor &&functor) {
+    return core::runtime_arfunctor<Signature>(std::forward<Functor>(functor));
+  }
 
-    /// Build a composed functor from the operator and the operand types
-    template <class Operator, class FunctorType, class... Operand>
-    FunctorType make_runtime_composed_arfunctor(Operand &&...op) {
-      return FunctorType{
-          composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>{
-              std::forward<Operand>(op)...}};
-    }
-  } // namespace core
-
-  template <class Signature>
-  using runtime_arfunctor = runtime_arfunctor<Signature>;
+  /// Build a composed functor from the operator and the operand types
+  template <class Operator, class Signature, class... Operand>
+  auto make_runtime_composed_arfunctor(Operand &&...op) {
+    return core::runtime_arfunctor<Signature>{
+        core::composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>{
+            std::forward<Operand>(op)...}};
+  }
 } // namespace mpt::arfunctors
