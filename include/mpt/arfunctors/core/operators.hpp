@@ -6,13 +6,6 @@
 
 namespace mpt::arfunctors {
 
-  template <class T> constexpr auto as_arfunctor(T &&obj) {
-    if constexpr (core::is_arfunctor_v<std::decay_t<T>>)
-      return obj;
-    else
-      return core::make_arfunctor(std::forward<T>(obj));
-  }
-
   namespace core {
 
     namespace {

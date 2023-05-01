@@ -40,8 +40,6 @@
  */
 #pragma once
 #include "mpt/types.hpp"
-#include <ostream>
-#include <string_view>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -143,11 +141,19 @@ namespace mpt::arfunctors {
 
   using arfunctor = mpt::arfunctors::core::arfunctor;
 
+  template <class T> constexpr auto as_arfunctor(T &&obj) {
+    if constexpr (core::is_arfunctor_v<std::decay_t<T>>)
+      return obj;
+    else
+      return core::make_arfunctor(std::forward<T>(obj));
+  }
+
   /// Build a composed functor from the operator and the operand types
   template <class Operator, class... Operand>
-  constexpr mpt::arfunctors::core::composed_arfunctor<
-      Operator, std::remove_cvref_t<Operand>...>
-  make_composed_arfunctor(Operand &&...op) {
-    return {std::forward<Operand>(op)...};
+  constexpr auto make_composed_arfunctor(Operand &&...op) {
+    using type = mpt::arfunctors::core::composed_arfunctor<
+        Operator,
+        decltype(as_arfunctor(std::declval<std::decay_t<Operand>>()))...>;
+    return type{as_arfunctor(std::forward<Operand>(op))...};
   }
 } // namespace mpt::arfunctors
