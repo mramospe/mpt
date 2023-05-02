@@ -13,8 +13,8 @@ namespace mpt::arfunctors {
 
     /*!\brief Abstract runtime arithmetic and relation functor wrapper
 
-    This is the base type for any run-time functor wrapper.
-    It allows to call any functor using polymorphism.
+      This is the base type for any run-time functor wrapper.
+      It allows to call any functor using polymorphism.
    */
     template <class Output, class... Input>
     struct runtime_arfunctor_wrapper<Output(Input...)> {
@@ -29,10 +29,10 @@ namespace mpt::arfunctors {
 
       /*!\brief Runtime arithmetic and relational functor wrapper
 
-    This object wraps any functor type without needing to inherit from
-    any additional class (i.e. allows to work directly with
-    \ref mpt::arfunctor objects).
-   */
+        This object wraps any functor type without needing to inherit from
+        any additional class (i.e. allows to work directly with
+        \ref mpt::arfunctor objects).
+      */
       template <class Functor, class Output, class... Input>
       class specialized_runtime_arfunctor_wrapper
           : public runtime_arfunctor_wrapper<Output(Input...)> {
@@ -67,12 +67,12 @@ namespace mpt::arfunctors {
 
     /*!\brief Run-time arithmetic and relational functor
 
-    This object is a run-time wrapper of any \ref mpt::arfunctor object.
-    It allows to perform arithmetic and relational operations among functors
-    at run-time.
-    This requires to define the signature for which the functor will
-    be called.
-   */
+      This object is a run-time wrapper of any \ref mpt::arfunctor object.
+      It allows to perform arithmetic and relational operations among functors
+      at run-time.
+      This requires to define the signature for which the functor will
+      be called.
+    */
     template <class Output, class... Input>
     class runtime_arfunctor<Output(Input...)> {
 
@@ -121,13 +121,5 @@ namespace mpt::arfunctors {
   template <class Signature, class Functor>
   auto make_runtime_arfunctor(Functor &&functor) {
     return core::runtime_arfunctor<Signature>(std::forward<Functor>(functor));
-  }
-
-  /// Build a composed functor from the operator and the operand types
-  template <class Operator, class Signature, class... Operand>
-  auto make_runtime_composed_arfunctor(Operand &&...op) {
-    return core::runtime_arfunctor<Signature>{
-        core::composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>{
-            std::forward<Operand>(op)...}};
   }
 } // namespace mpt::arfunctors

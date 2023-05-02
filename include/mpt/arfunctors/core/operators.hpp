@@ -10,6 +10,14 @@ namespace mpt::arfunctors {
 
     namespace {
 
+      /// Build a composed functor from the operator and the operand types
+      template <class Operator, class Signature, class... Operand>
+      auto make_runtime_composed_arfunctor(Operand &&...op) {
+        return core::runtime_arfunctor<Signature>{
+            core::composed_arfunctor<Operator, std::remove_cvref_t<Operand>...>{
+                std::forward<Operand>(op)...}};
+      }
+
       template <class Operator, class LeftOperand, class RightOperand>
       struct binary_operator_switcher {
         template <class L, class R>

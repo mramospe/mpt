@@ -20,27 +20,13 @@ struct functor_z_t : public mpt::arfunctors::arfunctor {
   template <class Operand> auto operator()(Operand &&op) const { return op.z; }
 } constexpr functor_z;
 
-std::ostream &operator<<(std::ostream &os, functor_x_t const &) {
-  return os << "x";
-}
-
-std::ostream &operator<<(std::ostream &os, functor_y_t const &) {
-  return os << "y";
-}
-
-std::ostream &operator<<(std::ostream &os, functor_z_t const &) {
-  return os << "z";
-}
-
 struct abs_operator {
-  static constexpr std::string_view chars = "abs";
   template <class Operand> constexpr auto operator()(Operand &&op) const {
     return op > 0 ? op : -op;
   }
 };
 
 struct sqrt_operator {
-  static constexpr std::string_view chars = "sqrt";
   template <class Operand> constexpr auto operator()(Operand &&op) const {
     return std::sqrt(op);
   }
@@ -173,7 +159,12 @@ mpt::test::errors test_runtime_math() {
   position pos = {1.f, 2.f, 3.f};
 
   if (!mpt::test::is_close(sqrt(fx + fz)(pos), 2.f))
-    errors.push_back("Unable to calculate the square root");
+    errors.push_back("Unable to calculate the square root from a compile-time "
+                     "and a run-time functor");
+
+  if (!mpt::test::is_close(sqrt(fx * fx)(pos), 1.f))
+    errors.push_back(
+        "Unable to calculate the square root from two run-time functors");
 
   if (!in_range(-2.f, fx, +2.f)(pos))
     errors.push_back("Unable to determine if a quantity is in the given range");
