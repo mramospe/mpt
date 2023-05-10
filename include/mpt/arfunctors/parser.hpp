@@ -9,7 +9,7 @@
 #include <type_traits>
 #include <variant>
 
-namespace mpt {
+namespace mpt::arfunctors {
 
   /*!\brief Define the floating-point and integral types to parse strings
 
@@ -18,7 +18,7 @@ namespace mpt {
     and creating runtime arithmetic and relational functors.
    */
   template <class FloatType = double, class IntegralType = long int>
-  struct arfunctor_arithmetic_types {
+  struct arithmetic_types {
 
     static_assert(std::is_floating_point_v<FloatType>);
     static_assert(std::is_integral_v<IntegralType>);
@@ -95,7 +95,7 @@ namespace mpt {
     /// Parse a string and build an arithmetic and relational functor
     template <class Signature, class ArithmeticTypes, class Functors,
               class Operators>
-    runtime_arfunctor<Signature> parse_arfunctor_impl(std::string_view view) {
+    runtime_arfunctor<Signature> parse_impl(std::string_view view) {
 
       token_state<Signature, ArithmeticTypes, Functors, Operators> state(view);
 
@@ -124,7 +124,7 @@ namespace mpt {
 
 #ifndef MPT_DOXYGEN_WARD
   template <class ArithmeticTypes, class Functors, class Operators>
-  struct arfunctors_parser;
+  struct parser;
 #endif
 
   /*!\brief Small class to parse arithmetic and relational functors from strings
@@ -134,7 +134,7 @@ namespace mpt {
     additional operators (functions) and convert it into a runtime functor.
    */
   template <class ArithmeticTypes, class... Functor, class... Operator>
-  struct arfunctors_parser<ArithmeticTypes, types<Functor...>,
+  struct parser<ArithmeticTypes, types<Functor...>,
                            types<Operator...>> {
 
     static_assert(!has_repeated_template_arguments_v<Functor...>);
@@ -147,7 +147,7 @@ namespace mpt {
 
     template <class Signature>
     static runtime_arfunctor<Signature> parse(std::string_view const &input) {
-      return parse_arfunctor_impl<Signature, arithmetic_types, functor_types,
+      return parse_impl<Signature, arithmetic_types, functor_types,
                                   operator_types>(input);
     }
 
