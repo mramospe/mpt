@@ -55,11 +55,11 @@ export(EXPORT ${PROJECT_NAME}Targets
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include DESTINATION ${PROJECT_BINARY_DIR} FILES_MATCHING PATTERN *.hpp)
 
 #
-# Avoid incorrect warnings present in Clang and not in GCC
+#Avoid incorrect warnings present in Clang and not in GCC
 #
-# See:
-# https: // bugs.llvm.org/show_bug.cgi?id=21629
-# https: // stackoverflow.com/questions/13905200/is-it-wise-to-ignore-gcc-clangs-wmissing-braces-warning
+#See:
+#https: // bugs.llvm.org/show_bug.cgi?id=21629
+#https: // stackoverflow.com/questions/13905200/is-it-wise-to-ignore-gcc-clangs-wmissing-braces-warning
 #
 if(INSTALL_TESTS)
   if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -68,7 +68,7 @@ if(INSTALL_TESTS)
 endif(INSTALL_TESTS)
 
 #
-# Installation of the test scripts
+#Installation of the test scripts
 #
 if(INSTALL_TESTS)
 
@@ -77,7 +77,7 @@ if(INSTALL_TESTS)
 
     file(GLOB TEST_SOURCES ${PROJECT_SOURCE_DIR}/test/cpp/*.cpp)
 
-    set(CMAKE_CXX_FLAGS "-O3 -pedantic -Wall -Wextra")
+    set(CMAKE_CXX_FLAGS "-O2 -pedantic -Wall -Wextra")
     set(CMAKE_CXX_FLAGS_DEBUG "-g -pedantic -Wall -Wextra")
 
     foreach(testsourcefile ${TEST_SOURCES})
