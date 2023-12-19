@@ -79,17 +79,6 @@ namespace mpt::arfunctors {
           std::forward<FunctionLikeOrArithmeticType>(f));
     }
 
-    /// Check if the provided type is an arithmetic and relational functor
-    template <class T>
-    struct is_arfunctor
-        : std::conditional_t<
-              std::is_base_of_v<arfunctor, std::remove_cvref_t<T>>,
-              std::true_type, std::false_type> {};
-
-    /// Whether the provided type is an arithmetic and relational functor
-    template <class T>
-    static constexpr auto is_arfunctor_v = is_arfunctor<T>::value;
-
     /*!\brief Composed operation between two objects
 
     This object allows to perform an operation that takes several values
@@ -142,10 +131,10 @@ namespace mpt::arfunctors {
   using arfunctor = mpt::arfunctors::core::arfunctor;
 
   template <class T> constexpr auto as_arfunctor(T &&obj) {
-    if constexpr (core::is_arfunctor_v<std::decay_t<T>>)
-      return obj;
-    else
+    if constexpr (std::is_arithmetic_v<std::decay_t<T>>)
       return core::make_arfunctor(std::forward<T>(obj));
+    else
+      return obj;
   }
 
   /// Build a composed functor from the operator and the operand types

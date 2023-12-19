@@ -6,6 +6,221 @@
 
 namespace mpt::arfunctors {
 
+  enum class precedence_type : int { first, second, third, fourth, fifth, sixth, seventh, eighth, nineth, tenth, eleventh };
+
+  /// @brief Unary plus
+  struct unary_plus {
+    static constexpr std::string_view chars = "+";
+    static constexpr precedence_type precedence = precedence_type::first;
+    template <class Operand> constexpr auto operator()(Operand &&op) const {
+      return +std::forward<Operand>(op);
+    }
+  };
+  /// @brief Unary minus
+  struct unary_minus {
+    static constexpr std::string_view chars = "-";
+    static constexpr precedence_type precedence = precedence_type::first;
+    template <class Operand> constexpr auto operator()(Operand &&op) const {
+      return -std::forward<Operand>(op);
+    }
+  };
+  /// @brief Addition of two objects
+  struct add {
+    static constexpr std::string_view chars = "+";
+    static constexpr precedence_type precedence = precedence_type::third;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) + std::forward<R>(rop);
+    }
+  };
+  /// @brief Subtraction of two objects
+  struct sub {
+    static constexpr std::string_view chars = "-";
+    static constexpr precedence_type precedence = precedence_type::third;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) - std::forward<R>(rop);
+    }
+  };
+  /// @brief Multiplication of two objects
+  struct mul {
+    static constexpr std::string_view chars = "*";
+    static constexpr precedence_type precedence = precedence_type::second;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) * std::forward<R>(rop);
+    }
+  };
+  /// @brief Division of two objects
+  struct div {
+    static constexpr std::string_view chars = "/";
+    static constexpr precedence_type precedence = precedence_type::second;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) / std::forward<R>(rop);
+    }
+  };
+  /// @brief Modulo of two objects
+  struct modulo {
+    static constexpr std::string_view chars = "%";
+    static constexpr precedence_type precedence = precedence_type::second;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) % std::forward<R>(rop);
+    }
+  };
+  /// @brief Whether the left operand is less than the right operand
+  struct lt {
+    static constexpr std::string_view chars = "<";
+    static constexpr precedence_type precedence = precedence_type::fifth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) {
+      return std::forward<L>(lop) < std::forward<R>(rop);
+    }
+  };
+  /// @brief Whether the left operand is less or equal than the right operand
+  struct leq {
+    static constexpr std::string_view chars = "<=";
+    static constexpr precedence_type precedence = precedence_type::fifth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) <= std::forward<R>(rop);
+    }
+  };
+  /// @brief Whether the left operand is greater than the right operand
+  struct gt {
+    static constexpr std::string_view chars = ">";
+    static constexpr precedence_type precedence = precedence_type::fifth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) > std::forward<R>(rop);
+    }
+  };
+  /// @brief Whether the left operand is greater or equal than the right operand
+  struct geq {
+    static constexpr std::string_view chars = ">=";
+    static constexpr precedence_type precedence = precedence_type::fifth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) >= std::forward<R>(rop);
+    }
+  };
+  /// @brief Whether the left operand is equal to the right operand
+  struct eq {
+    static constexpr std::string_view chars = "==";
+    static constexpr precedence_type precedence = precedence_type::sixth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) == std::forward<R>(rop);
+    }
+  };
+  /// @brief Whether the left operand is not equal to the right operand
+  struct neq {
+    static constexpr std::string_view chars = "!=";
+    static constexpr precedence_type precedence = precedence_type::sixth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) != std::forward<R>(rop);
+    }
+  };
+  /// @brief Logical "and" operation between two operands
+  struct logical_and {
+    static constexpr std::string_view chars = "&&";
+    static constexpr precedence_type precedence = precedence_type::tenth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) && std::forward<R>(rop);
+    }
+  };
+  /// @brief Logical "or" operation between two operands
+  struct logical_or {
+    static constexpr std::string_view chars = "||";
+    static constexpr precedence_type precedence = precedence_type::eleventh;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) || std::forward<R>(rop);
+    }
+  };
+  /// @brief Logical "not" operation of an operand
+  struct notop {
+    static constexpr std::string_view chars = "!";
+    static constexpr precedence_type precedence = precedence_type::first;
+    template <class Operand> constexpr auto operator()(Operand &&op) const {
+      return !std::forward<Operand>(op);
+    }
+  };
+  /// @brief Bitwise "and" operation between two operands
+  struct bitwise_and {
+    static constexpr std::string_view chars = "&";
+    static constexpr precedence_type precedence = precedence_type::seventh;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) & std::forward<R>(rop);
+    }
+  };
+  /// @brief Bitwise "or" operation between two operands
+  struct bitwise_or {
+    static constexpr std::string_view chars = "|";
+    static constexpr precedence_type precedence = precedence_type::nineth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) | std::forward<R>(rop);
+    }
+  };
+  /// @brief Bitwise "xor" operation between two operands
+  struct bitwise_xor {
+    static constexpr std::string_view chars = "^";
+    static constexpr precedence_type precedence = precedence_type::eighth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) ^ std::forward<R>(rop);
+    }
+  };
+  /// @brief Bitwise complement of an operand
+  struct bitwise_complement {
+    static constexpr std::string_view chars = "~";
+    static constexpr precedence_type precedence = precedence_type::first;
+    template <class Operand> constexpr auto operator()(Operand &&op) const {
+      return ~std::forward<Operand>(op);
+    }
+  };
+  /// @brief Bitwise left shift operation between two operands
+  struct bitwise_shift_left {
+    static constexpr std::string_view chars = "<<";
+    static constexpr precedence_type precedence = precedence_type::fourth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) << std::forward<R>(rop);
+    }
+  };
+  /// @brief Bitwise right shift operation between two operands
+  struct bitwise_shift_right {
+    static constexpr std::string_view chars = ">>";
+    static constexpr precedence_type precedence = precedence_type::fourth;
+    template <class L, class R>
+    constexpr auto operator()(L &&lop, R &&rop) const {
+      return std::forward<L>(lop) >> std::forward<R>(rop);
+    }
+  };
+
+  using unary_arithmetic_operators = mpt::types<unary_minus, unary_plus>;
+  using binary_arithmetic_operators = mpt::types<add, sub, mul, div, modulo>;
+  using arithmetic_operators = mpt::concatenate_types_t<unary_arithmetic_operators, binary_arithmetic_operators>;
+
+  using unary_relational_operators = mpt::types<notop>;
+  using binary_relational_operators = mpt::types<gt, lt, geq, leq, eq, neq>;
+  using relational_operators = mpt::concatenate_types_t<unary_relational_operators, binary_relational_operators>;
+  
+  using unary_bitwise_operators = mpt::types<bitwise_complement>;
+  using binary_bitwise_operators = mpt::types<bitwise_and, bitwise_or, bitwise_xor, bitwise_shift_right, bitwise_shift_left>;
+  using bitwise_operators = mpt::concatenate_types_t<unary_bitwise_operators, binary_bitwise_operators>;
+
+  using unary_operators = mpt::concatenate_types_t<unary_arithmetic_operators, unary_relational_operators, unary_bitwise_operators>;
+  using binary_operators = mpt::concatenate_types_t<binary_arithmetic_operators, binary_relational_operators, binary_bitwise_operators>;
+  using all_operators = mpt::concatenate_types_t<unary_operators, binary_operators>;
+
+  static_assert(!mpt::has_repeated_template_arguments_v<all_operators>, "Repeated entries found in the lists of operators");
+
   namespace core {
 
     namespace {
@@ -90,224 +305,10 @@ namespace mpt::arfunctors {
         return unary_operator_switcher<Operator, std::decay_t<Operand>>{}(
             std::forward<Operand>(op));
       }
+    }
+  }
 
-      /// @brief Unary plus
-      struct unary_plus {
-        static constexpr std::string_view chars = "+";
-        template <class Operand> constexpr auto operator()(Operand &&op) const {
-          return +std::forward<Operand>(op);
-        }
-      };
-      /// @brief Unary minus
-      struct unary_minus {
-        static constexpr std::string_view chars = "-";
-        template <class Operand> constexpr auto operator()(Operand &&op) const {
-          return -std::forward<Operand>(op);
-        }
-      };
-      /// @brief Addition of two objects
-      struct add {
-        static constexpr std::string_view chars = "+";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) + std::forward<R>(rop);
-        }
-      };
-      /// @brief Subtraction of two objects
-      struct sub {
-        static constexpr std::string_view chars = "-";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) - std::forward<R>(rop);
-        }
-      };
-      /// @brief Multiplication of two objects
-      struct mul {
-        static constexpr std::string_view chars = "*";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) * std::forward<R>(rop);
-        }
-      };
-      /// @brief Division of two objects
-      struct div {
-        static constexpr std::string_view chars = "/";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) / std::forward<R>(rop);
-        }
-      };
-      /// @brief Modulo of two objects
-      struct modulo {
-        static constexpr std::string_view chars = "%";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) % std::forward<R>(rop);
-        }
-      };
-      /// @brief Whether the left operand is less than the right operand
-      struct lt {
-        static constexpr std::string_view chars = "<";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) {
-          return std::forward<L>(lop) < std::forward<R>(rop);
-        }
-      };
-      /// @brief Whether the left operand is less or equal than the right operand
-      struct leq {
-        static constexpr std::string_view chars = "<=";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) <= std::forward<R>(rop);
-        }
-      };
-      /// @brief Whether the left operand is greater than the right operand
-      struct gt {
-        static constexpr std::string_view chars = ">";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) > std::forward<R>(rop);
-        }
-      };
-      /// @brief Whether the left operand is greater or equal than the right operand
-      struct geq {
-        static constexpr std::string_view chars = ">=";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) >= std::forward<R>(rop);
-        }
-      };
-      /// @brief Whether the left operand is equal to the right operand
-      struct eq {
-        static constexpr std::string_view chars = "==";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) == std::forward<R>(rop);
-        }
-      };
-      /// @brief Whether the left operand is not equal to the right operand
-      struct neq {
-        static constexpr std::string_view chars = "!=";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) != std::forward<R>(rop);
-        }
-      };
-      /// @brief Logical and operation between two operands
-      struct logical_and {
-        static constexpr std::string_view chars = "&&";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) && std::forward<R>(rop);
-        }
-      };
-      /// @brief Logical or operation between two operands
-      struct logical_or {
-        static constexpr std::string_view chars = "||";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) || std::forward<R>(rop);
-        }
-      };
-      /// @brief Logical not operation of an operand
-      struct notop {
-        static constexpr std::string_view chars = "!";
-        template <class Operand> constexpr auto operator()(Operand &&op) const {
-          return !std::forward<Operand>(op);
-        }
-      };
-      /// @brief Bitwise and operation between two operands
-      struct bitwise_and {
-        static constexpr std::string_view chars = "&";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) & std::forward<R>(rop);
-        }
-      };
-      /// @brief Bitwise or operation between two operands
-      struct bitwise_or {
-        static constexpr std::string_view chars = "|";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) | std::forward<R>(rop);
-        }
-      };
-      /// @brief Bitwise xor operation between two operands
-      struct bitwise_xor {
-        static constexpr std::string_view chars = "^";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) ^ std::forward<R>(rop);
-        }
-      };
-      /// @brief Bitwise complement of an operand
-      struct bitwise_complement {
-        static constexpr std::string_view chars = "~";
-        template <class Operand> constexpr auto operator()(Operand &&op) const {
-          return ~std::forward<Operand>(op);
-        }
-      };
-      /// @brief Bitwise left shift operation between two operands
-      struct bitwise_shift_left {
-        static constexpr std::string_view chars = "<<";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) << std::forward<R>(rop);
-        }
-      };
-      /// @brief Bitwise right shift operation between two operands
-      struct bitwise_shift_right {
-        static constexpr std::string_view chars = ">>";
-        template <class L, class R>
-        constexpr auto operator()(L &&lop, R &&rop) const {
-          return std::forward<L>(lop) >> std::forward<R>(rop);
-        }
-      };
-
-      /// @brief  Binary arithmetic operators
-      using binary_arithmetic_operators =
-          mpt::types<add, sub, mul, div, modulo>;
-      /// @brief Binary relational operators
-      using binary_relational_operators = mpt::types<lt, leq, gt, geq, eq, neq>;
-      /// @brief Binary logical operators
-      using binary_logical_operators = mpt::types<logical_and, logical_or>;
-      /// @brief Binary bitwise comparison operators
-      using binary_bitwise_comparison_operators =
-          mpt::types<bitwise_and, bitwise_or, bitwise_xor>;
-      /// @brief Binary bitwise shift operators
-      using binary_bitwise_shift_operators =
-          mpt::types<bitwise_shift_left, bitwise_shift_right>;
-      /// @brief Binary operators
-      using binary_operators = mpt::concatenate_types_t<
-          binary_arithmetic_operators, binary_relational_operators,
-          binary_logical_operators, binary_bitwise_comparison_operators,
-          binary_bitwise_shift_operators>;
-      /// @brief Unary operators
-      using unary_operators =
-          mpt::types<unary_plus, unary_minus, notop, bitwise_complement>;
-
-      /// @brief Whether an operator is a binary operator
-      template <class Operator>
-      concept IsBinaryOperator =
-          mpt::templated_object_has_type_v<Operator, binary_operators>;
-
-      /// @brief Whether an operator is an unary operator
-      template <class Operator>
-      concept IsUnaryOperator =
-          mpt::templated_object_has_type_v<Operator, unary_operators>;
-
-      /// @brief Whether an operator is arithmetic
-      template <class Operator>
-      concept IsArithmeticOperator =
-          mpt::templated_object_has_type_v<Operator,
-                                           binary_arithmetic_operators>;
-
-      /// @brief Whether an operator is relational
-      template <class Operator>
-      concept IsRelationalOperator =
-          mpt::templated_object_has_type_v<Operator,
-                                           binary_relational_operators>;
-    } // namespace
+  namespace core {
 
     // Arithmetic operators
 
