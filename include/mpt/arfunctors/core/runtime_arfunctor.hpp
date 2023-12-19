@@ -91,7 +91,7 @@ namespace mpt::arfunctors {
       runtime_arfunctor &operator=(runtime_arfunctor const &other) = default;
       runtime_arfunctor &operator=(runtime_arfunctor &&other) = default;
 
-      /// Call the internal functorspecialized_runtime_arfunctor_wrapper
+      /// Call the internal functor
       Output operator()(Input const &...args) const {
         return m_ptr->operator()(args...);
       }

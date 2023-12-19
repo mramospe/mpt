@@ -224,5 +224,5 @@ int main() {
   MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime_math);
   //MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_string);
 
-  return mpt::test::to_return_code(runtime_arfunctors.run(), arfunctors.run());
+  return mpt::test::to_return_code(arfunctors.run(), runtime_arfunctors.run());
 }
