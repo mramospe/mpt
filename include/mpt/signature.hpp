@@ -85,6 +85,10 @@ namespace mpt {
   template <class Callable>
   using callable_signature_t = typename callable_signature<Callable>::type;
 
+  /// Number of input arguments for a callable
+  template<class Callable>
+  static constexpr auto callable_number_of_input_arguments_v = std::tuple_size_v<typename callable_signature_t<Callable>::input_t>;
+
   /// Checks if the given signature is that of a function
   template <class Signature> struct is_function_signature : std::false_type {};
 
