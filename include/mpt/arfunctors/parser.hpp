@@ -95,7 +95,7 @@ namespace mpt::arfunctors {
       using base_type = function_type_for_number_of_arguments_t<ValueType, MaximumNumberOfArguments>;
       using derived_type = typename specialized_function_wrapper_type_for_base<base_type, Function>::type;
       return static_cast<std::shared_ptr<base_type>>(std::make_shared<derived_type>(std::forward<Function>(function)));
-    };
+    }
   }
 
   using arithmetic_types = mpt::types<bool, int, unsigned int, long int, unsigned long int, long long int, unsigned long long int, float, double, long double>;
@@ -349,6 +349,22 @@ namespace mpt::arfunctors {
     template <class Signature>
     runtime_arfunctor<Signature> parse(const char *input) const {
       return parse<Signature>(std::string_view(input));
+    }
+
+    auto& functors() {
+      return m_functor_map;
+    }
+
+    auto const& functors() const {
+      return m_functor_map;
+    }
+
+    auto& functions() {
+      return m_function_map;
+    }
+
+    auto const& functions() const {
+      return m_function_map;
     }
 
     private:

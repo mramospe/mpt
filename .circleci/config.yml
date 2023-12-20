@@ -8,13 +8,13 @@ jobs:
           name: Install dependencies
           command: |
             apt-get update -y
-            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y git cmake g++-10
+            DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y git cmake g++-11
       - checkout
       - run:
           name: Install the package
           environment:
-            CC: gcc-10
-            CXX: g++-10
+            CC: gcc-11
+            CXX: g++-11
           command: |
             mkdir build
             cd build
@@ -35,8 +35,8 @@ jobs:
       - run:
           name: Test the installation of a CMake dependent project
           environment:
-            CC: gcc-10
-            CXX: g++-10
+            CC: gcc-11
+            CXX: g++-11
           command: |
             mkdir test/cmake/build
             cd test/cmake/build
