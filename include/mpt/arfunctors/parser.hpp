@@ -24,6 +24,9 @@ namespace mpt::arfunctors {
       virtual value_type operator()(Args const& ... args) const = 0;
   };
 
+  template<class ... Signature>
+  using signatures = mpt::types<Signature ...>;
+
   namespace {
     template<class Signatures>
     struct all_arfunctor_types;
@@ -100,10 +103,30 @@ namespace mpt::arfunctors {
 
   using arithmetic_types = mpt::types<bool, int, unsigned int, long int, unsigned long int, long long int, unsigned long long int, float, double, long double>;
 
+  template<class Signatures>
+  class functor_proxy {
+    public:
+      using value_type = mpt::specialize_template_from_types_t<std::variant, all_arfunctor_types_t<Signatures>>;
+
+      functor_proxy() = delete;
+      functor_proxy(functor_proxy const&) = default;
+      functor_proxy(functor_proxy&&) = default;
+      functor_proxy& operator=(functor_proxy const&) = default;
+      functor_proxy& operator=(functor_proxy&&) = default;
+
+      template<class Signature> requires HasType<Signature, Signatures>
+      functor_proxy(runtime_arfunctor<Signature> f) : m_functor{std::move(f)} { }
+      template<class Signature> requires HasType<Signature, Signatures>
+      functor_proxy& operator=(runtime_arfunctor<Signature> f) { m_functor = std::move(f); return *this; }
+
+    private:
+      value_type m_functor;
+  };
+
   template<class Signatures, std::size_t MaximumNumberOfArguments=16ul>
   class function_proxy {
     public:
-    
+
     using functor_types = all_arfunctor_types_t<Signatures>;
     using value_type = mpt::specialize_template_t<std::variant, mpt::concatenate_types_t<arithmetic_types, functor_types>>;
     using function_type = function_type_for_number_of_arguments_t<value_type, MaximumNumberOfArguments>;
@@ -139,11 +162,11 @@ namespace mpt::arfunctors {
       std::shared_ptr<function_type> m_function_ptr;
   };
 
-  template<class ... Signature>
-  using functor_map = std::map<std::string, std::variant<runtime_arfunctor<Signature> ...>>;
+  template<class Signatures>
+  using functor_map = std::map<std::string, functor_proxy<Signatures>>;
 
-  template<class ... Signature>
-  using function_map = std::map<std::string, function_proxy<Signature ...>>;
+  template<class Signatures>
+  using function_map = std::map<std::string, function_proxy<Signatures>>;
 
   namespace {
 
@@ -172,17 +195,17 @@ namespace mpt::arfunctors {
     };
 
 #ifndef MPT_DOXYGEN_WARD
-    template <class Signature, class Functors, class Operators>
+    template <class Signature, class Functors>
     class token_state;
 #endif
 
     /// Store the state for reading tokens in a string
-    template <class Signature, class... Functor, class... Operator>
-    class token_state<Signature, mpt::types<Functor...>, mpt::types<Operator...>> {
+    template <class Signature, class... Functor>
+    class token_state<Signature, mpt::types<Functor...>> {
 
     public:
       using token_type =
-          token<mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<mpt::types<Functor...>, mpt::types<Operator ...>, arithmetic_types>>>;
+          token<mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<mpt::types<Functor...>, arithmetic_types>>>;
 
       /// Build the object from a view of a string
       token_state(std::string_view view) : m_view{view}, m_pos{0u} {}
@@ -225,17 +248,15 @@ namespace mpt::arfunctors {
     }
 
     /// Parse a string and build an arithmetic and relational functor
-    template <class Signature, class Operators, class ... S>
-    runtime_arfunctor<Signature> parse_impl(std::string_view view, functor_map<S ...> const& functors, function_map<S ...> const& functions) {
+    template <class FunctorSignature, class Operators, class Signatures>
+    runtime_arfunctor<FunctorSignature> parse_impl(std::string_view view, functor_map<Signatures> const& functors, function_map<Signatures> const& functions) {
 
-      using functor_types = mpt::types<runtime_arfunctor<S> ...>;
-
-      using token_state_type = token_state<Signature, functor_types, Operators>;
+      using functor_types = mpt::specialized_template_list_t<runtime_arfunctor, Signatures>;
+      using token_state_type = token_state<FunctorSignature, functor_types>;
       using token_type = typename token_state_type::token_type;
-      using operator_or_function_var = mpt::specialize_template_from_types<std::variant, Operators>;
 
       std::queue<token_type> output_queue;
-      std::stack<operator_or_function_var> operator_stack;
+      std::stack<token_type> operator_stack;
 
       token_state_type state(view);
 
@@ -311,7 +332,7 @@ namespace mpt::arfunctors {
   } // namespace
 
 #ifndef MPT_DOXYGEN_WARD
-  template <class Operators, class ... FunctorSignature>
+  template <class FunctorSignatures>
   struct parser;
 #endif
 
@@ -321,34 +342,32 @@ namespace mpt::arfunctors {
     any operation (specified as a string) involving a set of functors and
     additional operators (functions) and convert it into a runtime functor.
    */
-  template<class ... Operator, class ... Output, class ... Input>
-  class parser<mpt::types<Operator ...>, Output(Input ...) ...> {
+  template<class ... Signature>
+  class parser<signatures<Signature ...>> {
 
     public:
       
-      static_assert((mpt::templated_object_has_type_v<Operator, all_operators> && ...), "Wrong operators specified in parser");
-
-    using functor_map_type = functor_map<Output(Input ...) ...>;
-    using function_map_type = function_map<Output(Input ...) ...>;
+    using functor_map_type = functor_map<signatures<Signature ...>>;
+    using function_map_type = function_map<signatures<Signature ...>>;
 
     parser() = delete;
 
-    template<class Operators, class ... Signature>
-    friend parser<Operators, Signature ...> make_parser(functor_map_type, function_map_type);
+    template<class Signatures>
+    friend parser<Signatures> make_parser(functor_map<Signatures>, function_map<Signatures>);
     
-    template <class Signature>
-    runtime_arfunctor<Signature> parse(std::string_view const &input) const {
-      return parse_impl<Signature, mpt::types<Operator ...>>(input, m_functor_map, m_function_map);
+    template <class FunctorSignature>
+    runtime_arfunctor<FunctorSignature> parse(std::string_view const &input) const {
+      return parse_impl<FunctorSignature>(input, m_functor_map, m_function_map);
     }
 
-    template <class Signature>
-    runtime_arfunctor<Signature> parse(std::string const &input) const {
-      return parse<Signature>(std::string_view(input));
+    template <class FunctorSignature>
+    runtime_arfunctor<FunctorSignature> parse(std::string const &input) const {
+      return parse<FunctorSignature>(std::string_view(input));
     }
 
-    template <class Signature>
-    runtime_arfunctor<Signature> parse(const char *input) const {
-      return parse<Signature>(std::string_view(input));
+    template <class FunctorSignature>
+    runtime_arfunctor<FunctorSignature> parse(const char *input) const {
+      return parse<FunctorSignature>(std::string_view(input));
     }
 
     auto& functors() {
@@ -375,8 +394,8 @@ namespace mpt::arfunctors {
       function_map_type m_function_map;
   };
 
-  template<class Operators, class ... Signature>
-  parser<Operators, Signature ...> make_parser(functor_map<Signature ...> functors, function_map<Signature ...> functions) {
-    return parser<Operators, Signature...>(std::move(functors), std::move(functions));
+  template<class Signatures>
+  parser<Signatures> make_parser(functor_map<Signatures> functors, function_map<Signatures> functions = {}) {
+    return parser<Signatures>(std::move(functors), std::move(functions));
   }
 } // namespace mpt

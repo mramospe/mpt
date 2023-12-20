@@ -49,6 +49,9 @@ namespace mpt {
   template <class Reference, class... T> struct has_type : std::false_type {};
 
   /// Whether the type is in the given list
+  template<class Reference, class ... T> struct has_type<Reference, types<T ...>> : has_type<Reference, T ...> { };
+
+  /// Whether the type is in the given list
   template <class Reference, class... T>
   struct has_type<Reference, Reference, T...> : std::true_type {};
 
@@ -273,6 +276,20 @@ namespace mpt {
   template <template <class...> class Template, class... T>
   using specialize_template_avoid_repetitions_t =
       typename specialize_template_avoid_repetitions<Template, T...>::type;
+
+#ifndef MPT_DOXYGEN_WARD
+  template<template<class> class Template, class Types>
+  struct specialized_template_list;
+#endif
+
+  /// Make a list of types specializing the given template
+  template<template<class> class Template, template<class ...> class TypesTemplate, class ... T>
+  struct specialized_template_list<Template, TypesTemplate<T ...>> {
+    using type = TypesTemplate<Template<T> ...>;
+  };
+
+  template<template<class> class Template, class Types>
+  using specialized_template_list_t = typename specialized_template_list<Template, Types>::type;
 
   /// Restriction for templates that must have at least one argument
   template <class... T> concept NonEmptyTemplateArguments = (sizeof...(T) > 0);

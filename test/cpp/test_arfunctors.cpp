@@ -33,8 +33,8 @@ struct sqrt_operator {
 };
 
 struct in_range_operator {
-  template <class Operand, class FloatType>
-  constexpr auto operator()(FloatType lb, Operand &&op, FloatType rb) const {
+  template <class LeftBound, class Operand, class RightBound>
+  constexpr auto operator()(LeftBound&& lb, Operand &&op, RightBound&& rb) const {
     return op > lb && op < rb;
   }
 };
@@ -49,10 +49,10 @@ template <class Operand> constexpr auto sqrt(Operand &&op) {
       std::forward<Operand>(op));
 }
 
-template <class Operand, class FloatType>
-constexpr auto in_range(FloatType lb, Operand &&op, FloatType rb) {
+template <class LeftBound, class Operand, class RightBound>
+constexpr auto in_range(LeftBound&& lb, Operand &&op, RightBound&& rb) {
   return mpt::arfunctors::make_composed_arfunctor<in_range_operator>(
-      lb, std::forward<Operand>(op), rb);
+      std::forward<LeftBound>(lb), std::forward<Operand>(op), std::forward<RightBound>(rb));
 }
 
 mpt::test::errors test_simple() {
@@ -127,6 +127,9 @@ mpt::test::errors test_math() {
   if (!in_range(-2.f, functor_x, +2.f)(pos))
     errors.push_back("Unable to determine if a quantity is in the given range");
 
+  if (!in_range(functor_x, functor_y, functor_z)(pos))
+    errors.push_back("Unable to determine if a quantity is in a range defined by functors");
+
   return errors;
 }
 
@@ -154,6 +157,7 @@ mpt::test::errors test_runtime_math() {
 
   auto fx = mpt::arfunctors::make_runtime_arfunctor<float(position const &)>(
       functor_x);
+  auto fy = functor_y;
   auto fz = functor_z;
 
   position pos = {1.f, 2.f, 3.f};
@@ -169,6 +173,9 @@ mpt::test::errors test_runtime_math() {
   if (!in_range(-2.f, fx, +2.f)(pos))
     errors.push_back("Unable to determine if a quantity is in the given range");
 
+  if (!in_range(fx, fy, fz)(pos))
+    errors.push_back("Unable to determine if a quantity is in a range defined by functors");
+
   return errors;
 }
 
@@ -177,6 +184,31 @@ template <class Functor> std::string to_string(Functor const &functor) {
   ss << functor;
   return ss.str();
 }
+
+mpt::test::errors test_parser() {
+
+  mpt::test::errors errors;
+
+  auto fx = mpt::arfunctors::make_runtime_arfunctor<float(position const &)>(
+      functor_x);
+  auto fy = mpt::arfunctors::make_runtime_arfunctor<float(position const &)>(
+      functor_y);
+  auto fz = mpt::arfunctors::make_runtime_arfunctor<float(position const &)>(functor_z);
+
+  auto magt = mpt::arfunctors::make_runtime_arfunctor<float(position const &)>(sqrt(fx * fx + fy * fy));
+
+  auto mag = mpt::arfunctors::make_runtime_arfunctor<float(position const &)>(sqrt(fx * fx + fy * fy + fz * fz));
+
+  using signatures = mpt::arfunctors::signatures<float(position const&), int(position const&)>;
+
+  mpt::arfunctors::functor_map<signatures> functor_map = {{"x", fx}, {"y", fy}, {"z", fz}, {"magt", magt}, {"mag", mag}};
+  mpt::arfunctors::function_map<signatures> function_map;
+
+  auto parser = mpt::arfunctors::make_parser(functor_map, function_map);
+
+  return errors;
+}
+
 /*
 mpt::test::errors test_string() {
 
@@ -222,6 +254,7 @@ int main() {
   mpt::test::collector runtime_arfunctors("runtime arfunctors");
   MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime);
   MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_runtime_math);
+  MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_parser);
   //MPT_TEST_UTILS_ADD_TEST(runtime_arfunctors, test_string);
 
   return mpt::test::to_return_code(arfunctors.run(), runtime_arfunctors.run());
