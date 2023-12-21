@@ -8,8 +8,16 @@ namespace mpt::arfunctors {
 
   enum class precedence_type : int { first, second, third, fourth, fifth, sixth, seventh, eighth, nineth, tenth, eleventh };
 
+  struct plus {
+    static constexpr std::string_view chars = "+";
+  };
+
+  struct minus {
+    static constexpr std::string_view chars = "-";
+  };
+
   /// @brief Unary plus
-  struct unary_plus {
+  struct unary_plus : plus {
     static constexpr std::string_view chars = "+";
     static constexpr precedence_type precedence = precedence_type::first;
     template <class Operand> constexpr auto operator()(Operand &&op) const {
@@ -17,7 +25,7 @@ namespace mpt::arfunctors {
     }
   };
   /// @brief Unary minus
-  struct unary_minus {
+  struct unary_minus : minus {
     static constexpr std::string_view chars = "-";
     static constexpr precedence_type precedence = precedence_type::first;
     template <class Operand> constexpr auto operator()(Operand &&op) const {
@@ -25,7 +33,7 @@ namespace mpt::arfunctors {
     }
   };
   /// @brief Addition of two objects
-  struct add {
+  struct add : plus {
     static constexpr std::string_view chars = "+";
     static constexpr precedence_type precedence = precedence_type::third;
     template <class L, class R>
@@ -34,7 +42,7 @@ namespace mpt::arfunctors {
     }
   };
   /// @brief Subtraction of two objects
-  struct sub {
+  struct sub : minus {
     static constexpr std::string_view chars = "-";
     static constexpr precedence_type precedence = precedence_type::third;
     template <class L, class R>
@@ -206,6 +214,7 @@ namespace mpt::arfunctors {
   using unary_arithmetic_operators = mpt::types<unary_minus, unary_plus>;
   using binary_arithmetic_operators = mpt::types<add, sub, mul, div, modulo>;
   using arithmetic_operators = mpt::concatenate_types_t<unary_arithmetic_operators, binary_arithmetic_operators>;
+  using tokenized_arithmetic_operators = mpt::types<minus, plus, mul, div, modulo>;
 
   using unary_relational_operators = mpt::types<notop>;
   using binary_relational_operators = mpt::types<gt, lt, geq, leq, eq, neq>;
@@ -218,6 +227,7 @@ namespace mpt::arfunctors {
   using unary_operators = mpt::concatenate_types_t<unary_arithmetic_operators, unary_relational_operators, unary_bitwise_operators>;
   using binary_operators = mpt::concatenate_types_t<binary_arithmetic_operators, binary_relational_operators, binary_bitwise_operators>;
   using all_operators = mpt::concatenate_types_t<unary_operators, binary_operators>;
+  using all_tokenized_operators = mpt::concatenate_types_t<tokenized_arithmetic_operators, relational_operators, bitwise_operators>;
 
   static_assert(!mpt::has_repeated_template_arguments_v<all_operators>, "Repeated entries found in the lists of operators");
 

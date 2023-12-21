@@ -206,6 +206,8 @@ mpt::test::errors test_parser() {
 
   auto parser = mpt::arfunctors::make_parser(functor_map, function_map);
 
+  auto parsed_magt = parser.parse<float(position const&)>("x * x + y * y");
+
   return errors;
 }
 

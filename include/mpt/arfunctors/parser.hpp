@@ -7,6 +7,7 @@
 #include "mpt/arfunctors/core/operators.hpp"
 #include "mpt/arfunctors/core/runtime_arfunctor.hpp"
 #include <cstring>
+#include <istream>
 #include <map>
 #include <queue>
 #include <stack>
@@ -119,6 +120,14 @@ namespace mpt::arfunctors {
       template<class Signature> requires HasType<Signature, Signatures>
       functor_proxy& operator=(runtime_arfunctor<Signature> f) { m_functor = std::move(f); return *this; }
 
+      auto& get() {
+        return m_functor;
+      }
+
+      auto const& get() const {
+        return m_functor;
+      }
+
     private:
       value_type m_functor;
   };
@@ -170,69 +179,116 @@ namespace mpt::arfunctors {
 
   namespace {
 
-    /// Kind of token
-    enum class token_kind : int {
-      none,
-      number,
-      functor,
-      function,
-      operation,
-      comma,
-      left_parenthesis,
-      right_parenthesis
-    };
+    // Types to refer to different tokens which do not really have an associated
+    // value (unlike functors, functions and arithmetic types)
+    struct null_token_t { } constexpr null_token;
+    struct left_parenthesis_token_t { } constexpr left_parenthesis_token;
+    struct right_parenthesis_token_t { } constexpr right_parenthesis_token;
+    struct comma_token_t { } constexpr comma_token;
 
-    /// A token, which is defined by its kind and the value
-    template <class ValueType> struct token {
-
-      using value_type = ValueType;
-
-      token_kind kind;
-      value_type value;
-
-      /// Determine if the value is valid or not
-      operator bool() const { return kind != token_kind::none; }
-    };
+    using void_types = mpt::types<null_token_t, left_parenthesis_token_t, right_parenthesis_token_t, comma_token_t>;
 
 #ifndef MPT_DOXYGEN_WARD
-    template <class Signature, class Functors>
-    class token_read_state;
+    template <class Signatures>
+    class token_reader;
 #endif
 
     /// Store the state for reading tokens in a string
-    template <class Signature, class... Functor>
-    class token_read_state<Signature, mpt::types<Functor...>> {
+    template <class ... Signature>
+    class token_reader<signatures<Signature ...>> : private std::istream {
 
     public:
-      using value_type =
-          token<mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<mpt::types<Functor...>, arithmetic_types>>>;
+      using value_type = mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<void_types, mpt::types<runtime_arfunctor<Signature>...>, arithmetic_types>>;
+      using iterator_type = std::string_view::const_iterator;
+      using functor_map_pointer_type = functor_map<signatures<Signature ...>> const*;
+      using function_map_pointer_type = function_map<signatures<Signature ...>> const*;
 
       /// Build the object from a view of a string
-      token_read_state(std::string_view view) : m_view{view}, m_pos{0u} {}
+      token_reader(std::string_view view, functor_map_pointer_type functors, function_map_pointer_type functions) : m_view{view}, m_it{m_view.cbegin()}, m_functors{functors}, m_functions{functions} {}
 
-      /// Parse the next token
-      value_type parse_token() {
+      token_reader& operator>>(value_type& tk) {
 
-        // TODO: parse the string, determine the token, define the value of the variant that holds it and return its value.
+        auto cend = m_view.cend();
 
-        // set the new point of view of the string
-        m_view = std::string_view(m_view.cbegin() + m_pos, m_view.cend());
-        m_pos = 0u;
+        while ( m_it != cend && std::isblank(*m_it) )
+          ++m_it;
 
-        return {token_kind::none, 0.};
-        // return {token_kind::, };
+        if ( m_it == cend ) {
+          // there were blank characters before reaching the end of the string
+          setstate(std::ios_base::eofbit);
+          return *this;
+        }
+
+        tk = std::isdigit(*m_it) ? parse_number() : (std::isalpha(*m_it) || *m_it == '_') ? parse_functor_or_function() : *m_it == ',' ? parse_comma() : parse_operator();
+
+        if ( m_it == cend )
+          setstate(std::ios_base::eofbit);
+
+        return *this;
+      }
+
+      operator bool() const {
+        return good();
       }
 
     private:
+
+      value_type parse_number() {
+        return value_type{};
+      }
+
+      value_type parse_functor_or_function() {
+        
+        auto start = m_it;
+        auto end = std::find_if_not(++m_it, m_view.cend(), [](auto&& v) { return std::isalnum(v) || v == '_'; });
+
+        std::string_view name{start, end};
+
+        auto functor_it = std::find_if(m_functors->cbegin(), m_functors->cend(), [&name](auto&& v) { return v.first == name; });
+        if ( functor_it != m_functors->end() )
+          return std::visit([](auto&& v) -> value_type { return v; }, functor_it->second.get());
+        /* TODO: fixme
+        auto function_it = std::find_if(m_functions->cbegin(), m_functions->cend(), [&name](auto&& v) { return v.first == name; });
+        if ( function_it != m_functions->end() )
+          return std::visit([](auto&& v) -> value_type { return v; }, function_it->second);
+*/
+        throw std::runtime_error("Token " + std::string{name} + " not found in the functor or in the function registries");
+      }
+
+      value_type parse_comma() {
+        ++m_it; // we already checked that the pointed value was a comma
+        return {null_token};
+      }
+
+      value_type parse_operator() {
+
+        if ( *m_it == '(' ) {
+          ++m_it;
+          return left_parenthesis_token;}
+        
+        if ( *m_it == ')' ) {
+          ++m_it;
+          return right_parenthesis_token;
+        }
+
+
+
+        return value_type{};
+      }
+
       /// The string the state works on
       std::string_view m_view;
       /// The current position of the pointer in the overall string
-      std::size_t m_pos;
+      std::string_view::const_iterator m_it;
+      /// Pointer to the functors
+      functor_map_pointer_type m_functors;
+      /// Pointer to the functions
+      function_map_pointer_type m_functions;
     };
 
     namespace {
       template<class Variant>
-      precedence_type determine_precedence(token<Variant> const& tk) {
+      precedence_type determine_precedence(Variant const& tk) {
         return std::visit([](auto&& v) {
 
           using type = std::decay_t<decltype(v)>;
@@ -247,87 +303,118 @@ namespace mpt::arfunctors {
       }
     }
 
+    template<class Signatures>
+    token_reader<Signatures> make_reader(std::string_view view, functor_map<Signatures> const* functors, function_map<Signatures> const* functions) {
+      return token_reader<Signatures>(view, functors, functions);
+    }
+
+    namespace {
+      template<class T>
+      struct is_runtime_arfunctor : std::false_type { };
+
+      template<class Signature>
+      struct is_runtime_arfunctor<runtime_arfunctor<Signature>> : std::true_type { };
+
+      template<class T>
+      static constexpr auto is_runtime_arfunctor_v = is_runtime_arfunctor<T>::value;
+
+      template<class T>
+      struct is_function_proxy : std::false_type { };
+
+      template<class Signatures, std::size_t MaximumNumberOfArguments>
+      struct is_function_proxy<function_proxy<Signatures, MaximumNumberOfArguments>> : std::true_type { };
+
+      template<class T>
+      static constexpr auto is_function_proxy_v = is_function_proxy<T>::value;
+
+      template<class T, class Variant>
+      auto token_is_of_kind(Variant&& var) {
+        return std::visit([](auto && v) { return std::is_same_v<std::decay_t<decltype(v)>, T>; }, var);
+      }
+
+      template<class Variant>
+      auto token_is_function(Variant&& var) {
+        return std::visit([](auto && v) { return is_function_proxy_v<std::decay_t<decltype(v)>>; }, var);
+      }
+    }
+
     /// Parse a string and build an arithmetic and relational functor
-    template <class FunctorSignature, class Operators, class Signatures>
+    template <class FunctorSignature, class Signatures>
     runtime_arfunctor<FunctorSignature> parse_impl(std::string_view view, functor_map<Signatures> const& functors, function_map<Signatures> const& functions) {
 
-      using functor_types = mpt::specialized_template_list_t<runtime_arfunctor, Signatures>;
-      using token_state_type = token_read_state<FunctorSignature, functor_types>;
-      using token_type = typename token_state_type::value_type;
+      using token_reader_type = token_reader<Signatures>;
+      using token_type = typename token_reader_type::value_type;
 
       std::queue<token_type> output_queue;
       std::stack<token_type> operator_stack;
 
-      token_state_type state(view);
+      auto reader = make_reader(view, &functors, &functions);
 
-      while (auto tk = state.parse_token()) {
+      token_type tk;
+      while (reader >> tk) {
+        std::visit([&output_queue, &operator_stack](auto&& v){
 
-        switch (tk.kind) {
-        case (token_kind::number):
-          output_queue.push_back(std::move(tk));
-          break;
-        case (token_kind::functor):
-          output_queue.push_back(std::move(tk));
-          break;
-        case (token_kind::function):
-          operator_stack.emplace(std::move(tk));
-          break;
-        case (token_kind::operation):
-          while ( !operator_stack.empty() && operator_stack.top().kind != token_kind::left_parenthesis && determine_precedence(operator_stack.top()) < determine_precedence(tk) ) {
-            output_queue.push_back(std::move(operator_stack.top()));
-            operator_stack.pop();
+          using type = std::decay_t<decltype(v)>;
+
+          if constexpr ( std::is_arithmetic_v<type> )
+            output_queue.push(v);
+          else if constexpr ( is_runtime_arfunctor_v<type> )
+            output_queue.push(v);
+          else if constexpr ( is_function_proxy_v<type> )
+            operator_stack.emplace(v);
+          else if constexpr ( std::is_same_v<type, comma_token_t> ) {
+            while ( !operator_stack.empty() && token_is_of_kind<left_parenthesis_token_t>(operator_stack.top())){
+              output_queue.push(std::move(operator_stack.top()));
+              operator_stack.pop();
+            }
           }
-          operator_stack.push(std::move(tk));
-          break;
-        case (token_kind::comma):
-          while ( !operator_stack.emtpy() && operator_stack.top().kind != token_kind::left_parenthesis){
-            output_queue.push_back(std::move(operator_stack.top()));
-            operator_stack.pop();
-          }
-          break;
-        case (token_kind::left_parenthesis):
-          operator_stack.emplace(std::move(tk));
-          break;
-        case (token_kind::right_parenthesis):
-          do {
+          else if constexpr ( std::is_same_v<type, left_parenthesis_token_t> )
+            operator_stack.emplace(v);
+          else if constexpr ( std::is_same_v<type, right_parenthesis_token_t> ) {
+            do {
+              if ( operator_stack.empty() )
+                // there is no left parenthesis preceding it
+                throw std::runtime_error("Mismatched parenthesis");
+
+              output_queue.push(std::move(operator_stack.top()));
+              operator_stack.pop();
+            } while ( !operator_stack.empty() && token_is_of_kind<left_parenthesis_token_t>(operator_stack.top()) );
+
             if ( operator_stack.empty() )
               // there is no left parenthesis preceding it
               throw std::runtime_error("Mismatched parenthesis");
+            
+            operator_stack.pop(); // remove left parenthesis
 
-            output_queue.push_back(std::move(operator_stack.top()));
-            operator_stack.pop();
-          } while ( !operator_stack.empty() && operator_stack.top().kind != token_kind::left_parenthesis );
-
-          if ( operator_stack.empty() )
-            // there is no left parenthesis preceding it
-            throw std::runtime_error("Mismatched parenthesis");
-          
-          operator_stack.pop(); // remove left parenthesis
-
-          if ( !operator_stack.empty() && operator_stack.top().kind == token_kind::function ) {
-            // if there is a function in the operator stack, the parentheses belong to it
-            output_queue.push_back(std::move(operator_stack.top()));
-            operator_stack.pop();
+            if ( !operator_stack.empty() && token_is_function(operator_stack.top()) ) {
+              // if there is a function in the operator stack, the parentheses belong to it
+              output_queue.push(std::move(operator_stack.top()));
+              operator_stack.pop();
+            }
           }
-
-          break;
-        case (token_kind::none): // TODO: remove
-          __builtin_unreachable();
-        }
+          else if constexpr ( mpt::templated_object_has_type_v<type, all_operators> ) {
+            while ( !operator_stack.empty() && token_is_of_kind<left_parenthesis_token_t>(operator_stack.top()) && determine_precedence(operator_stack.top()) < determine_precedence(v) ) {
+              output_queue.push(std::move(operator_stack.top()));
+              operator_stack.pop();
+            }
+            operator_stack.push(v);
+          }
+          else // type must be a null token
+            static_assert(std::is_same_v<type, null_token_t>, "Broken implementation of the parser");
+        }, tk);
       }
 
       while ( !operator_stack.empty() ) {
-        if ( operator_stack.top() == token_kind::left_parenthesis || operator_stack.top() == token_kind::right_parenthesis )
+        if ( token_is_of_kind<left_parenthesis_token_t>(operator_stack.top()) || token_is_of_kind<right_parenthesis_token_t>(operator_stack.top()) )
           throw std::runtime_error("Mismatched parenthesis");
         else {
-          output_queue.push_back(std::move(operator_stack.top()));
+          output_queue.push(std::move(operator_stack.top()));
           operator_stack.pop();
         }
       }
 
       // TODO: parse the output queue now that the tokens are sorted
-
-      return {};
+      return std::visit([](auto&&v ) { return static_cast<runtime_arfunctor<FunctorSignature>>(v); }, functors.at("x").get());
     }
   } // namespace
 
