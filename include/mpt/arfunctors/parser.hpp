@@ -196,22 +196,22 @@ namespace mpt::arfunctors {
 
 #ifndef MPT_DOXYGEN_WARD
     template <class Signature, class Functors>
-    class token_state;
+    class token_read_state;
 #endif
 
     /// Store the state for reading tokens in a string
     template <class Signature, class... Functor>
-    class token_state<Signature, mpt::types<Functor...>> {
+    class token_read_state<Signature, mpt::types<Functor...>> {
 
     public:
-      using token_type =
+      using value_type =
           token<mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<mpt::types<Functor...>, arithmetic_types>>>;
 
       /// Build the object from a view of a string
-      token_state(std::string_view view) : m_view{view}, m_pos{0u} {}
+      token_read_state(std::string_view view) : m_view{view}, m_pos{0u} {}
 
       /// Parse the next token
-      token_type parse_token() {
+      value_type parse_token() {
 
         // TODO: parse the string, determine the token, define the value of the variant that holds it and return its value.
 
@@ -252,8 +252,8 @@ namespace mpt::arfunctors {
     runtime_arfunctor<FunctorSignature> parse_impl(std::string_view view, functor_map<Signatures> const& functors, function_map<Signatures> const& functions) {
 
       using functor_types = mpt::specialized_template_list_t<runtime_arfunctor, Signatures>;
-      using token_state_type = token_state<FunctorSignature, functor_types>;
-      using token_type = typename token_state_type::token_type;
+      using token_state_type = token_read_state<FunctorSignature, functor_types>;
+      using token_type = typename token_state_type::value_type;
 
       std::queue<token_type> output_queue;
       std::stack<token_type> operator_stack;
