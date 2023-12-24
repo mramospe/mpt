@@ -15,6 +15,8 @@
 #include <type_traits>
 #include <variant>
 
+#define MPT_DEFAULT_MAXIMUM_NUMBER_OF_ARGUMENTS 16ul
+
 namespace mpt::arfunctors {
 
   template<class ValueType, class ... Args>
@@ -70,7 +72,7 @@ namespace mpt::arfunctors {
       using value_type = ValueType;
       static constexpr auto number_of_arguments = mpt::callable_number_of_input_arguments_v<Function>;
       specialized_function_wrapper() = delete;
-      specialized_function_wrapper(Function function) : m_function{std::move(function)} { }
+      specialized_function_wrapper(function_type function) : m_function{std::move(function)} { }
       std::size_t expected_number_of_arguments() const override {
         return number_of_arguments;
       }
@@ -95,10 +97,10 @@ namespace mpt::arfunctors {
     };
 
     template<class ValueType, std::size_t MaximumNumberOfArguments, class Function>
-    auto make_specialized_function_pointer(Function&& function) {
+    auto make_specialized_function_pointer(Function function) {
       using base_type = function_type_for_number_of_arguments_t<ValueType, MaximumNumberOfArguments>;
       using derived_type = typename specialized_function_wrapper_type_for_base<base_type, Function>::type;
-      return static_cast<std::shared_ptr<base_type>>(std::make_shared<derived_type>(std::forward<Function>(function)));
+      return static_cast<std::shared_ptr<base_type>>(std::make_shared<derived_type>(std::move(function)));
     }
   }
 
@@ -132,7 +134,7 @@ namespace mpt::arfunctors {
       value_type m_functor;
   };
 
-  template<class Signatures, std::size_t MaximumNumberOfArguments=16ul>
+  template<class Signatures, std::size_t MaximumNumberOfArguments=MPT_DEFAULT_MAXIMUM_NUMBER_OF_ARGUMENTS>
   class function_proxy {
     public:
 
@@ -143,7 +145,13 @@ namespace mpt::arfunctors {
     static constexpr auto maximum_number_of_arguments = MaximumNumberOfArguments;
 
     template<class Function>
-    function_proxy(Function&& f) : m_function_ptr{make_specialized_function_pointer<value_type, maximum_number_of_arguments>(std::forward<Function>(f))} { }
+    function_proxy(Function f) : m_function_ptr{make_specialized_function_pointer<value_type, maximum_number_of_arguments>(std::move(f))} { }
+
+    function_proxy() = delete;
+    function_proxy(function_proxy const&) = default;
+    function_proxy(function_proxy&&) = default;
+    function_proxy& operator=(function_proxy const&) = default;
+    function_proxy& operator=(function_proxy&&) = default;
 
     auto& operator*() {
       return *m_function_ptr;
@@ -161,12 +169,6 @@ namespace mpt::arfunctors {
       return m_function_ptr.get();
     }
 
-    function_proxy() = delete;
-    function_proxy(function_proxy&&) = default;
-    function_proxy(function_proxy const&) = default;
-    function_proxy& operator=(function_proxy&&) = default;
-    function_proxy& operator=(function_proxy const&) = default;
-
     private:
       std::shared_ptr<function_type> m_function_ptr;
   };
@@ -174,8 +176,8 @@ namespace mpt::arfunctors {
   template<class Signatures>
   using functor_map = std::map<std::string, functor_proxy<Signatures>>;
 
-  template<class Signatures>
-  using function_map = std::map<std::string, function_proxy<Signatures>>;
+  template<class Signatures, std::size_t MaximumNumberOfArguments=MPT_DEFAULT_MAXIMUM_NUMBER_OF_ARGUMENTS>
+  using function_map = std::map<std::string, function_proxy<Signatures, MaximumNumberOfArguments>>;
 
   namespace {
 
@@ -189,19 +191,19 @@ namespace mpt::arfunctors {
     using void_types = mpt::types<null_token_t, left_parenthesis_token_t, right_parenthesis_token_t, comma_token_t>;
 
 #ifndef MPT_DOXYGEN_WARD
-    template <class Signatures>
+    template <class Signatures, std::size_t MaximumNumberOfArguments>
     class token_reader;
 #endif
 
     /// Store the state for reading tokens in a string
-    template <class ... Signature>
-    class token_reader<signatures<Signature ...>> : private std::istream {
+    template <std::size_t MaximumNumberOfArguments, class ... Signature>
+    class token_reader<signatures<Signature ...>, MaximumNumberOfArguments> : private std::istream {
 
     public:
-      using value_type = mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<void_types, mpt::types<runtime_arfunctor<Signature>...>, arithmetic_types>>;
+      using value_type = mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<void_types, arithmetic_types, mpt::types<function_proxy<signatures<Signature ...>, MaximumNumberOfArguments>, runtime_arfunctor<Signature>...>>>;
       using iterator_type = std::string_view::const_iterator;
       using functor_map_pointer_type = functor_map<signatures<Signature ...>> const*;
-      using function_map_pointer_type = function_map<signatures<Signature ...>> const*;
+      using function_map_pointer_type = function_map<signatures<Signature ...>, MaximumNumberOfArguments> const*;
 
       /// Build the object from a view of a string
       token_reader(std::string_view view, functor_map_pointer_type functors, function_map_pointer_type functions) : m_view{view}, m_it{m_view.cbegin()}, m_functors{functors}, m_functions{functions} {}
@@ -247,11 +249,11 @@ namespace mpt::arfunctors {
         auto functor_it = std::find_if(m_functors->cbegin(), m_functors->cend(), [&name](auto&& v) { return v.first == name; });
         if ( functor_it != m_functors->end() )
           return std::visit([](auto&& v) -> value_type { return v; }, functor_it->second.get());
-        /* TODO: fixme
+        // TODO: fixme
         auto function_it = std::find_if(m_functions->cbegin(), m_functions->cend(), [&name](auto&& v) { return v.first == name; });
         if ( function_it != m_functions->end() )
-          return std::visit([](auto&& v) -> value_type { return v; }, function_it->second);
-*/
+          return value_type{function_it->second};
+
         throw std::runtime_error("Token " + std::string{name} + " not found in the functor or in the function registries");
       }
 
@@ -271,7 +273,7 @@ namespace mpt::arfunctors {
           return right_parenthesis_token;
         }
 
-
+        // TODO: fixme
 
         return value_type{};
       }
@@ -303,9 +305,9 @@ namespace mpt::arfunctors {
       }
     }
 
-    template<class Signatures>
-    token_reader<Signatures> make_reader(std::string_view view, functor_map<Signatures> const* functors, function_map<Signatures> const* functions) {
-      return token_reader<Signatures>(view, functors, functions);
+    template<std::size_t MaximumNumberOfArguments, class Signatures>
+    token_reader<Signatures, MaximumNumberOfArguments> make_reader(std::string_view view, functor_map<Signatures> const* functors, function_map<Signatures, MaximumNumberOfArguments> const* functions) {
+      return token_reader<Signatures, MaximumNumberOfArguments>(view, functors, functions);
     }
 
     namespace {
@@ -339,10 +341,10 @@ namespace mpt::arfunctors {
     }
 
     /// Parse a string and build an arithmetic and relational functor
-    template <class FunctorSignature, class Signatures>
-    runtime_arfunctor<FunctorSignature> parse_impl(std::string_view view, functor_map<Signatures> const& functors, function_map<Signatures> const& functions) {
+    template <class FunctorSignature, class Signatures, std::size_t MaximumNumberOfArguments>
+    runtime_arfunctor<FunctorSignature> parse_impl(std::string_view view, functor_map<Signatures> const& functors, function_map<Signatures, MaximumNumberOfArguments> const& functions) {
 
-      using token_reader_type = token_reader<Signatures>;
+      using token_reader_type = token_reader<Signatures, MaximumNumberOfArguments>;
       using token_type = typename token_reader_type::value_type;
 
       std::queue<token_type> output_queue;
@@ -419,7 +421,7 @@ namespace mpt::arfunctors {
   } // namespace
 
 #ifndef MPT_DOXYGEN_WARD
-  template <class FunctorSignatures>
+  template <class FunctorSignatures, std::size_t MaximumNumberOfArguments>
   struct parser;
 #endif
 
@@ -429,18 +431,18 @@ namespace mpt::arfunctors {
     any operation (specified as a string) involving a set of functors and
     additional operators (functions) and convert it into a runtime functor.
    */
-  template<class ... Signature>
-  class parser<signatures<Signature ...>> {
+  template<std::size_t MaximumNumberOfArguments, class ... Signature>
+  class parser<signatures<Signature ...>, MaximumNumberOfArguments> {
 
     public:
       
     using functor_map_type = functor_map<signatures<Signature ...>>;
-    using function_map_type = function_map<signatures<Signature ...>>;
+    using function_map_type = function_map<signatures<Signature ...>, MaximumNumberOfArguments>;
 
     parser() = delete;
 
-    template<class Signatures>
-    friend parser<Signatures> make_parser(functor_map<Signatures>, function_map<Signatures>);
+    template<class Signatures, std::size_t N>
+    friend parser<Signatures, N> make_parser(functor_map<Signatures>, function_map<Signatures, N>);
     
     template <class FunctorSignature>
     runtime_arfunctor<FunctorSignature> parse(std::string_view const &input) const {
@@ -481,8 +483,8 @@ namespace mpt::arfunctors {
       function_map_type m_function_map;
   };
 
-  template<class Signatures>
-  parser<Signatures> make_parser(functor_map<Signatures> functors, function_map<Signatures> functions = {}) {
-    return parser<Signatures>(std::move(functors), std::move(functions));
+  template<class Signatures, std::size_t MaximumNumberOfArguments>
+  parser<Signatures, MaximumNumberOfArguments> make_parser(functor_map<Signatures> functors, function_map<Signatures, MaximumNumberOfArguments> functions = {}) {
+    return parser<Signatures, MaximumNumberOfArguments>(std::move(functors), std::move(functions));
   }
 } // namespace mpt
