@@ -4,6 +4,7 @@
 #pragma once
 #include "mpt/signature.hpp"
 #include "mpt/types.hpp"
+#include "mpt/numstr.hpp"
 #include "mpt/arfunctors/core/operators.hpp"
 #include "mpt/arfunctors/core/runtime_arfunctor.hpp"
 #include <cstring>
@@ -104,8 +105,6 @@ namespace mpt::arfunctors {
     }
   }
 
-  using arithmetic_types = mpt::types<bool, int, unsigned int, long int, unsigned long int, long long int, unsigned long long int, float, double, long double>;
-
   template<class Signatures>
   class functor_proxy {
     public:
@@ -139,7 +138,7 @@ namespace mpt::arfunctors {
     public:
 
     using functor_types = all_arfunctor_types_t<Signatures>;
-    using value_type = mpt::specialize_template_t<std::variant, mpt::concatenate_types_t<arithmetic_types, functor_types>>;
+    using value_type = mpt::specialize_template_t<std::variant, mpt::concatenate_types_t<mpt::arithmetic_types, functor_types>>;
     using function_type = function_type_for_number_of_arguments_t<value_type, MaximumNumberOfArguments>;
 
     static constexpr auto maximum_number_of_arguments = MaximumNumberOfArguments;
@@ -200,7 +199,7 @@ namespace mpt::arfunctors {
     class token_reader<signatures<Signature ...>, MaximumNumberOfArguments> : private std::istream {
 
     public:
-      using value_type = mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<void_types, arithmetic_types, mpt::types<function_proxy<signatures<Signature ...>, MaximumNumberOfArguments>, runtime_arfunctor<Signature>...>>>;
+      using value_type = mpt::specialize_template_from_types_t<std::variant, mpt::concatenate_types_t<void_types, mpt::arithmetic_types, mpt::types<function_proxy<signatures<Signature ...>, MaximumNumberOfArguments>, runtime_arfunctor<Signature>...>>>;
       using iterator_type = std::string_view::const_iterator;
       using functor_map_pointer_type = functor_map<signatures<Signature ...>> const*;
       using function_map_pointer_type = function_map<signatures<Signature ...>, MaximumNumberOfArguments> const*;
