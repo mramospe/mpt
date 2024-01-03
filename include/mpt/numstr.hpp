@@ -15,7 +15,7 @@ namespace mpt {
 
     namespace {
 
-        using io_bit_state = unsigned long long int;
+        using io_bit_state = long unsigned int;
 
         /** @brief Identifier for a state that has just been built
          * 
@@ -36,7 +36,7 @@ namespace mpt {
         template<>
         struct bit_helper_t<data_type_enum> {
             static constexpr io_bit_state mask = 0xfu;
-            static constexpr unsigned short int offset = 0u;
+            static constexpr unsigned char offset = 0u;
         };
 
         enum precision_enum : io_bit_state { normal_value=0x0u, long_value=0x1u, long_long_value=0x2u, single_precision_floating_point=0x3u };
@@ -44,7 +44,7 @@ namespace mpt {
         template<>
         struct bit_helper_t<precision_enum> {
             static constexpr io_bit_state mask = 0xf0u;
-            static constexpr unsigned short int offset = 4u;
+            static constexpr unsigned char offset = 4u;
         };
 
         enum integral_sign_enum : io_bit_state { signed_integral=0x0u, unsigned_integral=0x2u };
@@ -52,7 +52,7 @@ namespace mpt {
         template<>
         struct bit_helper_t<integral_sign_enum> {
             static constexpr io_bit_state mask = 0xf00u;
-            static constexpr unsigned short int offset = 8u;
+            static constexpr unsigned char offset = 8u;
         };
 
         enum value_sign_enum : io_bit_state { positive=0x0u, negative=0x1u };
@@ -60,7 +60,7 @@ namespace mpt {
         template<>
         struct bit_helper_t<value_sign_enum> {
             static constexpr io_bit_state mask = 0xf000u;
-            static constexpr unsigned short int offset = 16u;
+            static constexpr unsigned char offset = 12u;
         };
 
         enum exponent_sign_enum : io_bit_state { positive_exponent=0x1u, negative_exponent=0x2u };
@@ -68,17 +68,17 @@ namespace mpt {
         template<>
         struct bit_helper_t<exponent_sign_enum> {
             static constexpr io_bit_state mask = 0xf0000u;
-            static constexpr unsigned short int offset = 32u;
+            static constexpr unsigned char offset = 16u;
         };
 
         struct exponent_value {
-            using value_type = unsigned short int;
+            using value_type = int;
         };
 
         template<>
         struct bit_helper_t<exponent_value> {
             static constexpr io_bit_state omit = 0xfffffu; // maximum value for "long double" is 4932
-            static constexpr unsigned short int offset = 64u;
+            static constexpr unsigned char offset = 20u;
         };
 
         template<class T>
@@ -156,12 +156,12 @@ namespace mpt {
             return set_bit<exponent_sign_enum>(state, exponent_sign_enum::negative_exponent);
         }
 
-        io_bit_state set_exponent_value(io_bit_state state, exponent_value::value_type value) {
+        io_bit_state set_exponent_value(io_bit_state state, io_bit_state value) {
             return (state & bit_helper_t<exponent_value>::omit) | (value << bit_helper_t<exponent_value>::offset);
         }
 
-        io_bit_state get_exponent(io_bit_state state) {
-            return (is_bit<exponent_sign_enum>(state, exponent_sign_enum::positive_exponent) ? +1 : -1) * ((state ^ bit_helper_t<exponent_value>::omit) >> bit_helper_t<exponent_value>::offset );
+        auto get_exponent(io_bit_state state) {
+            return (is_bit<exponent_sign_enum>(state, exponent_sign_enum::positive_exponent) ? +1 : -1) * exponent_value::value_type((state ^ bit_helper_t<exponent_value>::omit) >> bit_helper_t<exponent_value>::offset );
         }
 
         template<class IntegralType, class Iterator>
@@ -318,7 +318,7 @@ namespace mpt {
 
                 auto exponent_begin_it = it;
                 do { ++it; } while ( it != end && std::isdigit(*it) );
-                state = set_exponent_value(state, parse_raw_sanitized_integral<exponent_value::value_type>(exponent_begin_it, it));
+                state = set_exponent_value(state, parse_raw_sanitized_integral<io_bit_state>(exponent_begin_it, it));
             }
         }
 
