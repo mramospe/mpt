@@ -31,7 +31,7 @@ namespace mpt {
         template<class EnumType>
         struct bit_helper_t;
 
-        enum data_type_enum : io_bit_state { integral=0x1u, floating_point=0x2u };
+        enum data_type_enum : io_bit_state { integral=0x0u, floating_point=0x1u };
 
         template<>
         struct bit_helper_t<data_type_enum> {
@@ -47,7 +47,7 @@ namespace mpt {
             static constexpr unsigned char offset = 4u;
         };
 
-        enum integral_sign_enum : io_bit_state { signed_integral=0x0u, unsigned_integral=0x2u };
+        enum integral_sign_enum : io_bit_state { signed_integral=0x0u, unsigned_integral=0x1u };
 
         template<>
         struct bit_helper_t<integral_sign_enum> {
@@ -63,7 +63,7 @@ namespace mpt {
             static constexpr unsigned char offset = 12u;
         };
 
-        enum exponent_sign_enum : io_bit_state { positive_exponent=0x1u, negative_exponent=0x2u };
+        enum exponent_sign_enum : io_bit_state { positive_exponent=0x0u, negative_exponent=0x1u };
 
         template<>
         struct bit_helper_t<exponent_sign_enum> {
@@ -141,7 +141,7 @@ namespace mpt {
         }
 
         bool is_precision_set(io_bit_state state) {
-            return get_bit<precision_enum>(state) != precision_enum::normal_value;
+            return !is_bit<precision_enum>(state, precision_enum::normal_value);
         }
 
         io_bit_state set_single_precision_floating_point(io_bit_state state) {
@@ -336,6 +336,7 @@ namespace mpt {
                     throw std::runtime_error("Invalid use of colon in the suffix of a floating-point type");
             }
             else if ( *it == 'u' ) {
+
                 if ( is_floating_point(state) )
                     throw std::runtime_error("Invalid use of the \"u\" suffix in floating-point type");
                 else
@@ -344,7 +345,9 @@ namespace mpt {
                 if ( is_unsigned(*it) )
                     throw std::runtime_error("Repeated \"u\" specifier in suffix");
                 else
-                    state = set_unsigned(*it);
+                    state = set_unsigned(state);
+
+                ++it;
             }
             else if ( *it == 'l' ) {
                 if ( is_precision_set(state) )
