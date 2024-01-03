@@ -2,6 +2,7 @@
 #include "mpt/types.hpp"
 #include <cstdint>
 #include <cmath>
+#include <iostream>
 #include <variant>
 #include <stdexcept>
 #include <string>
@@ -225,7 +226,7 @@ namespace mpt {
             if ( is_negative(state) )
                 value *= value_type{-1};
 
-            return exponent != 0 ? value : value * std::pow(value_type{10}, exponent);
+            return exponent != 0 ? value : value * std::pow(value_type{10}, value_type(exponent));
         }
 
         template<class Iterator>

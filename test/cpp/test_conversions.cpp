@@ -28,6 +28,7 @@ mpt::test::errors test_general_infering_type() {
 
     mpt::test::errors errors;
 
+    // integral types
     if ( parsed_number_is_not_of_type<int>("13") )
         errors.push_back("Wrong integral type; expected \"int\"");
 
@@ -45,6 +46,25 @@ mpt::test::errors test_general_infering_type() {
 
     if ( parsed_number_is_not_of_type<unsigned long long int>("13ull") )
         errors.push_back("Wrong integral type; expected \"unsigned long long int\"");
+
+    // floating-point types
+    if ( parsed_number_is_not_of_type<double>("13.") )
+        errors.push_back("Wrong floating-point type; expected \"double\"");
+
+    if ( parsed_number_is_not_of_type<float>("13f") )
+        errors.push_back("Wrong floating-point type; expected \"float\"");
+
+    if ( parsed_number_is_not_of_type<long double>("13.l") )
+        errors.push_back("Wrong floating-point type; expected \"long double\"");
+
+    if ( parsed_number_is_not_of_type<double>("13.45e-34") )
+        errors.push_back("Wrong floating-point type in scientific notation; expected \"double\"");
+
+    if ( parsed_number_is_not_of_type<float>("13.45e-34f") )
+        errors.push_back("Wrong floating-point type in scientific notation; expected \"float\"");
+
+    if ( parsed_number_is_not_of_type<long double>("13.45e-34l") )
+        errors.push_back("Wrong floating-point type in scientific notation; expected \"long double\"");
 
     return errors;
 }
